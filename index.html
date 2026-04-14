@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AMR — The Prescription Layer for AI Agents</title>
+<meta name="description" content="AMR is an open-source MCP server that creates, verifies, and audits legal mandates for autonomous AI agents. eIDAS 2.0 ready. AI Act compliant.">
+<meta property="og:title" content="AMR — The Prescription Layer for AI Agents">
+<meta property="og:description" content="Open-source MCP server for legal mandates. eIDAS 2.0 ready. AI Act Art. 26 compliant.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mandatia.eu">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AMR — The Prescription Layer for AI Agents">
+<meta name="twitter:description" content="Open-source MCP server for legal mandates. eIDAS 2.0 ready. AI Act Art. 26 compliant.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%235C6B5E' stroke='%23C4A96A' stroke-width='1.5'/><path d='M10 16l4 4 8-8' stroke='white' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #FDFBF7;
+  --bg-alt: #F7F5F0;
+  --text: #2C2C2C;
+  --text-light: #6B6B6B;
+  --sage: #5C6B5E;
+  --sage-light: #7A8A7C;
+  --gold: #C4A96A;
+  --gold-light: #D4BE8A;
+  --dark: #1A1A1A;
+  --code-bg: #F0EDE6;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Outfit', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --max-w: 960px;
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 2rem;
+  --space-lg: 4rem;
+  --space-xl: 6rem;
+  --space-2xl: 10rem;
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* --- NAV --- */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(253, 251, 247, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+.nav-logo {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.nav-logo span { color: var(--gold); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text-light);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover { color: var(--sage); }
+
+.lang-toggle {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--text-light);
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  transition: all 0.3s;
+}
+
+.lang-toggle:hover { border-color: var(--sage); color: var(--sage); }
+
+@media (max-width: 768px) {
+  .nav-links { gap: 1rem; }
+  .nav-links a.nav-hide-mobile { display: none; }
+  nav { padding: 0.75rem 1.25rem; }
+}
+
+/* --- SECTIONS --- */
+section {
+  padding: var(--space-xl) var(--space-md);
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  section { padding: var(--space-lg) var(--space-sm); }
+}
+
+/* --- REVEAL ANIMATION --- */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 1.2s cubic-bezier(0.25, 0.1, 0.25, 1), transform 1.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- HERO --- */
+.hero {
+  padding-top: var(--space-2xl);
+  padding-bottom: var(--space-xl);
+  text-align: center;
+}
+
+.hero h1 {
+  font-family: var(--font-serif);
+  font-size: clamp(2.4rem, 5.5vw, 4rem);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--text);
+  margin-bottom: var(--space-md);
+  letter-spacing: -0.01em;
+}
+
+.hero p {
+  font-size: 1.1rem;
+  color: var(--text-light);
+  max-width: 600px;
+  margin: 0 auto var(--space-lg);
+  line-height: 1.8;
+}
+
+.hero-ctas {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: var(--space-md);
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 2rem;
+  background: var(--sage);
+  color: #fff;
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+
+.btn-primary:hover { background: #4D5B4F; }
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 2rem;
+  background: transparent;
+  color: var(--text);
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+
+.btn-secondary:hover { border-color: var(--sage); color: var(--sage); }
+
+.hero-badge {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-light);
+  letter-spacing: 0.08em;
+}
+
+/* --- CODE BLOCK --- */
+.code-block {
+  max-width: 520px;
+  margin: var(--space-lg) auto 0;
+  background: var(--code-bg);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 3px;
+  padding: 1.5rem;
+  text-align: left;
+  overflow-x: auto;
+}
+
+.code-block pre {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.code-block .code-comment { color: var(--sage-light); }
+.code-block .code-key { color: var(--sage); }
+.code-block .code-string { color: #8B6914; }
+
+/* --- PROBLEM --- */
+.problem {
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-xl);
+}
+
+.section-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 600;
+  margin-bottom: var(--space-md);
+  line-height: 1.2;
+}
+
+.section-text {
+  font-size: 1.05rem;
+  color: var(--text-light);
+  line-height: 1.8;
+  max-width: 680px;
+}
+
+.pull-quote {
+  font-family: var(--font-serif);
+  font-size: clamp(1.4rem, 2.8vw, 2rem);
+  font-weight: 600;
+  font-style: italic;
+  color: var(--gold);
+  margin: var(--space-lg) 0;
+  padding-left: var(--space-md);
+  border-left: 3px solid var(--gold-light);
+  line-height: 1.4;
+  max-width: 640px;
+}
+
+/* --- SOLUTION CARDS --- */
+.solution { padding-top: var(--space-xl); }
+
+.solution .section-subtitle {
+  font-size: 1.05rem;
+  color: var(--text-light);
+  margin-bottom: var(--space-lg);
+  max-width: 600px;
+  line-height: 1.8;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+}
+
+@media (max-width: 640px) {
+  .cards-grid { grid-template-columns: 1fr; }
+}
+
+.card {
+  padding: var(--space-md);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 3px;
+  background: var(--bg);
+  transition: border-color 0.3s;
+}
+
+.card:hover { border-color: var(--sage-light); }
+
+.card-tool {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--sage);
+  margin-bottom: var(--space-sm);
+  letter-spacing: 0.02em;
+}
+
+.card p {
+  font-size: 0.95rem;
+  color: var(--text-light);
+  line-height: 1.7;
+}
+
+/* --- ANALOGY --- */
+.analogy-wrapper {
+  margin: var(--space-xl) 0;
+  padding: 0 var(--space-md);
+}
+
+.analogy {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: var(--space-lg);
+  align-items: center;
+  padding: var(--space-xl) 0;
+}
+
+.analogy-divider {
+  width: 1px;
+  height: 120px;
+  background: var(--gold);
+}
+
+.analogy-col {
+  text-align: center;
+}
+
+.analogy-icon {
+  font-size: 2rem;
+  margin-bottom: var(--space-sm);
+  display: block;
+}
+
+.analogy-col p {
+  font-family: var(--font-serif);
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+.analogy-punchline {
+  text-align: center;
+  font-family: var(--font-serif);
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  font-style: italic;
+  color: var(--sage);
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+@media (max-width: 640px) {
+  .analogy { grid-template-columns: 1fr; gap: var(--space-md); }
+  .analogy-divider { width: 60px; height: 1px; margin: 0 auto; }
+}
+
+/* --- USE CASES --- */
+.use-cases {
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-xl);
+}
+
+.use-cases-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+}
+
+@media (max-width: 768px) {
+  .use-cases-grid { grid-template-columns: 1fr; }
+}
+
+.use-case-item h3 {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: var(--space-sm);
+  color: var(--text);
+}
+
+.use-case-item p {
+  font-size: 0.95rem;
+  color: var(--text-light);
+  line-height: 1.7;
+}
+
+/* --- TECH --- */
+.tech {
+  background: var(--bg-alt);
+  border-radius: 3px;
+  padding: var(--space-xl) var(--space-md);
+  margin: 0 auto;
+  max-width: var(--max-w);
+}
+
+.tech-list {
+  list-style: none;
+  margin: var(--space-lg) 0;
+}
+
+.tech-list li {
+  font-size: 0.95rem;
+  color: var(--text-light);
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.tech-check {
+  color: var(--sage);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.install-block {
+  background: var(--dark);
+  color: #D4D0C8;
+  border-radius: 3px;
+  padding: 1.5rem;
+  overflow-x: auto;
+  margin-top: var(--space-md);
+}
+
+.install-block pre {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.8;
+}
+
+.install-comment { color: #7A8A7C; }
+.install-cmd { color: #D4BE8A; }
+
+/* --- ABOUT --- */
+.about {
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-xl);
+}
+
+.about-text {
+  font-size: 1.1rem;
+  line-height: 2;
+  color: var(--text-light);
+  max-width: 640px;
+}
+
+.about-sig {
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid rgba(0,0,0,0.06);
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.about-sig span { color: var(--text-light); font-family: var(--font-sans); font-size: 0.9rem; }
+
+/* --- CTA FINAL --- */
+.final-cta {
+  text-align: center;
+  padding: var(--space-2xl) var(--space-md);
+}
+
+.final-cta h2 {
+  font-family: var(--font-serif);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 600;
+  margin-bottom: var(--space-lg);
+  line-height: 1.3;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.final-cta .hero-ctas { margin-bottom: 0; }
+
+/* --- FOOTER --- */
+footer {
+  text-align: center;
+  padding: var(--space-lg) var(--space-md);
+  font-size: 0.8rem;
+  color: var(--text-light);
+  border-top: 1px solid rgba(0,0,0,0.04);
+}
+
+footer a { color: var(--sage); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+/* --- SEPARATOR --- */
+.sep {
+  width: 40px;
+  height: 1px;
+  background: var(--gold);
+  margin: var(--space-xl) 0;
+}
+
+/* --- LANG TOGGLE --- */
+[data-lang="fr"] { display: none; }
+html[lang="fr"] [data-lang="fr"] { display: unset; }
+html[lang="fr"] [data-lang="en"] { display: none; }
+
+/* For block elements */
+div[data-lang="fr"], p[data-lang="fr"], h1[data-lang="fr"], 
+h2[data-lang="fr"], h3[data-lang="fr"], li[data-lang="fr"],
+span[data-lang="fr"], a[data-lang="fr"] { display: none; }
+
+html[lang="fr"] div[data-lang="fr"], html[lang="fr"] p[data-lang="fr"],
+html[lang="fr"] h1[data-lang="fr"], html[lang="fr"] h2[data-lang="fr"],
+html[lang="fr"] h3[data-lang="fr"], html[lang="fr"] li[data-lang="fr"],
+html[lang="fr"] span[data-lang="fr"], html[lang="fr"] a[data-lang="fr"] { display: unset; }
+
+html[lang="fr"] div[data-lang="en"], html[lang="fr"] p[data-lang="en"],
+html[lang="fr"] h1[data-lang="en"], html[lang="fr"] h2[data-lang="en"],
+html[lang="fr"] h3[data-lang="en"], html[lang="fr"] li[data-lang="en"],
+html[lang="fr"] span[data-lang="en"], html[lang="fr"] a[data-lang="en"] { display: none; }
+
+/* Fix for flex/grid children */
+html[lang="fr"] .hero-ctas a[data-lang="fr"] { display: inline-flex; }
+html[lang="fr"] .hero-ctas a[data-lang="en"] { display: none; }
+.hero-ctas a[data-lang="fr"] { display: none; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">AM<span>R</span></a>
+  <ul class="nav-links">
+    <li><a href="#problem" class="nav-hide-mobile" data-lang="en">Problem</a><a href="#problem" class="nav-hide-mobile" data-lang="fr">Problème</a></li>
+    <li><a href="#solution" class="nav-hide-mobile" data-lang="en">Solution</a><a href="#solution" class="nav-hide-mobile" data-lang="fr">Solution</a></li>
+    <li><a href="#about" data-lang="en">About</a><a href="#about" data-lang="fr">À propos</a></li>
+    <li><a href="https://github.com/JC7333/amr" target="_blank" rel="noopener">GitHub</a></li>
+    <li><button class="lang-toggle" id="langToggle" aria-label="Switch language">FR / EN</button></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="reveal">
+    <h1 data-lang="en">The Prescription Layer<br>for AI Agents</h1>
+    <h1 data-lang="fr">L'ordonnance<br>des agents IA</h1>
+
+    <p data-lang="en">AI agents act on your behalf — but who verified their mandate? AMR is an open-source MCP server that creates, verifies, and audits legal mandates for autonomous agents. eIDAS 2.0 ready. AI Act compliant.</p>
+    <p data-lang="fr">Les agents IA agissent en votre nom — mais qui a vérifié leur mandat ? AMR est un serveur MCP open-source qui crée, vérifie et audite les mandats légaux des agents autonomes. Compatible eIDAS 2.0. Conforme AI Act.</p>
+
+    <div class="hero-ctas">
+      <a href="https://github.com/JC7333/amr" target="_blank" rel="noopener" class="btn-primary" data-lang="en">View on GitHub →</a>
+      <a href="https://github.com/JC7333/amr" target="_blank" rel="noopener" class="btn-primary" data-lang="fr">Voir sur GitHub →</a>
+      <a href="#solution" class="btn-secondary" data-lang="en">How it works</a>
+      <a href="#solution" class="btn-secondary" data-lang="fr">Découvrir</a>
+    </div>
+
+    <p class="hero-badge">Open Source · MIT License · MCP Native</p>
+  </div>
+
+  <div class="code-block reveal">
+    <pre><span class="code-comment">// Create a legal mandate for an AI agent</span>
+{
+  <span class="code-key">"tool"</span>: <span class="code-string">"create_mandate"</span>,
+  <span class="code-key">"principal"</span>: <span class="code-string">"wealth_advisor_42"</span>,
+  <span class="code-key">"agent"</span>: <span class="code-string">"portfolio_analyzer"</span>,
+  <span class="code-key">"scope"</span>: [<span class="code-string">"read_portfolio"</span>, <span class="code-string">"generate_report"</span>],
+  <span class="code-key">"legal_basis"</span>: <span class="code-string">"art_1984_code_civil"</span>,
+  <span class="code-key">"expires"</span>: <span class="code-string">"2026-12-31T23:59:59Z"</span>
+}</pre>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem" id="problem">
+  <div class="reveal">
+    <h2 class="section-title" data-lang="en">The Mandate Gap</h2>
+    <h2 class="section-title" data-lang="fr">Le vide du mandat</h2>
+
+    <p class="section-text" data-lang="en">AI agents are booking meetings, analyzing portfolios, processing claims, and signing contracts. They act fast, at scale, around the clock. But here's the question no one is answering:</p>
+    <p class="section-text" data-lang="fr">Les agents IA prennent des rendez-vous, analysent des portefeuilles, traitent des sinistres, signent des contrats. Ils agissent vite, à grande échelle, 24h/24. Mais voici la question que personne ne traite :</p>
+  </div>
+
+  <div class="reveal">
+    <blockquote class="pull-quote" data-lang="en">"How do you prove an AI agent has legal authority to act on someone's behalf?"</blockquote>
+    <blockquote class="pull-quote" data-lang="fr">« Comment prouver qu'un agent IA a l'autorité légale d'agir au nom de quelqu'un ? »</blockquote>
+  </div>
+
+  <div class="reveal">
+    <p class="section-text" data-lang="en">Today, agent frameworks handle permissions and authentication. But permissions ≠ legal mandate. A database ACL doesn't hold up in court. An API key doesn't prove informed consent. The EU AI Act requires a named human sponsor for each agent (Article 14) and deployer obligations including oversight and audit logs (Article 26). But without a mandate registry, that human sponsor field is just a name attached retroactively — it doesn't prove prospective authorization. No current framework bridges this gap.</p>
+    <p class="section-text" data-lang="fr">Aujourd'hui, les frameworks d'agents gèrent les permissions et l'authentification. Mais permission ≠ mandat légal. Une ACL de base de données ne tient pas devant un tribunal. Une clé API ne prouve pas le consentement éclairé. L'AI Act exige un humain responsable nommé pour chaque agent (Article 14) et des obligations de supervision et logs d'audit pour les déployeurs (Article 26). Mais sans registre de mandats, ce champ "humain responsable" n'est qu'un nom collé après coup — il ne prouve pas l'autorisation prospective. Aucun framework actuel ne comble ce vide.</p>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section class="solution" id="solution">
+  <div class="reveal">
+    <h2 class="section-title" data-lang="en">Four tools. One mandate chain.</h2>
+    <h2 class="section-title" data-lang="fr">Quatre outils. Une chaîne de mandats.</h2>
+
+    <p class="section-subtitle" data-lang="en">AMR is a Model Context Protocol server. Install it, and any MCP-compatible AI agent can issue, verify, and audit legal mandates natively.</p>
+    <p class="section-subtitle" data-lang="fr">AMR est un serveur Model Context Protocol. Installez-le, et tout agent IA compatible MCP peut émettre, vérifier et auditer des mandats légaux nativement.</p>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card reveal">
+      <div class="card-tool">create_mandate</div>
+      <p data-lang="en">Issue a legally-structured mandate with principal identity, agent scope, legal basis, and expiration. Every mandate is SHA-256 hashed and chained.</p>
+      <p data-lang="fr">Émettez un mandat structuré juridiquement : identité du mandant, périmètre de l'agent, base légale, expiration. Chaque mandat est hashé SHA-256 et chaîné.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-tool">verify_mandate</div>
+      <p data-lang="en">Before any sensitive action, the agent checks: is this mandate valid, active, and within scope? One call. Instant answer.</p>
+      <p data-lang="fr">Avant toute action sensible, l'agent vérifie : ce mandat est-il valide, actif, dans le périmètre ? Un appel. Réponse instantanée.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-tool">revoke_mandate</div>
+      <p data-lang="en">Revoke any mandate instantly. The revocation propagates through the chain. No more ghost authorizations.</p>
+      <p data-lang="fr">Révoquez n'importe quel mandat instantanément. La révocation se propage dans la chaîne. Plus d'autorisations fantômes.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-tool">audit_mandate_chain</div>
+      <p data-lang="en">Full audit trail: who mandated whom, when, for what, with what legal basis. Tamper-proof. Court-ready.</p>
+      <p data-lang="fr">Traçabilité complète : qui a mandaté qui, quand, pour quoi, sur quelle base légale. Inviolable. Opposable.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ANALOGY -->
+<div class="analogy-wrapper reveal">
+  <div class="analogy">
+    <div class="analogy-col">
+      <span class="analogy-icon">℞</span>
+      <p data-lang="en">A pharmacist won't dispense without a valid prescription.</p>
+      <p data-lang="fr">Un pharmacien ne délivre jamais sans ordonnance valide.</p>
+    </div>
+    <div class="analogy-divider"></div>
+    <div class="analogy-col">
+      <span class="analogy-icon">⬡</span>
+      <p data-lang="en">Why should an AI agent act without a verified mandate?</p>
+      <p data-lang="fr">Pourquoi un agent IA agirait-il sans mandat vérifié ?</p>
+    </div>
+  </div>
+  <p class="analogy-punchline" data-lang="en">AMR is the prescription pad for the age of autonomous agents.</p>
+  <p class="analogy-punchline" data-lang="fr">AMR est l'ordonnancier de l'ère des agents autonomes.</p>
+</div>
+
+<!-- USE CASES -->
+<section class="use-cases">
+  <div class="reveal">
+    <h2 class="section-title" data-lang="en">Built for regulated industries</h2>
+    <h2 class="section-title" data-lang="fr">Conçu pour les industries régulées</h2>
+  </div>
+
+  <div class="use-cases-grid">
+    <div class="use-case-item reveal">
+      <h3 data-lang="en">Finance & Wealth Management</h3>
+      <h3 data-lang="fr">Finance & Gestion de patrimoine</h3>
+      <p data-lang="en">A wealth advisor delegates portfolio analysis to an AI agent. AMR ensures the mandate is traceable, scoped, and compliant with AMF regulations.</p>
+      <p data-lang="fr">Un CGP délègue l'analyse de portefeuille à un agent IA. AMR garantit que le mandat est traçable, borné et conforme aux exigences AMF.</p>
+    </div>
+    <div class="use-case-item reveal">
+      <h3 data-lang="en">Insurance</h3>
+      <h3 data-lang="fr">Assurance</h3>
+      <p data-lang="en">Claims processing agents handle sensitive data. AMR provides ACPR-compliant mandate chains with automatic expiration.</p>
+      <p data-lang="fr">Les agents de traitement des sinistres manipulent des données sensibles. AMR fournit des chaînes de mandats conformes ACPR avec expiration automatique.</p>
+    </div>
+    <div class="use-case-item reveal">
+      <h3 data-lang="en">HR & Data Protection</h3>
+      <h3 data-lang="fr">RH & Protection des données</h3>
+      <p data-lang="en">AI agents processing employee data need GDPR-compliant mandates. AMR integrates CNIL requirements into every mandate.</p>
+      <p data-lang="fr">Les agents IA traitant des données employés ont besoin de mandats conformes RGPD. AMR intègre les exigences CNIL dans chaque mandat.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TECH -->
+<div class="tech reveal">
+  <h2 class="section-title" data-lang="en">Under the hood</h2>
+  <h2 class="section-title" data-lang="fr">Sous le capot</h2>
+
+  <ul class="tech-list">
+    <li data-lang="en"><span class="tech-check">✓</span> MCP protocol native — works with Claude Desktop, Cursor, any MCP client</li>
+    <li data-lang="fr"><span class="tech-check">✓</span> Natif protocole MCP — fonctionne avec Claude Desktop, Cursor, tout client MCP</li>
+    <li data-lang="en"><span class="tech-check">✓</span> SHA-256 mandate chain — tamper-proof, cryptographically linked</li>
+    <li data-lang="fr"><span class="tech-check">✓</span> Chaîne de mandats SHA-256 — inviolable, liée cryptographiquement</li>
+    <li data-lang="en"><span class="tech-check">✓</span> eIDAS 2.0 ready — European qualified electronic signatures</li>
+    <li data-lang="fr"><span class="tech-check">✓</span> Compatible eIDAS 2.0 — signatures électroniques qualifiées européennes</li>
+    <li data-lang="en"><span class="tech-check">✓</span> AI Act Art. 14 + 26 compliant — human sponsor and deployer obligations built in</li>
+    <li data-lang="fr"><span class="tech-check">✓</span> Conforme AI Act Art. 14 + 26 — sponsor humain et obligations déployeur intégrés</li>
+    <li data-lang="en"><span class="tech-check">✓</span> SQLite WAL — lightweight, zero infrastructure</li>
+    <li data-lang="fr"><span class="tech-check">✓</span> SQLite WAL — léger, zéro infrastructure</li>
+    <li data-lang="en"><span class="tech-check">✓</span> Pydantic v2 validation — type-safe mandate schemas</li>
+    <li data-lang="fr"><span class="tech-check">✓</span> Validation Pydantic v2 — schémas de mandats typés</li>
+    <li data-lang="en"><span class="tech-check">✓</span> Open source — MIT license, audit the code yourself</li>
+    <li data-lang="fr"><span class="tech-check">✓</span> Open source — licence MIT, auditez le code vous-même</li>
+  </ul>
+
+  <div class="install-block">
+    <pre><span class="install-comment"># Install</span>
+<span class="install-cmd">git clone</span> https://github.com/JC7333/amr.git
+<span class="install-cmd">cd</span> amr
+<span class="install-cmd">pip install</span> -e .
+
+<span class="install-comment"># Add to Claude Desktop config</span>
+{
+  "mcpServers": {
+    "amr": {
+      "command": "python",
+      "args": ["-m", "amr.server"]
+    }
+  }
+}</pre>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="reveal">
+    <h2 class="section-title" data-lang="en">Why a physician built this</h2>
+    <h2 class="section-title" data-lang="fr">Pourquoi un médecin a créé AMR</h2>
+
+    <p class="about-text" data-lang="en">I'm a physician in the French Alps. Every day, I write prescriptions — formal mandates that authorize pharmacists to act on my patients' behalf. The system works because every prescription is traceable, scoped, time-limited, and legally binding.</p>
+    <p class="about-text" data-lang="fr">Je suis médecin thermaliste dans les Alpes françaises. Chaque jour, je rédige des ordonnances — des mandats formels qui autorisent les pharmaciens à agir au nom de mes patients. Le système fonctionne parce que chaque ordonnance est traçable, bornée, limitée dans le temps et juridiquement opposable.</p>
+
+    <p class="about-text" style="margin-top: var(--space-md);" data-lang="en">When I started building AI agents, I realized the same problem existed: agents were acting without verifiable mandates. No audit trail. No legal basis. No expiration.</p>
+    <p class="about-text" style="margin-top: var(--space-md);" data-lang="fr">Quand j'ai commencé à construire des agents IA, j'ai réalisé que le même problème existait : les agents agissaient sans mandat vérifiable. Pas de traçabilité. Pas de base légale. Pas d'expiration.</p>
+
+    <p class="about-text" style="margin-top: var(--space-md);" data-lang="en">AMR brings the rigor of medical prescriptions to the world of autonomous agents. Because if we trust a pharmacist to verify a prescription before dispensing medication, we should demand the same from AI agents before they act on our behalf.</p>
+    <p class="about-text" style="margin-top: var(--space-md);" data-lang="fr">AMR apporte la rigueur de l'ordonnance médicale au monde des agents autonomes. Parce que si nous exigeons d'un pharmacien qu'il vérifie l'ordonnance avant de délivrer un médicament, nous devrions exiger la même chose d'un agent IA avant qu'il agisse en notre nom.</p>
+
+    <div class="about-sig">
+      Dr. Audric<br>
+      <span data-lang="en">Physician & Founder · Aix-les-Bains, France</span>
+      <span data-lang="fr">Médecin & Fondateur · Aix-les-Bains, France</span>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <div class="reveal">
+    <h2 data-lang="en">The AI Act deadline is August 2, 2026.<br>Are your agents ready?</h2>
+    <h2 data-lang="fr">La date limite de l'AI Act est le 2 août 2026.<br>Vos agents sont-ils prêts ?</h2>
+
+    <div class="hero-ctas">
+      <a href="https://github.com/JC7333/amr" target="_blank" rel="noopener" class="btn-primary" data-lang="en">Star on GitHub →</a>
+      <a href="https://github.com/JC7333/amr" target="_blank" rel="noopener" class="btn-primary" data-lang="fr">Star sur GitHub →</a>
+      <a href="mailto:contact@mandatia.eu" class="btn-secondary">Contact</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>AMR — Agent Mandate Registry</p>
+  <p>Open Source · MIT License · <a href="https://github.com/JC7333/amr" target="_blank" rel="noopener">GitHub</a></p>
+  <p style="margin-top: 0.5rem;">© 2026</p>
+</footer>
+
+<script>
+// Language toggle
+(function() {
+  const html = document.documentElement;
+  const btn = document.getElementById('langToggle');
+  const saved = localStorage.getItem('amr-lang');
+  
+  if (saved) {
+    html.lang = saved;
+  } else if (navigator.language && navigator.language.startsWith('fr')) {
+    html.lang = 'fr';
+  }
+  
+  btn.addEventListener('click', function() {
+    const next = html.lang === 'en' ? 'fr' : 'en';
+    html.lang = next;
+    localStorage.setItem('amr-lang', next);
+  });
+})();
+
+// Scroll reveal
+(function() {
+  const els = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  
+  els.forEach(function(el) { observer.observe(el); });
+})();
+</script>
+</body>
+</html>
