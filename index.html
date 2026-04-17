@@ -114,9 +114,11 @@ nav {
 .lang-toggle:hover { border-color: var(--sage); color: var(--sage); }
 
 @media (max-width: 768px) {
-  .nav-links { gap: 1rem; }
+  .nav-links { gap: 0.75rem; }
   .nav-links a.nav-hide-mobile { display: none; }
-  nav { padding: 0.75rem 1.25rem; }
+  nav { padding: 0.75rem 1rem; }
+  .nav-logo { font-size: 1.3rem; }
+  .lang-toggle { font-size: 0.7rem; padding: 0.25rem 0.5rem; }
 }
 
 /* --- SECTIONS --- */
@@ -626,7 +628,7 @@ html[lang="fr"] .hero-ctas a[data-lang="en"] { display: none; }
     <li><a href="#problem" class="nav-hide-mobile" data-lang="en">Problem</a><a href="#problem" class="nav-hide-mobile" data-lang="fr">Problème</a></li>
     <li><a href="#solution" class="nav-hide-mobile" data-lang="en">Solution</a><a href="#solution" class="nav-hide-mobile" data-lang="fr">Solution</a></li>
     <li><a href="#enforcement" class="nav-hide-mobile" data-lang="en">Enforcement</a><a href="#enforcement" class="nav-hide-mobile" data-lang="fr">Enforcement</a></li>
-    <li><a href="#about" data-lang="en">About</a><a href="#about" data-lang="fr">À propos</a></li>
+    <li><a href="#about" class="nav-hide-mobile" data-lang="en">About</a><a href="#about" class="nav-hide-mobile" data-lang="fr">À propos</a></li>
     <li><a href="https://github.com/JC7333/amr" target="_blank" rel="noopener">GitHub</a></li>
     <li><button class="lang-toggle" id="langToggle" aria-label="Switch language">FR / EN</button></li>
   </ul>
