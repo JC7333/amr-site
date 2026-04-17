@@ -512,6 +512,77 @@ footer {
 footer a { color: var(--sage); text-decoration: none; }
 footer a:hover { text-decoration: underline; }
 
+/* --- ENFORCEMENT --- */
+.enforcement {
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-xl);
+}
+
+.enforcement-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: var(--space-md);
+  align-items: stretch;
+  margin: var(--space-lg) 0 var(--space-md);
+}
+
+.enforcement-col {
+  padding: var(--space-md);
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 3px;
+  background: var(--bg);
+}
+
+.enforcement-col-pro {
+  border-color: var(--sage);
+  background: rgba(92, 107, 94, 0.04);
+}
+
+.enforcement-col h3 {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: var(--space-sm);
+  color: var(--text);
+}
+
+.enforcement-col p {
+  font-size: 0.95rem;
+  color: var(--text-light);
+  line-height: 1.7;
+}
+
+.enforcement-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--sage);
+  margin-bottom: var(--space-sm);
+  text-transform: uppercase;
+}
+
+.enforcement-arrow {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  color: var(--gold);
+  font-weight: 300;
+}
+
+.enforcement-footnote {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--sage);
+  text-align: center;
+  margin-top: var(--space-md);
+}
+
+@media (max-width: 640px) {
+  .enforcement-grid { grid-template-columns: 1fr; }
+  .enforcement-arrow { justify-content: center; transform: rotate(90deg); }
+}
+
 /* --- SEPARATOR --- */
 .sep {
   width: 40px;
@@ -554,6 +625,7 @@ html[lang="fr"] .hero-ctas a[data-lang="en"] { display: none; }
   <ul class="nav-links">
     <li><a href="#problem" class="nav-hide-mobile" data-lang="en">Problem</a><a href="#problem" class="nav-hide-mobile" data-lang="fr">Problème</a></li>
     <li><a href="#solution" class="nav-hide-mobile" data-lang="en">Solution</a><a href="#solution" class="nav-hide-mobile" data-lang="fr">Solution</a></li>
+    <li><a href="#enforcement" class="nav-hide-mobile" data-lang="en">Enforcement</a><a href="#enforcement" class="nav-hide-mobile" data-lang="fr">Enforcement</a></li>
     <li><a href="#about" data-lang="en">About</a><a href="#about" data-lang="fr">À propos</a></li>
     <li><a href="https://github.com/JC7333/amr" target="_blank" rel="noopener">GitHub</a></li>
     <li><button class="lang-toggle" id="langToggle" aria-label="Switch language">FR / EN</button></li>
@@ -666,6 +738,40 @@ html[lang="fr"] .hero-ctas a[data-lang="en"] { display: none; }
   <p class="analogy-punchline" data-lang="fr">AMR est l'ordonnancier de l'ère des agents autonomes.</p>
 </div>
 
+<!-- ENFORCEMENT -->
+<section class="enforcement" id="enforcement">
+  <div class="reveal">
+    <h2 class="section-title" data-lang="en">Registry is not enough.<br>Enforcement is the product.</h2>
+    <h2 class="section-title" data-lang="fr">L'archive ne suffit pas.<br>Le verrou, c'est le produit.</h2>
+
+    <p class="section-text" data-lang="en">A mandate registry that agents <em>can</em> check but <em>don't have to</em> check ends up ignored. Every compliance system that relies on voluntary calls degrades to advisory within weeks of deployment.</p>
+    <p class="section-text" data-lang="fr">Un registre de mandats que les agents <em>peuvent</em> vérifier mais <em>ne sont pas obligés</em> de vérifier finit ignoré. Tout système de conformité basé sur des appels volontaires se dégrade en recommandation en quelques semaines.</p>
+  </div>
+
+  <div class="enforcement-grid reveal">
+    <div class="enforcement-col">
+      <div class="enforcement-label" data-lang="en">Open source · Free</div>
+      <div class="enforcement-label" data-lang="fr">Open source · Gratuit</div>
+      <h3 data-lang="en">The Registry</h3>
+      <h3 data-lang="fr">Le Registre</h3>
+      <p data-lang="en">Create, store, verify, and audit mandates. SHA-256 chain. MCP native. Anyone can register mandates and verify the chain.</p>
+      <p data-lang="fr">Créer, stocker, vérifier et auditer les mandats. Chaîne SHA-256. Natif MCP. N'importe qui peut enregistrer des mandats et vérifier la chaîne.</p>
+    </div>
+    <div class="enforcement-arrow">→</div>
+    <div class="enforcement-col enforcement-col-pro">
+      <div class="enforcement-label" data-lang="en">Pro · Coming Q3 2026</div>
+      <div class="enforcement-label" data-lang="fr">Pro · Prévu T3 2026</div>
+      <h3 data-lang="en">The Lock</h3>
+      <h3 data-lang="fr">Le Verrou</h3>
+      <p data-lang="en">No valid mandate → no execution authorization → no action possible. The system refuses to work without the mandate. Structural enforcement, not procedural.</p>
+      <p data-lang="fr">Pas de mandat valide → pas d'autorisation d'exécution → pas d'action possible. Le système refuse de fonctionner sans le mandat. Enforcement structurel, pas procédural.</p>
+    </div>
+  </div>
+
+  <p class="enforcement-footnote reveal" data-lang="en">Compliance teams pay for the lock, not the archive.</p>
+  <p class="enforcement-footnote reveal" data-lang="fr">Les équipes compliance paient pour le verrou, pas pour l'archive.</p>
+</section>
+
 <!-- USE CASES -->
 <section class="use-cases">
   <div class="reveal">
@@ -715,6 +821,8 @@ html[lang="fr"] .hero-ctas a[data-lang="en"] { display: none; }
     <li data-lang="fr"><span class="tech-check">✓</span> Validation Pydantic v2 — schémas de mandats typés</li>
     <li data-lang="en"><span class="tech-check">✓</span> Open source — MIT license, audit the code yourself</li>
     <li data-lang="fr"><span class="tech-check">✓</span> Open source — licence MIT, auditez le code vous-même</li>
+    <li data-lang="en"><span class="tech-check">✓</span> Composable — AMR authorizes before the action; action-certification proxies prove what happened during. Full trust chain.</li>
+    <li data-lang="fr"><span class="tech-check">✓</span> Composable — AMR autorise avant l'action ; les proxies de certification prouvent ce qui s'est passé pendant. Chaîne de confiance complète.</li>
   </ul>
 
   <div class="install-block">
@@ -761,8 +869,8 @@ html[lang="fr"] .hero-ctas a[data-lang="en"] { display: none; }
 <!-- FINAL CTA -->
 <section class="final-cta">
   <div class="reveal">
-    <h2 data-lang="en">The AI Act deadline is August 2, 2026.<br>Are your agents ready?</h2>
-    <h2 data-lang="fr">La date limite de l'AI Act est le 2 août 2026.<br>Vos agents sont-ils prêts ?</h2>
+    <h2 data-lang="en">The AI Act high-risk deadline is August 2, 2026.<br>The Digital Omnibus may delay it — but it hasn't yet.<br>Are your agents ready for either scenario?</h2>
+    <h2 data-lang="fr">La date AI Act haut risque est le 2 août 2026.<br>Le Digital Omnibus pourrait la repousser — mais ce n'est pas encore fait.<br>Vos agents sont-ils prêts dans les deux cas ?</h2>
 
     <div class="hero-ctas">
       <a href="https://github.com/JC7333/amr" target="_blank" rel="noopener" class="btn-primary" data-lang="en">Star on GitHub →</a>
