@@ -1,0 +1,149 @@
+# Exemple 03 — Mandat EQUILIBRE
+# Profil cible : ETI avec une fonction RH structuree, DPO en place,
+# deploiement en production apres une phase pilote restrictive.
+# L'agent a une autonomie moyenne sur les taches routinieres,
+# les actions sortantes restent soumises a revue humaine ciblee.
+
+metadata:
+  template_id: "amr-tpl-rh-recrutement-v1"
+  profile: "equilibre"
+  language: "fr"
+  jurisdiction: "FR-EU"
+  created_at: "2026-04-20"
+
+principal:
+  type: "legal_entity"
+  legal_name: "Mandatia Industries SAS"
+  registration:
+    country: "FR"
+    id_type: "SIREN"
+    id_value: "000000000"
+  representative:
+    name: "DRH et DPO co-signataires"
+    role: "DRH + DPO"
+    email: "rh-ia@mandatia.example"
+  legal_basis_gdpr:
+    article: "6(1)(f)"
+    description: "Interet legitime — pre-qualification des candidatures"
+
+agent:
+  agent_id: "mandatia-rh-bot-01"
+  display_name: "Assistant-Recrutement-Prod"
+  provider: "prestataire externe"
+  model:
+    family: "Claude"
+    version: "Sonnet 4.6"
+    hosted_in: "EU-West"
+  purpose: "Pre-qualification de bout-en-bout jusqu'a la proposition de creneau d'entretien, toujours sous revue humaine ciblee."
+
+scope:
+  business_processes:
+    - "tri_candidatures_entrantes"
+    - "extraction_informations_cv"
+    - "scoring_correspondance_poste"
+    - "redaction_messages_candidats"
+    - "planification_entretiens"
+  job_families_covered:
+    - "developpement"
+    - "support"
+    - "commercial"
+  geographic_scope:
+    - "FR"
+  excluded_processes:
+    - "decision_finale_embauche"
+    - "decision_finale_rejet"
+    - "negociation_remuneration"
+    - "evaluation_psychometrique_automatisee"
+
+permissions:
+  read:
+    - resource: "candidatures_ats"
+      # Volume intermediaire — 500/jour couvre un service RH actif.
+      max_volume_per_day: 500
+      fields_allowed:
+        - "nom"
+        - "prenom"
+        - "cv_texte"
+        - "experiences"
+        - "competences_declarees"
+        - "formations"
+      fields_forbidden:
+        - "photo"
+        - "date_naissance"
+        - "situation_familiale"
+        - "etat_sante"
+  write:
+    - resource: "notes_internes_ats"
+      max_volume_per_day: 500
+    - resource: "messages_candidats_templates"
+      max_volume_per_day: 200
+      requires_human_approval: true
+  invoke:
+    - action: "programmer_entretien"
+      max_per_day: 30
+      requires_human_approval: true
+
+restrictions:
+  forbidden_actions:
+    - "rejeter_candidature_sans_revue_humaine"
+    - "publier_offre_emploi_sans_validation"
+    - "transferer_donnees_hors_UE"
+    - "entrainer_modele_tiers_sur_donnees_candidats"
+
+human_oversight:
+  regime: "human_in_the_loop"
+  ai_act_reference: "Article 14"
+  mandatory_review_triggers:
+    - trigger: "envoi_message_candidat"
+      threshold: "tout_message_sortant"
+    - trigger: "rejet_candidature"
+      threshold: "toute_recommandation_de_rejet"
+    - trigger: "score_correspondance_inferieur"
+      # Seuil intermediaire — en dessous de 40 %, alerte humaine.
+      threshold: 40
+      unit: "pourcentage"
+    - trigger: "volume_quotidien_traite"
+      threshold: 400
+      unit: "candidatures_par_jour"
+  reviewer_profile:
+    role: "recruteur_habilite"
+    training_required: true
+
+expiration:
+  valid_from: "2026-05-01"
+  valid_until: "2027-04-30"
+  max_duration_months: 12
+  revocation:
+    immediate_triggers:
+      - "incident_de_securite_confirme"
+      - "plainte_candidat_recevable"
+      - "mise_a_jour_majeure_du_modele_llm"
+
+audit_trail:
+  logged_events:
+    - "lecture_candidature"
+    - "production_score"
+    - "generation_message"
+    - "validation_humaine"
+    - "rejet_apres_validation"
+    - "declenchement_supervision"
+  log_retention_days: 1825
+  tamper_evidence: "sha256_chain"
+
+compliance_mapping:
+  ai_act:
+    classification: "high_risk_system"
+    annex: "Annex III, point 4"
+    articles:
+      - "Article 12"
+      - "Article 13"
+      - "Article 14"
+      - "Article 26"
+  gdpr:
+    dpia_required: true
+    automated_decision_making_article_22: false
+  national_law_fr:
+    - "Code du travail, article L.1132-1"
+    - "Code du travail, article L.1221-6"
+    - "Code du travail, article L.1221-8"
+    - "Code du travail, article L.1221-9"

@@ -1,0 +1,135 @@
+# Exemple 01 — Mandat PERMISSIF
+# Profil cible : organisation mature, process RH deja rodes,
+# agent deploye en support sur un ATS maitrise, oversight humain
+# renforce par des revues statistiques regulieres.
+#
+# Attention : "permissif" ne veut pas dire "sans garde-fou".
+# Les interdictions legales (non-discrimination, RGPD) restent strictes.
+# C'est le volume et le perimetre fonctionnel qui sont elargis.
+
+metadata:
+  template_id: "amr-tpl-rh-recrutement-v1"
+  profile: "permissif"
+  language: "fr"
+  jurisdiction: "FR-EU"
+  created_at: "2026-04-20"
+
+principal:
+  type: "legal_entity"
+  legal_name: "ACME Conseil SAS"
+  registration:
+    country: "FR"
+    id_type: "SIREN"
+    id_value: "000000000"
+  representative:
+    name: "Directrice des Ressources Humaines"
+    role: "DRH"
+    email: "drh@acme.example"
+  legal_basis_gdpr:
+    article: "6(1)(f)"
+    description: "Interet legitime — gestion des candidatures"
+
+agent:
+  agent_id: "acme-rh-bot-01"
+  display_name: "Assistant-Recrutement-Groupe"
+  provider: "equipe interne IT"
+  model:
+    family: "Claude"
+    version: "Sonnet 4.6"
+    hosted_in: "EU-West"
+  # Volume eleve : l'agent traite l'ensemble des flux entrants
+  # sur plusieurs marques du groupe.
+  purpose: "Pre-traitement massif de candidatures avant revue humaine."
+
+scope:
+  business_processes:
+    - "tri_candidatures_entrantes"
+    - "extraction_informations_cv"
+    - "scoring_correspondance_poste"
+    - "redaction_messages_candidats"
+    - "planification_entretiens"
+  job_families_covered:
+    - "developpement"
+    - "support"
+    - "commercial"
+    - "marketing"
+    - "operations"
+  geographic_scope:
+    - "FR"
+    - "BE"
+    - "LU"
+  excluded_processes:
+    - "decision_finale_embauche"
+    - "decision_finale_rejet"
+    - "negociation_remuneration"
+
+permissions:
+  read:
+    - resource: "candidatures_ats"
+      # Volume eleve — adapte a un groupe multi-marques.
+      max_volume_per_day: 2000
+      fields_allowed:
+        - "nom"
+        - "prenom"
+        - "cv_texte"
+        - "experiences"
+        - "competences_declarees"
+        - "formations"
+  write:
+    - resource: "notes_internes_ats"
+      max_volume_per_day: 2000
+    - resource: "messages_candidats_templates"
+      # Meme en permissif, tout message sortant passe par une revue.
+      max_volume_per_day: 800
+      requires_human_approval: true
+  invoke:
+    - action: "programmer_entretien"
+      max_per_day: 100
+      requires_human_approval: true
+
+restrictions:
+  forbidden_actions:
+    - "rejeter_candidature_sans_revue_humaine"
+    - "publier_offre_emploi_sans_validation"
+    - "transferer_donnees_hors_UE"
+
+human_oversight:
+  regime: "human_on_the_loop"
+  # "on_the_loop" : l'humain supervise par echantillonnage statistique,
+  # avec declencheurs automatiques sur les cas sensibles.
+  ai_act_reference: "Article 14"
+  mandatory_review_triggers:
+    - trigger: "envoi_message_candidat"
+      threshold: "tout_message_sortant"
+    - trigger: "rejet_candidature"
+      threshold: "toute_recommandation_de_rejet"
+    - trigger: "score_correspondance_inferieur"
+      threshold: 30
+      unit: "pourcentage"
+  sampling_review:
+    frequency: "quotidien"
+    sample_size_percent: 5
+    reviewer_role: "recruteur_senior"
+
+expiration:
+  valid_from: "2026-05-01"
+  valid_until: "2027-04-30"
+  max_duration_months: 12
+
+audit_trail:
+  logged_events:
+    - "lecture_candidature"
+    - "production_score"
+    - "generation_message"
+    - "validation_humaine"
+    - "declenchement_supervision"
+  log_retention_days: 1825
+  tamper_evidence: "sha256_chain"
+
+compliance_mapping:
+  ai_act:
+    classification: "high_risk_system"
+    annex: "Annex III, point 4"
+  gdpr:
+    dpia_required: true
+    dpia_reference: "<reference DPIA interne>"

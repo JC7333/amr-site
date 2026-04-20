@@ -1,0 +1,211 @@
+# AMR Mandate Template — Agent RH Recrutement
+# Version 1.0 — langue: fr — juridiction: FR-EU
+# Ce fichier est un gabarit. Les valeurs entre < > doivent être renseignees
+# par l'organisation qui emet le mandat avant chargement dans le registre AMR.
+
+metadata:
+  template_id: "amr-tpl-rh-recrutement-v1"
+  template_version: "1.0.0"
+  domain: "ressources-humaines"
+  subdomain: "recrutement-selection"
+  language: "fr"
+  jurisdiction: "FR-EU"
+  created_at: "2026-04-20"
+  reference_standards:
+    - "Regulation (EU) 2024/1689 — AI Act"
+    - "Regulation (EU) 2016/679 — GDPR"
+    - "Code du travail (France) — articles L.1221-6 a L.1221-9"
+
+principal:
+  type: "legal_entity"
+  legal_name: "<Raison sociale du mandant>"
+  registration:
+    country: "FR"
+    id_type: "SIREN"
+    id_value: "<SIREN 9 chiffres>"
+  representative:
+    name: "<Nom du representant habilite>"
+    role: "<Fonction — ex: DRH, Directeur juridique>"
+    email: "<email@entreprise.fr>"
+  legal_basis_gdpr:
+    article: "6(1)(f)"
+    description: "Interet legitime — gestion des candidatures et selection"
+    balancing_test_ref: "<reference interne du test de mise en balance>"
+
+agent:
+  agent_id: "<identifiant unique interne de l'agent>"
+  display_name: "<nom fonctionnel — ex: Assistant-Recrutement-Paris>"
+  provider: "<editeur ou equipe interne>"
+  model:
+    family: "<famille — ex: Claude, GPT, Mistral>"
+    version: "<version specifique deployee>"
+    hosted_in: "<zone d'hebergement — ex: EU-West>"
+  purpose: "Assister le recruteur humain dans le tri et la pre-qualification des candidatures, sans decision finale automatisee."
+
+scope:
+  business_processes:
+    - "tri_candidatures_entrantes"
+    - "extraction_informations_cv"
+    - "scoring_correspondance_poste"
+    - "redaction_messages_candidats"
+    - "planification_entretiens"
+  job_families_covered:
+    - "<liste explicite — ex: dev, support, commercial>"
+  geographic_scope:
+    - "FR"
+  excluded_processes:
+    - "decision_finale_embauche"
+    - "decision_finale_rejet"
+    - "negociation_remuneration"
+    - "evaluation_psychometrique_automatisee"
+
+permissions:
+  read:
+    - resource: "candidatures_ats"
+      max_volume_per_day: 500
+      fields_allowed:
+        - "nom"
+        - "prenom"
+        - "cv_texte"
+        - "experiences"
+        - "competences_declarees"
+        - "formations"
+      fields_forbidden:
+        - "photo"
+        - "date_naissance"
+        - "situation_familiale"
+        - "origine"
+        - "religion"
+        - "etat_sante"
+        - "orientation_sexuelle"
+        - "opinions_politiques"
+        - "appartenance_syndicale"
+  write:
+    - resource: "notes_internes_ats"
+      max_volume_per_day: 500
+    - resource: "messages_candidats_templates"
+      max_volume_per_day: 200
+      requires_human_approval: true
+  invoke:
+    - action: "programmer_entretien"
+      max_per_day: 30
+      requires_human_approval: true
+
+restrictions:
+  forbidden_actions:
+    - "rejeter_candidature_sans_revue_humaine"
+    - "publier_offre_emploi_sans_validation"
+    - "contacter_candidat_hors_canaux_autorises"
+    - "transferer_donnees_hors_UE"
+    - "entrainer_modele_tiers_sur_donnees_candidats"
+  prohibited_criteria:
+    description: >
+      L'agent ne peut utiliser aucun critere prohibe par l'article L.1132-1
+      du Code du travail ni par l'article 225-1 du Code penal (discriminations).
+    list:
+      - "age"
+      - "sexe"
+      - "origine"
+      - "situation_familiale"
+      - "apparence_physique"
+      - "patronyme"
+      - "etat_de_sante"
+      - "handicap"
+      - "opinions_politiques_syndicales_religieuses"
+
+data_access:
+  categories:
+    - label: "donnees_identite_candidat"
+      sensitivity: "personal"
+      gdpr_basis: "6(1)(f)"
+    - label: "donnees_professionnelles"
+      sensitivity: "personal"
+      gdpr_basis: "6(1)(f)"
+  special_categories_article_9: "non_autorise"
+  retention:
+    active_candidates_days: 90
+    passive_candidates_days: 730
+    justification: "Alignement avec recommandation CNIL sur la duree de conservation en recrutement — A VALIDER PAR JURISTE en fonction du referentiel applicable."
+  data_minimization: true
+  transfer_outside_eu: false
+
+human_oversight:
+  regime: "human_in_the_loop"
+  ai_act_reference: "Article 14"
+  mandatory_review_triggers:
+    - trigger: "envoi_message_candidat"
+      threshold: "tout_message_sortant"
+    - trigger: "rejet_candidature"
+      threshold: "toute_recommandation_de_rejet"
+    - trigger: "score_correspondance_inferieur"
+      threshold: 40
+      unit: "pourcentage"
+    - trigger: "volume_quotidien_traite"
+      threshold: 400
+      unit: "candidatures_par_jour"
+  reviewer_profile:
+    role: "recruteur_habilite"
+    training_required: true
+    training_topics:
+      - "biais_algorithmiques"
+      - "non_discrimination_recrutement"
+      - "RGPD_droits_candidats"
+
+expiration:
+  valid_from: "<AAAA-MM-JJ>"
+  valid_until: "<AAAA-MM-JJ — 12 mois maximum recommande>"
+  max_duration_months: 12
+  revocation:
+    immediate_triggers:
+      - "incident_de_securite_confirme"
+      - "plainte_candidat_recevable"
+      - "mise_a_jour_majeure_du_modele_llm"
+      - "changement_de_prestataire"
+    revocation_contacts:
+      - "<dpo@entreprise.fr>"
+      - "<drh@entreprise.fr>"
+
+audit_trail:
+  logged_events:
+    - "lecture_candidature"
+    - "production_score"
+    - "generation_message"
+    - "validation_humaine"
+    - "rejet_apres_validation"
+    - "declenchement_supervision"
+  log_retention_days: 1825
+  log_retention_justification: "5 ans — alignement avec duree de prescription en matiere de discrimination — A VALIDER PAR JURISTE."
+  log_access:
+    - "dpo"
+    - "drh"
+    - "audit_interne"
+    - "autorite_de_controle_sur_requisition"
+  tamper_evidence: "sha256_chain"
+
+compliance_mapping:
+  ai_act:
+    classification: "high_risk_system"
+    annex: "Annex III, point 4 — emploi, gestion de la main-d'oeuvre"
+    articles:
+      - "Article 12 — tenue de registres"
+      - "Article 13 — transparence vis-a-vis des utilisateurs"
+      - "Article 14 — supervision humaine"
+      - "Article 26 — obligations des deployeurs"
+  gdpr:
+    articles:
+      - "Article 6 — base legale"
+      - "Article 13 — information des personnes"
+      - "Article 22 — decision individuelle automatisee"
+      - "Article 35 — analyse d'impact"
+  national_law_fr:
+    - "Code du travail, article L.1132-1 — non-discrimination"
+    - "Code du travail, article L.1221-6 — pertinence des informations demandees"
+    - "Code du travail, article L.1221-8 — information du candidat"
+    - "Code du travail, article L.1221-9 — methodes et techniques d'evaluation"
+    - "Loi Informatique et Libertes, article 47 — controle humain sur decision"
+
+signature:
+  method: "<eIDAS qualifie | avance | interne>"
+  signed_at: "<AAAA-MM-JJ>"
+  signatory: "<nom et fonction>"
+  signature_ref: "<reference de la signature ou hash>"
