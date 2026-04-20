@@ -1,0 +1,120 @@
+# Exemple 02 — Mandat RESTRICTIF
+# Profil cible : premiere experimentation, PME/ETI sans DPO dedie,
+# secteur sensible (sante, public, defense). L'agent est cantonne
+# a des taches a faible autonomie, toute action sortante passe par
+# un humain. Volume faible, traces exhaustives.
+
+metadata:
+  template_id: "amr-tpl-rh-recrutement-v1"
+  profile: "restrictif"
+  language: "fr"
+  jurisdiction: "FR-EU"
+  created_at: "2026-04-20"
+
+principal:
+  type: "legal_entity"
+  legal_name: "Clinique du Lac SA"
+  registration:
+    country: "FR"
+    id_type: "SIREN"
+    id_value: "000000000"
+  representative:
+    name: "Responsable RH"
+    role: "RRH"
+    email: "rh@clinique.example"
+  legal_basis_gdpr:
+    article: "6(1)(f)"
+    description: "Interet legitime — pre-lecture des candidatures"
+
+agent:
+  agent_id: "clinique-rh-bot-01"
+  display_name: "Assistant-Lecture-CV"
+  provider: "prestataire externe certifie"
+  model:
+    family: "Claude"
+    version: "Haiku 4.5"
+    hosted_in: "EU-West"
+  purpose: "Extraction structuree d'informations a partir des CV recus, sans aucune production de message ni planification."
+
+scope:
+  business_processes:
+    # Un seul processus autorise : extraction brute.
+    - "extraction_informations_cv"
+  job_families_covered:
+    - "soignants"
+    - "administratif"
+  geographic_scope:
+    - "FR"
+  excluded_processes:
+    - "decision_finale_embauche"
+    - "decision_finale_rejet"
+    - "redaction_messages_candidats"
+    - "planification_entretiens"
+    - "scoring_correspondance_poste"
+
+permissions:
+  read:
+    - resource: "candidatures_ats"
+      # Volume bas — coherent avec un service RH de taille intermediaire.
+      max_volume_per_day: 50
+      fields_allowed:
+        - "nom"
+        - "prenom"
+        - "cv_texte"
+        - "experiences"
+        - "competences_declarees"
+        - "formations"
+      fields_forbidden:
+        - "photo"
+        - "date_naissance"
+        - "situation_familiale"
+        - "etat_sante"
+  write:
+    # Aucune ecriture autorisee en dehors d'un log interne.
+    - resource: "log_extraction"
+      max_volume_per_day: 50
+  invoke: []
+
+restrictions:
+  forbidden_actions:
+    - "rejeter_candidature_sans_revue_humaine"
+    - "generer_message_candidat"
+    - "programmer_entretien"
+    - "produire_score_automatique"
+    - "publier_offre_emploi"
+    - "transferer_donnees_hors_UE"
+
+human_oversight:
+  regime: "human_in_the_loop_strict"
+  # Chaque extraction produit une fiche qui n'est exploitable
+  # qu'apres validation humaine explicite.
+  ai_act_reference: "Article 14"
+  mandatory_review_triggers:
+    - trigger: "toute_extraction"
+      threshold: "systematique"
+  reviewer_profile:
+    role: "recruteur_habilite"
+    training_required: true
+
+expiration:
+  valid_from: "2026-05-01"
+  # Mandat court : reevalue tous les 3 mois pendant l'experimentation.
+  valid_until: "2026-07-31"
+  max_duration_months: 3
+
+audit_trail:
+  logged_events:
+    - "lecture_candidature"
+    - "extraction_produite"
+    - "validation_humaine"
+    - "rejet_apres_validation"
+  log_retention_days: 1825
+  tamper_evidence: "sha256_chain"
+
+compliance_mapping:
+  ai_act:
+    classification: "high_risk_system"
+    annex: "Annex III, point 4"
+  gdpr:
+    dpia_required: true
+    automated_decision_making_article_22: false
