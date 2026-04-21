@@ -1,0 +1,249 @@
+# AMR Mandate Template — Agent Support Client
+# Version 1.0 — langue: fr — juridiction: FR-EU
+# Ce fichier est un gabarit. Les valeurs entre < > doivent etre renseignees
+# par l'organisation qui emet le mandat avant chargement dans le registre AMR.
+
+metadata:
+  template_id: "amr-tpl-support-client-v1"
+  template_version: "1.0.0"
+  domain: "relation-client"
+  subdomain: "support-niveau-1"
+  language: "fr"
+  jurisdiction: "FR-EU"
+  created_at: "2026-04-21"
+  reference_standards:
+    - "Regulation (EU) 2024/1689 — AI Act (article 50 — transparence)"
+    - "Regulation (EU) 2016/679 — GDPR"
+    - "Code de la consommation (France) — articles L.121-1 et suivants"
+    - "Code civil (France) — article 1103 — force obligatoire du contrat"
+
+principal:
+  type: "legal_entity"
+  legal_name: "<Raison sociale du mandant>"
+  registration:
+    country: "FR"
+    id_type: "SIREN"
+    id_value: "<SIREN 9 chiffres>"
+  representative:
+    name: "<Nom du representant habilite>"
+    role: "<Fonction — ex: Directeur Relation Client, DPO>"
+    email: "<email@entreprise.fr>"
+  legal_basis_gdpr:
+    article: "6(1)(b)"
+    description: "Execution du contrat avec le client — traitement de sa demande"
+    alternative_basis:
+      article: "6(1)(f)"
+      description: "Interet legitime — amelioration du service — requiert test de mise en balance"
+
+agent:
+  agent_id: "<identifiant unique interne de l'agent>"
+  display_name: "<nom fonctionnel — ex: Assistant-Support-Marque>"
+  provider: "<editeur ou equipe interne>"
+  model:
+    family: "<famille — ex: Claude, GPT, Mistral>"
+    version: "<version specifique deployee>"
+    hosted_in: "<zone d'hebergement — ex: EU-West>"
+  purpose: "Traiter en premier niveau les demandes entrantes des clients, informer, escalader et executer des gestes commerciaux bornes, sans engagement hors plafond."
+  user_disclosure:
+    ai_act_article_50: true
+    disclosure_text_fr: "Vous echangez avec un assistant virtuel. Un conseiller humain peut prendre le relais a votre demande."
+    disclosure_channels:
+      - "chat_web"
+      - "email_automatique"
+      - "messagerie_instantanee"
+
+scope:
+  business_processes:
+    - "reponse_questions_faq"
+    - "qualification_demande_entrante"
+    - "consultation_historique_client"
+    - "mise_a_jour_donnees_non_sensibles"
+    - "geste_commercial_borne"
+    - "escalade_vers_humain"
+  product_perimeter:
+    - "<lignes de produit couvertes — ex: abonnement_standard, abonnement_premium>"
+  geographic_scope:
+    - "FR"
+  languages_supported:
+    - "fr"
+  excluded_processes:
+    - "resiliation_contractuelle"
+    - "modification_donnees_bancaires"
+    - "reclamation_contentieuse"
+    - "demande_exercice_droits_rgpd"
+    - "plainte_pour_discrimination"
+    - "signalement_vulnerabilite_mineur"
+
+permissions:
+  read:
+    - resource: "historique_client"
+      max_volume_per_day: 2000
+      fields_allowed:
+        - "identifiant_client"
+        - "nom"
+        - "prenom"
+        - "adresse_postale"
+        - "historique_commandes"
+        - "statut_abonnement"
+        - "tickets_anterieurs_resume"
+      fields_forbidden:
+        - "numero_carte_bancaire"
+        - "iban_complet"
+        - "mot_de_passe"
+        - "donnees_sante"
+        - "opinions_politiques_religieuses"
+  write:
+    - resource: "notes_internes_ticket"
+      max_volume_per_day: 2000
+    - resource: "reponse_client"
+      max_volume_per_day: 1500
+      max_tokens_per_response: 1200
+    - resource: "mise_a_jour_donnees_non_sensibles"
+      fields_allowed:
+        - "adresse_livraison"
+        - "telephone_secondaire"
+        - "preferences_communication"
+      max_volume_per_day: 200
+      requires_authentication: true
+  invoke:
+    - action: "emettre_avoir"
+      max_amount_eur: 30
+      max_per_customer_per_year: 2
+      max_per_day_global: 50
+      requires_human_approval_above_threshold: true
+    - action: "emettre_remboursement"
+      max_amount_eur: 30
+      max_per_customer_per_year: 2
+      max_per_day_global: 30
+      requires_human_approval_above_threshold: true
+    - action: "creer_ticket_escalade_niveau_2"
+      max_per_day: 500
+
+restrictions:
+  forbidden_actions:
+    - "promettre_delai_hors_cgv"
+    - "promettre_remboursement_hors_plafond"
+    - "resilier_contrat"
+    - "modifier_donnees_bancaires"
+    - "acceder_cartes_bancaires_en_clair"
+    - "transferer_donnees_hors_UE"
+    - "entrainer_modele_tiers_sur_conversations_clients"
+    - "usurper_identite_conseiller_humain"
+  prohibited_behaviours:
+    description: >
+      L'agent ne peut nier son statut d'agent IA si le client pose la question.
+      Le refus de divulgation constitue une pratique commerciale trompeuse
+      (Code de la consommation, article L.121-2) et un manquement a l'article 50
+      du Reglement (UE) 2024/1689.
+    explicit_rules:
+      - "repondre_honnetement_si_question_suis-je_un_humain"
+      - "proposer_escalade_humain_a_la_demande"
+      - "ne_pas_simuler_emotion_forte_pour_dissuader_escalade"
+
+data_access:
+  categories:
+    - label: "donnees_identite_client"
+      sensitivity: "personal"
+      gdpr_basis: "6(1)(b)"
+    - label: "donnees_contractuelles"
+      sensitivity: "personal"
+      gdpr_basis: "6(1)(b)"
+    - label: "contenu_conversation"
+      sensitivity: "personal"
+      gdpr_basis: "6(1)(b)"
+  special_categories_article_9: "non_autorise"
+  retention:
+    active_ticket_days: 90
+    closed_ticket_days: 1095
+    justification: "3 ans — alignement avec la prescription commerciale de droit commun, article 2224 du Code civil. A VALIDER PAR JURISTE selon le secteur."
+  data_minimization: true
+  transfer_outside_eu: false
+
+human_oversight:
+  regime: "human_on_the_loop"
+  ai_act_reference: "Article 14 (principe general) + Article 50 (transparence)"
+  mandatory_escalation_triggers:
+    - trigger: "demande_remboursement_au_dessus_plafond"
+      threshold: 30
+      unit: "euros"
+    - trigger: "client_manifeste_detresse"
+      threshold: "mot_cle_detecte_ou_sentiment_critique"
+    - trigger: "reclamation_ecrite_qualifiee"
+      threshold: "toute_reclamation_formelle"
+    - trigger: "demande_exercice_droits_rgpd"
+      threshold: "toute_demande"
+    - trigger: "conversation_depasse_echanges"
+      threshold: 8
+      unit: "tours_sans_resolution"
+  sampling_review:
+    frequency: "quotidien"
+    sample_size_percent: 2
+    reviewer_role: "superviseur_niveau_2"
+  reviewer_profile:
+    role: "conseiller_niveau_2_habilite"
+    training_required: true
+    training_topics:
+      - "limites_de_l_agent"
+      - "reconnaissance_situation_vulnerable"
+      - "RGPD_droits_personnes"
+      - "code_de_la_consommation_essentiel"
+
+expiration:
+  valid_from: "<AAAA-MM-JJ>"
+  valid_until: "<AAAA-MM-JJ — 12 mois maximum recommande>"
+  max_duration_months: 12
+  revocation:
+    immediate_triggers:
+      - "incident_de_securite_confirme"
+      - "reclamation_collective"
+      - "mise_a_jour_majeure_du_modele_llm"
+      - "changement_de_cgv"
+      - "changement_de_prestataire_hebergement"
+    revocation_contacts:
+      - "<dpo@entreprise.fr>"
+      - "<direction-relation-client@entreprise.fr>"
+
+audit_trail:
+  logged_events:
+    - "ouverture_conversation"
+    - "disclosure_ai_act_article_50_affichee"
+    - "lecture_historique_client"
+    - "generation_reponse"
+    - "geste_commercial_emis"
+    - "escalade_humaine"
+    - "cloture_ticket"
+  log_retention_days: 1095
+  log_retention_justification: "3 ans — alignement prescription commerciale (article 2224 Code civil). A VALIDER PAR JURISTE."
+  log_access:
+    - "dpo"
+    - "direction_relation_client"
+    - "audit_interne"
+    - "autorite_de_controle_sur_requisition"
+  tamper_evidence: "sha256_chain"
+
+compliance_mapping:
+  ai_act:
+    classification: "limited_risk_transparency_obligation"
+    annex: "non_applicable_annex_III"
+    articles:
+      - "Article 50 — transparence vis-a-vis des personnes physiques"
+      - "Article 99, paragraphe 4 — sanctions manquement article 50"
+  gdpr:
+    articles:
+      - "Article 6 — base legale (execution du contrat)"
+      - "Article 5(1)(c) — minimisation"
+      - "Article 5(1)(e) — limitation de conservation"
+      - "Article 13 — information des personnes"
+      - "Article 32 — securite du traitement"
+  national_law_fr:
+    - "Code civil, article 1103 — force obligatoire du contrat"
+    - "Code civil, article 2224 — prescription commerciale"
+    - "Code de la consommation, article L.121-1 — pratiques commerciales deloyales"
+    - "Code de la consommation, article L.121-2 — pratiques trompeuses"
+    - "Code de la consommation, article L.221-18 — droit de retractation"
+
+signature:
+  method: "<eIDAS qualifie | avance | interne>"
+  signed_at: "<AAAA-MM-JJ>"
+  signatory: "<nom et fonction>"
+  signature_ref: "<reference de la signature ou hash>"

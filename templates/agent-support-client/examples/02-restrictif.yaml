@@ -1,0 +1,147 @@
+# Exemple 02 — Mandat RESTRICTIF
+# Profil cible : secteur regule ou sensible (assurance, banque,
+# sante non-HDS, telecoms avec clients vulnerables), premier deploiement,
+# tolerance a la derive quasi nulle.
+#
+# L'agent informe, oriente, rassure. Il n'engage pas l'entreprise
+# financierement. Tout geste commercial passe par un humain.
+
+metadata:
+  template_id: "amr-tpl-support-client-v1"
+  profile: "restrictif"
+  language: "fr"
+  jurisdiction: "FR-EU"
+  created_at: "2026-04-21"
+
+principal:
+  type: "legal_entity"
+  legal_name: "Mutuelle Prudente SA"
+  registration:
+    country: "FR"
+    id_type: "SIREN"
+    id_value: "000000000"
+  representative:
+    name: "Directeur Relation Adherents"
+    role: "DRA"
+    email: "dra@mutuelle.example"
+  legal_basis_gdpr:
+    article: "6(1)(b)"
+    description: "Execution du contrat d'adhesion"
+
+agent:
+  agent_id: "mutuelle-support-bot-01"
+  display_name: "Assistant-Information-Adherents"
+  provider: "editeur tiers"
+  model:
+    family: "Mistral"
+    version: "Large 2506"
+    hosted_in: "EU-West"
+  purpose: "Repondre aux questions d'information generales des adherents, orienter vers un conseiller humain pour toute demande contractuelle ou financiere."
+  user_disclosure:
+    ai_act_article_50: true
+    # Formulation renforcee : mentionne la limite d'autonomie de l'agent.
+    disclosure_text_fr: "Vous echangez avec un assistant virtuel d'information. Toute demande contractuelle, financiere ou personnelle est transmise a un conseiller humain."
+    disclosure_channels:
+      - "chat_web"
+      - "email_automatique"
+
+scope:
+  business_processes:
+    - "reponse_questions_faq"
+    - "orientation_vers_service"
+    - "escalade_vers_humain"
+  product_perimeter:
+    - "information_generale"
+  geographic_scope:
+    - "FR"
+  languages_supported:
+    - "fr"
+  excluded_processes:
+    - "resiliation_contractuelle"
+    - "modification_donnees_bancaires"
+    - "geste_commercial"
+    - "mise_a_jour_donnees_client"
+    - "consultation_dossier_medical"
+    - "consultation_contrat_individualise"
+
+permissions:
+  read:
+    - resource: "base_connaissance_publique"
+      max_volume_per_day: 1000
+      fields_allowed:
+        - "articles_faq"
+        - "documents_publics"
+      # Aucune lecture de donnees adherent nominatives.
+  write:
+    - resource: "reponse_client"
+      max_volume_per_day: 800
+      max_tokens_per_response: 600
+  invoke:
+    - action: "creer_ticket_escalade_niveau_2"
+      max_per_day: 500
+    # Aucune action financiere autorisee.
+
+restrictions:
+  forbidden_actions:
+    - "promettre_delai_hors_cgv"
+    - "promettre_remboursement_hors_plafond"
+    - "emettre_avoir"
+    - "emettre_remboursement"
+    - "resilier_contrat"
+    - "modifier_donnees_bancaires"
+    - "acceder_donnees_sante_article_9"
+    - "acceder_donnees_financieres_individuelles"
+    - "transferer_donnees_hors_UE"
+    - "entrainer_modele_tiers_sur_conversations"
+    - "usurper_identite_conseiller_humain"
+
+human_oversight:
+  regime: "human_in_the_loop"
+  # "in_the_loop" : chaque reponse sortante est verifiee avant envoi
+  # pendant la phase de pilote (3 mois). Ensuite bascule possible
+  # vers "on_the_loop" sur decision du comite de conformite.
+  ai_act_reference: "Article 14 + Article 50"
+  pilot_mode_duration_months: 3
+  mandatory_escalation_triggers:
+    - trigger: "toute_demande_contractuelle"
+      threshold: "immediate"
+    - trigger: "toute_demande_financiere"
+      threshold: "immediate"
+    - trigger: "client_manifeste_detresse"
+      threshold: "mot_cle_detecte_ou_sentiment_critique"
+    - trigger: "demande_exercice_droits_rgpd"
+      threshold: "toute_demande"
+  reviewer_profile:
+    role: "conseiller_senior_habilite"
+    training_required: true
+
+expiration:
+  valid_from: "2026-05-01"
+  # Duree courte — le profil restrictif est souvent un pilote.
+  valid_until: "2026-10-31"
+  max_duration_months: 6
+  revocation:
+    immediate_triggers:
+      - "premier_incident_public"
+      - "mise_a_jour_majeure_du_modele_llm"
+
+audit_trail:
+  logged_events:
+    - "ouverture_conversation"
+    - "disclosure_ai_act_article_50_affichee"
+    - "generation_reponse"
+    - "revue_humaine_avant_envoi"
+    - "escalade_humaine"
+    - "cloture_ticket"
+  log_retention_days: 1825
+  # Retention allongee a 5 ans en secteur assurance — a confirmer
+  # selon les recommandations de l'ACPR et de la CNIL applicables.
+  tamper_evidence: "sha256_chain"
+
+compliance_mapping:
+  ai_act:
+    classification: "limited_risk_transparency_obligation"
+    annex: "non_applicable_annex_III"
+  gdpr:
+    dpia_required: false
+    dpia_justification: "Pas de donnees article 9 traitees, pas de decision automatisee produisant des effets juridiques. A reevaluer si evolution du perimetre."
