@@ -1,0 +1,137 @@
+# Exemple 01 — Mandat PERMISSIF
+# Profil cible : e-commerce mature, volumes eleves, plafonds financiers
+# un peu plus larges, supervision humaine par echantillonnage statistique.
+#
+# "Permissif" ne veut pas dire "sans garde-fou". Les obligations de
+# transparence (AI Act article 50) et d'information (RGPD article 13)
+# restent integrales. Ce sont les volumes et les plafonds qui sont elargis.
+
+metadata:
+  template_id: "amr-tpl-support-client-v1"
+  profile: "permissif"
+  language: "fr"
+  jurisdiction: "FR-EU"
+  created_at: "2026-04-21"
+
+principal:
+  type: "legal_entity"
+  legal_name: "ACME Retail SAS"
+  registration:
+    country: "FR"
+    id_type: "SIREN"
+    id_value: "000000000"
+  representative:
+    name: "Directrice Relation Client"
+    role: "DRC"
+    email: "drc@acme.example"
+  legal_basis_gdpr:
+    article: "6(1)(b)"
+    description: "Execution du contrat client"
+
+agent:
+  agent_id: "acme-support-bot-01"
+  display_name: "Assistant-Support-Groupe"
+  provider: "equipe interne IT"
+  model:
+    family: "Claude"
+    version: "Sonnet 4.6"
+    hosted_in: "EU-West"
+  purpose: "Support niveau 1 en volume, avec gestes commerciaux bornes."
+  user_disclosure:
+    ai_act_article_50: true
+    # Disclosure systematique, affichee en debut de chaque conversation.
+    disclosure_text_fr: "Vous echangez avec l'assistant virtuel ACME. Tapez 'humain' a tout moment pour etre mis en relation avec un conseiller."
+    disclosure_channels:
+      - "chat_web"
+      - "email_automatique"
+      - "messagerie_instantanee"
+
+scope:
+  business_processes:
+    - "reponse_questions_faq"
+    - "qualification_demande_entrante"
+    - "consultation_historique_client"
+    - "mise_a_jour_donnees_non_sensibles"
+    - "geste_commercial_borne"
+    - "escalade_vers_humain"
+  product_perimeter:
+    - "abonnement_standard"
+    - "abonnement_premium"
+    - "vente_unitaire"
+  geographic_scope:
+    - "FR"
+    - "BE"
+    - "LU"
+  languages_supported:
+    - "fr"
+  excluded_processes:
+    - "resiliation_contractuelle"
+    - "modification_donnees_bancaires"
+
+permissions:
+  read:
+    - resource: "historique_client"
+      # Volume eleve — site grand public.
+      max_volume_per_day: 8000
+  write:
+    - resource: "reponse_client"
+      max_volume_per_day: 6000
+      max_tokens_per_response: 1500
+  invoke:
+    - action: "emettre_avoir"
+      # Plafond releve a 50 euros en profil permissif.
+      max_amount_eur: 50
+      max_per_customer_per_year: 3
+      max_per_day_global: 200
+      requires_human_approval_above_threshold: true
+    - action: "emettre_remboursement"
+      max_amount_eur: 50
+      max_per_customer_per_year: 3
+      max_per_day_global: 150
+      requires_human_approval_above_threshold: true
+
+restrictions:
+  forbidden_actions:
+    - "promettre_delai_hors_cgv"
+    - "resilier_contrat"
+    - "modifier_donnees_bancaires"
+
+human_oversight:
+  regime: "human_on_the_loop"
+  ai_act_reference: "Article 50"
+  # Supervision par echantillonnage plutot qu'a chaque interaction.
+  sampling_review:
+    frequency: "quotidien"
+    sample_size_percent: 3
+    reviewer_role: "superviseur_niveau_2"
+  mandatory_escalation_triggers:
+    - trigger: "demande_remboursement_au_dessus_plafond"
+      threshold: 50
+      unit: "euros"
+    - trigger: "client_manifeste_detresse"
+      threshold: "mot_cle_detecte"
+    - trigger: "demande_exercice_droits_rgpd"
+      threshold: "toute_demande"
+
+expiration:
+  valid_from: "2026-05-01"
+  valid_until: "2027-04-30"
+  max_duration_months: 12
+
+audit_trail:
+  logged_events:
+    - "ouverture_conversation"
+    - "disclosure_ai_act_article_50_affichee"
+    - "generation_reponse"
+    - "geste_commercial_emis"
+    - "escalade_humaine"
+  log_retention_days: 1095
+  tamper_evidence: "sha256_chain"
+
+compliance_mapping:
+  ai_act:
+    classification: "limited_risk_transparency_obligation"
+    annex: "non_applicable_annex_III"
+  gdpr:
+    dpia_required: false
+    # Pas de DPIA requise a priori, mais a reevaluer selon volumes et finalites.

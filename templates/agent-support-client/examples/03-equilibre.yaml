@@ -1,0 +1,144 @@
+# Exemple 03 — Mandat EQUILIBRE
+# Profil cible : ETI deja equipee d'un outil de ticketing, volumes
+# moyens, premier deploiement "en vraie grandeur" apres un pilote.
+#
+# Cet exemple reprend les valeurs du gabarit de base. C'est le profil
+# de depart recommande pour la plupart des deploiements.
+
+metadata:
+  template_id: "amr-tpl-support-client-v1"
+  profile: "equilibre"
+  language: "fr"
+  jurisdiction: "FR-EU"
+  created_at: "2026-04-21"
+
+principal:
+  type: "legal_entity"
+  legal_name: "Entreprise Exemple SAS"
+  registration:
+    country: "FR"
+    id_type: "SIREN"
+    id_value: "000000000"
+  representative:
+    name: "Responsable Relation Client"
+    role: "RRC"
+    email: "rrc@entreprise.example"
+  legal_basis_gdpr:
+    article: "6(1)(b)"
+    description: "Execution du contrat client"
+
+agent:
+  agent_id: "entreprise-support-bot-01"
+  display_name: "Assistant-Support-France"
+  provider: "editeur tiers"
+  model:
+    family: "Claude"
+    version: "Sonnet 4.6"
+    hosted_in: "EU-West"
+  purpose: "Support niveau 1, gestes commerciaux bornes, escalade systematique au-dela des seuils."
+  user_disclosure:
+    ai_act_article_50: true
+    disclosure_text_fr: "Vous echangez avec un assistant virtuel. Un conseiller humain peut prendre le relais a votre demande ou au-dela de certains seuils."
+    disclosure_channels:
+      - "chat_web"
+      - "email_automatique"
+
+scope:
+  business_processes:
+    - "reponse_questions_faq"
+    - "qualification_demande_entrante"
+    - "consultation_historique_client"
+    - "mise_a_jour_donnees_non_sensibles"
+    - "geste_commercial_borne"
+    - "escalade_vers_humain"
+  product_perimeter:
+    - "abonnement_standard"
+    - "vente_unitaire"
+  geographic_scope:
+    - "FR"
+  languages_supported:
+    - "fr"
+  excluded_processes:
+    - "resiliation_contractuelle"
+    - "modification_donnees_bancaires"
+    - "reclamation_contentieuse"
+
+permissions:
+  read:
+    - resource: "historique_client"
+      max_volume_per_day: 2000
+  write:
+    - resource: "reponse_client"
+      max_volume_per_day: 1500
+      max_tokens_per_response: 1200
+    - resource: "mise_a_jour_donnees_non_sensibles"
+      fields_allowed:
+        - "adresse_livraison"
+        - "telephone_secondaire"
+        - "preferences_communication"
+      max_volume_per_day: 200
+      requires_authentication: true
+  invoke:
+    - action: "emettre_avoir"
+      max_amount_eur: 30
+      max_per_customer_per_year: 2
+      max_per_day_global: 50
+      requires_human_approval_above_threshold: true
+    - action: "emettre_remboursement"
+      max_amount_eur: 30
+      max_per_customer_per_year: 2
+      max_per_day_global: 30
+      requires_human_approval_above_threshold: true
+
+restrictions:
+  forbidden_actions:
+    - "promettre_delai_hors_cgv"
+    - "promettre_remboursement_hors_plafond"
+    - "resilier_contrat"
+    - "modifier_donnees_bancaires"
+    - "transferer_donnees_hors_UE"
+    - "usurper_identite_conseiller_humain"
+
+human_oversight:
+  regime: "human_on_the_loop"
+  ai_act_reference: "Article 14 + Article 50"
+  mandatory_escalation_triggers:
+    - trigger: "demande_remboursement_au_dessus_plafond"
+      threshold: 30
+      unit: "euros"
+    - trigger: "client_manifeste_detresse"
+      threshold: "mot_cle_detecte_ou_sentiment_critique"
+    - trigger: "demande_exercice_droits_rgpd"
+      threshold: "toute_demande"
+    - trigger: "conversation_depasse_echanges"
+      threshold: 8
+      unit: "tours_sans_resolution"
+  sampling_review:
+    frequency: "quotidien"
+    sample_size_percent: 2
+    reviewer_role: "superviseur_niveau_2"
+
+expiration:
+  valid_from: "2026-05-01"
+  valid_until: "2027-04-30"
+  max_duration_months: 12
+
+audit_trail:
+  logged_events:
+    - "ouverture_conversation"
+    - "disclosure_ai_act_article_50_affichee"
+    - "lecture_historique_client"
+    - "generation_reponse"
+    - "geste_commercial_emis"
+    - "escalade_humaine"
+    - "cloture_ticket"
+  log_retention_days: 1095
+  tamper_evidence: "sha256_chain"
+
+compliance_mapping:
+  ai_act:
+    classification: "limited_risk_transparency_obligation"
+    annex: "non_applicable_annex_III"
+  gdpr:
+    dpia_required: false
+    dpia_justification: "A reevaluer si le perimetre evolue vers des decisions produisant des effets juridiques."
