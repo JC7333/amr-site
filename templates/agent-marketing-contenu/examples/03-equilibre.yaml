@@ -1,0 +1,75 @@
+# Exemple EQUILIBRE — Agent Marketing & Contenu
+# Profil: ETI B2B SaaS, equipe marketing structuree mais petite,
+# usage quotidien sur un perimetre defini, validation par
+# echantillonnage statistique en plus de la validation editoriale
+# par defaut. Profil par defaut recommande pour la plupart des deploiements.
+
+metadata:
+  template_id: "amr-tpl-marketing-contenu-v1"
+  profile: "equilibre"
+  language: "fr"
+  jurisdiction: "FR-EU"
+
+principal:
+  legal_name: "Acme Software SAS"
+  representative:
+    role: "Head of Marketing"
+
+agent:
+  display_name: "Editorial-Assistant-Standard"
+  purpose: "Production quotidienne de brouillons editoriaux et variantes pour validation par l'equipe marketing avant publication."
+  output_marking:
+    ai_act_article_50_paragraph_4: true
+    marking_rule: "Marquage C2PA systematique. Mention humaine visible appliquee selon la nature du contenu (article long: oui ; post court reformule: non, mais traçabilite interne)."
+
+scope:
+  business_processes:
+    - "generation_post_reseaux_sociaux"
+    - "redaction_article_blog"
+    - "redaction_email_marketing"
+    - "optimisation_seo_page_existante"
+    - "brief_creatif_pour_designer"
+    - "recyclage_asset_existant"
+  channels_authorized:
+    - "linkedin"
+    - "blog_corporate"
+    - "newsletter_opt_in"
+    - "site_web_public"
+
+permissions:
+  write:
+    - resource: "brouillon_contenu_a_valider"
+      max_volume_per_day: 80
+      max_tokens_per_output: 3000
+    - resource: "variante_post_social"
+      max_volume_per_day: 40
+      max_tokens_per_output: 600
+    - resource: "brief_creatif_interne"
+      max_volume_per_day: 20
+  invoke:
+    # Aucune publication directe. Tous les brouillons partent dans le CMS
+    # en statut "draft" pour validation par un humain.
+    - action: "publier_post_social"
+      max_per_day: 0
+      requires_human_approval: true
+    - action: "envoyer_campagne_email"
+      max_per_day: 0
+      requires_human_approval: true
+    - action: "soumettre_brouillon_au_cms"
+      max_per_day: 30
+      requires_human_approval: true
+      approval_role: "responsable_editorial"
+    - action: "demander_visuel_au_studio"
+      max_per_day: 10
+
+human_oversight:
+  regime: "human_in_the_loop"
+  # Validation systematique au moment de la publication
+  # + revue par echantillonnage statistique pour detection de derive.
+  sampling_review:
+    frequency: "hebdomadaire"
+    sample_size_percent: 10
+    reviewer_role: "responsable_editorial"
+
+expiration:
+  max_duration_months: 12

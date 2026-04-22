@@ -1,0 +1,81 @@
+# Exemple RESTRICTIF — Agent Marketing & Contenu
+# Profil: secteur regule (banque, assurance, sante, defense),
+# premier deploiement, faible appetit au risque de marque,
+# sortie a chaque etape revue manuellement avant tout transfert.
+# A reserver pour pilote initial ou contexte sensible.
+
+metadata:
+  template_id: "amr-tpl-marketing-contenu-v1"
+  profile: "restrictif"
+  language: "fr"
+  jurisdiction: "FR-EU"
+
+principal:
+  legal_name: "Banque Exemple SA"
+  representative:
+    role: "Directeur Communication et Conformite"
+  legal_basis_gdpr:
+    article: "6(1)(a)"
+    description: "Consentement obligatoire — secteur banque, prospection electronique B2C requiert opt-in (article L.34-5 CPCE)"
+
+agent:
+  display_name: "Editorial-Assistant-Pilote"
+  purpose: "Production restreinte de brouillons, soumission unique a un comite editorial elargi avant tout usage."
+  output_marking:
+    ai_act_article_50_paragraph_4: true
+    marking_rule: "Marquage C2PA + mention humaine visible obligatoire. Filigrane visible sur tout visuel."
+
+scope:
+  business_processes:
+    # Perimetre volontairement etroit.
+    - "redaction_article_blog"
+    - "optimisation_seo_page_existante"
+    - "traduction_contenu_existant"
+  channels_authorized:
+    - "blog_corporate"
+    - "site_web_public"
+  excluded_processes:
+    # En plus des exclusions du gabarit, on ajoute :
+    - "publication_directe_sans_validation_humaine"
+    - "envoi_email_a_liste_non_opt_in"
+    - "generation_image_personne_identifiable_sans_consentement"
+    - "generation_voix_synthese_personne_identifiable"
+    - "communication_de_crise"
+    - "communication_resultats_financiers_societe_cotee"
+    - "prise_de_position_politique_ou_religieuse"
+    - "comparaison_nominative_avec_concurrent"
+    - "production_post_reseaux_sociaux"
+    - "production_email_marketing"
+    - "claim_chiffre_meme_source_interne"
+    - "evocation_produit_d_investissement"
+    - "evocation_taux_ou_rendement"
+
+permissions:
+  write:
+    - resource: "brouillon_contenu_a_valider"
+      max_volume_per_day: 20
+      max_tokens_per_output: 2000
+  invoke:
+    - action: "soumettre_brouillon_au_cms"
+      max_per_day: 5
+      requires_human_approval: true
+      # Validation a deux niveaux pour secteurs regules.
+      approval_role: "comite_editorial_et_conformite"
+      dual_approval: true
+
+human_oversight:
+  regime: "human_in_the_loop"
+  # 100% des sorties revues, conformement aux recommandations
+  # ACPR 2023-R-01 sur la gouvernance des algorithmes (secteur banque).
+  sampling_review:
+    frequency: "par_sortie"
+    sample_size_percent: 100
+    reviewer_role: "comite_editorial_et_conformite"
+
+expiration:
+  # Duree courte pour reevaluation rapide en phase pilote.
+  max_duration_months: 3
+
+audit_trail:
+  log_retention_days: 1825
+  log_retention_justification: "5 ans — secteur banque, prescription contentieux DGCCRF + ACPR."
