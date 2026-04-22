@@ -1,0 +1,75 @@
+# Exemple PERMISSIF — Agent Marketing & Contenu
+# Profil: equipe editoriale mature, charte stricte deja en place,
+# responsable editorial dedie a la revue. Volumes eleves, soumission
+# directe au CMS comme brouillon (jamais publication directe).
+# A reserver aux organisations ayant un niveau de maturite eleve.
+
+metadata:
+  template_id: "amr-tpl-marketing-contenu-v1"
+  profile: "permissif"
+  language: "fr"
+  jurisdiction: "FR-EU"
+
+principal:
+  legal_name: "Acme Media SA"
+  representative:
+    role: "Directrice Editoriale"
+
+agent:
+  display_name: "Editorial-Assistant-Pro"
+  purpose: "Production a haut volume de brouillons editoriaux pour validation par redacteurs en chef."
+  output_marking:
+    ai_act_article_50_paragraph_4: true
+    marking_rule: "Marquage C2PA systematique sur tout brouillon. Mention humaine visible ajoutee a la publication par le redacteur en chef."
+
+scope:
+  business_processes:
+    - "generation_post_reseaux_sociaux"
+    - "redaction_article_blog"
+    - "redaction_email_marketing"
+    - "optimisation_seo_page_existante"
+    - "brief_creatif_pour_designer"
+    - "recyclage_asset_existant"
+    - "traduction_contenu_existant"
+  channels_authorized:
+    - "linkedin"
+    - "instagram"
+    - "x_twitter"
+    - "blog_corporate"
+    - "newsletter_opt_in"
+    - "site_web_public"
+
+permissions:
+  write:
+    # Volume eleve, mais aucune publication directe.
+    - resource: "brouillon_contenu_a_valider"
+      max_volume_per_day: 500
+      max_tokens_per_output: 4000
+    - resource: "variante_post_social"
+      max_volume_per_day: 300
+      max_tokens_per_output: 600
+  invoke:
+    # CRITIQUE : meme en profil permissif, aucune publication directe.
+    # L'agent ne peut que SOUMETTRE comme brouillon.
+    - action: "publier_post_social"
+      max_per_day: 0
+      requires_human_approval: true
+    - action: "envoyer_campagne_email"
+      max_per_day: 0
+      requires_human_approval: true
+    - action: "soumettre_brouillon_au_cms"
+      max_per_day: 100
+      requires_human_approval: true
+      approval_role: "redacteur_en_chef"
+
+human_oversight:
+  regime: "human_in_the_loop"
+  # Revue par echantillonnage statistique haute frequence,
+  # validation systematique au moment de la publication.
+  sampling_review:
+    frequency: "quotidien"
+    sample_size_percent: 20
+    reviewer_role: "responsable_editorial"
+
+expiration:
+  max_duration_months: 12

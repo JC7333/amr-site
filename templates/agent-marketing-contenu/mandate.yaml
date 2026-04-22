@@ -1,0 +1,301 @@
+# AMR Mandate Template — Agent Marketing & Contenu
+# Version 1.0 — langue: fr — juridiction: FR-EU
+# Ce fichier est un gabarit. Les valeurs entre < > doivent etre renseignees
+# par l'organisation qui emet le mandat avant chargement dans le registre AMR.
+
+metadata:
+  template_id: "amr-tpl-marketing-contenu-v1"
+  template_version: "1.0.0"
+  domain: "marketing-communication"
+  subdomain: "production-contenu-editorial"
+  language: "fr"
+  jurisdiction: "FR-EU"
+  created_at: "2026-04-22"
+  reference_standards:
+    - "Regulation (EU) 2024/1689 — AI Act (article 50 — transparence et marquage)"
+    - "Regulation (EU) 2016/679 — GDPR"
+    - "Regulation (EU) 2022/2065 — Digital Services Act"
+    - "Code de la propriete intellectuelle (France) — articles L.122-4, L.122-5, L.335-2"
+    - "Code de la consommation (France) — articles L.121-1 a L.121-5, L.132-2"
+    - "Loi n. 2004-575 du 21 juin 2004 (LCEN) — article 6"
+
+principal:
+  type: "legal_entity"
+  legal_name: "<Raison sociale du mandant>"
+  registration:
+    country: "FR"
+    id_type: "SIREN"
+    id_value: "<SIREN 9 chiffres>"
+  representative:
+    name: "<Nom du representant habilite>"
+    role: "<Fonction — ex: Directeur Marketing, Directeur Communication>"
+    email: "<email@entreprise.fr>"
+  legal_basis_gdpr:
+    article: "6(1)(f)"
+    description: "Interet legitime — communication commerciale a destination de prospects et clients existants — requiert test de mise en balance documente"
+    alternative_basis:
+      article: "6(1)(a)"
+      description: "Consentement — requis pour la prospection electronique B2C, article L.34-5 du Code des postes et communications electroniques"
+
+agent:
+  agent_id: "<identifiant unique interne de l'agent>"
+  display_name: "<nom fonctionnel — ex: Assistant-Editorial-Marque>"
+  provider: "<editeur ou equipe interne>"
+  model:
+    family: "<famille — ex: Claude, GPT, Mistral>"
+    version: "<version specifique deployee>"
+    hosted_in: "<zone d'hebergement — ex: EU-West>"
+  purpose: "Produire des contenus editoriaux, des variantes de posts sociaux, des sequences email et des optimisations SEO, sans publier ni envoyer sans validation humaine au-dela des seuils definis."
+  output_marking:
+    ai_act_article_50_paragraph_4: true
+    marking_rule: "Tout contenu genere ou substantiellement modifie par l'agent porte une mention machine-readable (metadonnee C2PA ou equivalente) et, lorsque le contexte editorial l'exige, une mention humaine visible."
+  user_disclosure:
+    ai_act_article_50_paragraph_1: true
+    disclosure_text_fr: "Cette interaction est assistee par une intelligence artificielle. Vous pouvez demander a echanger avec un membre de l'equipe."
+    disclosure_channels:
+      - "chatbot_site_public"
+      - "formulaire_intelligent"
+      - "assistant_editorial_externe"
+
+scope:
+  business_processes:
+    - "generation_post_reseaux_sociaux"
+    - "redaction_article_blog"
+    - "redaction_email_marketing"
+    - "optimisation_seo_page_existante"
+    - "brief_creatif_pour_designer"
+    - "recyclage_asset_existant"
+    - "traduction_contenu_existant"
+  channels_authorized:
+    - "linkedin"
+    - "instagram"
+    - "x_twitter"
+    - "blog_corporate"
+    - "newsletter_opt_in"
+    - "site_web_public"
+  geographic_scope:
+    - "FR"
+    - "EU"
+  languages_supported:
+    - "fr"
+    - "en"
+  excluded_processes:
+    - "publication_directe_sans_validation_humaine"
+    - "envoi_email_a_liste_non_opt_in"
+    - "generation_image_personne_identifiable_sans_consentement"
+    - "generation_voix_synthese_personne_identifiable"
+    - "communication_de_crise"
+    - "communication_resultats_financiers_societe_cotee"
+    - "prise_de_position_politique_ou_religieuse"
+    - "comparaison_nominative_avec_concurrent"
+
+permissions:
+  read:
+    - resource: "bibliotheque_assets_internes"
+      max_volume_per_day: 5000
+      fields_allowed:
+        - "texte_marketing_valide"
+        - "image_libre_de_droits_internes"
+        - "fiche_produit_publiee"
+        - "etude_de_cas_validee"
+        - "charte_editoriale"
+        - "guide_de_marque"
+      fields_forbidden:
+        - "donnees_clients_nominatives"
+        - "contrats_partenaires"
+        - "documents_strategiques_confidentiels"
+        - "donnees_financieres_non_publiques"
+    - resource: "donnees_audience_anonymisees"
+      max_volume_per_day: 50000
+      fields_allowed:
+        - "segment_id"
+        - "centre_interet_categorie"
+        - "comportement_agrege_anonymise"
+      fields_forbidden:
+        - "nom"
+        - "email"
+        - "telephone"
+        - "identifiant_individuel_reconciliable"
+  write:
+    - resource: "brouillon_contenu_a_valider"
+      max_volume_per_day: 200
+      max_tokens_per_output: 3000
+    - resource: "variante_post_social"
+      max_volume_per_day: 100
+      max_tokens_per_output: 600
+    - resource: "brief_creatif_interne"
+      max_volume_per_day: 50
+  invoke:
+    - action: "publier_post_social"
+      max_per_day: 0
+      requires_human_approval: true
+      approval_role: "responsable_editorial"
+    - action: "envoyer_campagne_email"
+      max_per_day: 0
+      requires_human_approval: true
+      approval_role: "responsable_marketing_direct"
+    - action: "soumettre_brouillon_au_cms"
+      max_per_day: 30
+      requires_human_approval: true
+      approval_role: "redacteur_en_chef"
+    - action: "demander_visuel_au_studio"
+      max_per_day: 20
+
+restrictions:
+  forbidden_actions:
+    - "publier_sans_validation_humaine"
+    - "envoyer_email_sans_validation_humaine"
+    - "citer_marque_tierce_sans_autorisation_documentee"
+    - "reproduire_oeuvre_protegee_sans_licence"
+    - "generer_image_personne_identifiable_sans_consentement"
+    - "generer_deepfake_audio_video"
+    - "formuler_claim_chiffre_non_source"
+    - "comparer_nominativement_avec_concurrent"
+    - "promettre_resultat_chiffre_non_garanti"
+    - "produire_contenu_a_destination_mineurs_sans_supervision"
+    - "transferer_donnees_audience_hors_UE"
+  ip_rules:
+    description: >
+      L'agent ne peut reproduire ni transformer une oeuvre protegee sans
+      licence ecrite. La citation breve est encadree par l'article L.122-5,
+      paragraphe 3, point a) du Code de la propriete intellectuelle :
+      mention de la source et du nom de l'auteur, finalite critique,
+      polemique, pedagogique, scientifique ou d'information, caractere bref.
+    explicit_rules:
+      - "verifier_droits_image_avant_usage"
+      - "respecter_droit_moral_auteur"
+      - "ne_pas_revendiquer_paternite_humaine_sur_contenu_genere"
+  brand_safety:
+    excluded_topics:
+      - "politique_partisane"
+      - "religion"
+      - "tragedie_actualite_recente"
+      - "minorites_stigmatisees_sans_validation_dei"
+    tone_guard: "respect_charte_editoriale_obligatoire"
+
+data_access:
+  categories:
+    - label: "donnees_audience_segmentaires"
+      sensitivity: "personal_aggregated"
+      gdpr_basis: "6(1)(f)"
+    - label: "donnees_prospects_opt_in"
+      sensitivity: "personal"
+      gdpr_basis: "6(1)(a)"
+    - label: "contenu_editorial_interne"
+      sensitivity: "internal_business"
+      gdpr_basis: "non_applicable"
+  special_categories_article_9: "non_autorise"
+  retention:
+    drafts_days: 365
+    published_assets_days: "duree_de_vie_commerciale_du_produit"
+    audience_data_days: "alignement_politique_generale_du_responsable_de_traitement"
+    justification: "Les brouillons sont conserves 12 mois pour traçabilite editoriale ; les durees produits relevent de la politique generale. A VALIDER PAR DPO."
+  data_minimization: true
+  transfer_outside_eu: false
+  training_on_proprietary_data:
+    allowed: false
+    note: "Les contenus de marque ne sont pas reutilises pour entrainer un modele tiers, sauf accord ecrit du responsable de traitement et du conseil juridique."
+
+human_oversight:
+  regime: "human_in_the_loop"
+  ai_act_reference: "Article 14 (principe general) + Article 50 (transparence et marquage) + Article 26 (deployeur)"
+  mandatory_validation_before_publication: true
+  mandatory_escalation_triggers:
+    - trigger: "contenu_evoquant_personne_physique_identifiable"
+      threshold: "toute_mention"
+    - trigger: "contenu_evoquant_marque_tierce"
+      threshold: "toute_mention_non_inscrite_liste_blanche"
+    - trigger: "claim_chiffre_ou_promesse_de_resultat"
+      threshold: "tout_chiffre_non_source"
+    - trigger: "sujet_sensible_detecte"
+      threshold: "politique_religion_sante_finance_minorites"
+    - trigger: "ton_hors_charte_detecte"
+      threshold: "score_alignement_charte_inferieur_a_seuil"
+    - trigger: "demande_communication_de_crise"
+      threshold: "toute_demande"
+  sampling_review:
+    frequency: "hebdomadaire"
+    sample_size_percent: 10
+    reviewer_role: "responsable_editorial"
+  reviewer_profile:
+    role: "redacteur_en_chef_ou_responsable_editorial"
+    training_required: true
+    training_topics:
+      - "limites_de_l_agent"
+      - "droit_d_auteur_et_droit_des_marques"
+      - "RGPD_prospection_et_profilage"
+      - "AI_Act_articles_50_et_26"
+      - "code_de_la_consommation_pratiques_commerciales"
+
+expiration:
+  valid_from: "<AAAA-MM-JJ>"
+  valid_until: "<AAAA-MM-JJ — 12 mois maximum recommande>"
+  max_duration_months: 12
+  revocation:
+    immediate_triggers:
+      - "incident_de_marque_confirme"
+      - "plainte_d_un_tiers_sur_droit_d_auteur"
+      - "mise_a_jour_majeure_du_modele_llm"
+      - "changement_de_charte_editoriale"
+      - "changement_de_prestataire_hebergement"
+      - "demande_d_une_autorite_de_controle"
+    revocation_contacts:
+      - "<directeur-marketing@entreprise.fr>"
+      - "<dpo@entreprise.fr>"
+      - "<juridique@entreprise.fr>"
+
+audit_trail:
+  logged_events:
+    - "ouverture_session"
+    - "lecture_asset_interne"
+    - "generation_brouillon"
+    - "marquage_contenu_genere_AI_Act_article_50_4"
+    - "soumission_pour_validation"
+    - "decision_humaine_validation_ou_refus"
+    - "publication_effective_par_humain"
+    - "incident_signale"
+  log_retention_days: 1825
+  log_retention_justification: "5 ans — alignement avec la prescription de l'action en contrefacon (Code de la propriete intellectuelle, article L.331-1-4) et la duree maximale d'examen DGCCRF. A VALIDER PAR JURISTE."
+  log_access:
+    - "dpo"
+    - "direction_marketing"
+    - "direction_juridique"
+    - "audit_interne"
+    - "autorite_de_controle_sur_requisition"
+  tamper_evidence: "sha256_chain"
+
+compliance_mapping:
+  ai_act:
+    classification: "limited_risk_transparency_obligation"
+    annex: "non_applicable_annex_III"
+    articles:
+      - "Article 50, paragraphe 1 — transparence vis-a-vis des personnes physiques"
+      - "Article 50, paragraphe 4 — marquage des contenus generes ou modifies par IA"
+      - "Article 26 — obligations du deployeur"
+      - "Article 99, paragraphe 4 — sanctions manquement article 50"
+  gdpr:
+    articles:
+      - "Article 6 — base legale (interet legitime ou consentement)"
+      - "Article 7 — conditions du consentement"
+      - "Article 13 — information des personnes"
+      - "Article 21 — droit d'opposition au profilage"
+      - "Article 22 — decision automatisee (a verifier si segmentation produit effets)"
+      - "Article 32 — securite du traitement"
+  dsa_eu_2022_2065:
+    - "Article 26 — transparence de la publicite en ligne (si plateforme intermediaire)"
+    - "Article 28 — protection des mineurs"
+  national_law_fr:
+    - "Code de la propriete intellectuelle, article L.122-4 — interdiction reproduction sans autorisation"
+    - "Code de la propriete intellectuelle, article L.122-5 — exceptions (citation breve)"
+    - "Code de la propriete intellectuelle, article L.335-2 — sanctions contrefacon"
+    - "Code de la consommation, article L.121-1 — pratiques commerciales deloyales"
+    - "Code de la consommation, article L.121-2 — pratiques trompeuses"
+    - "Code de la consommation, article L.132-2 — sanctions"
+    - "Code des postes et communications electroniques, article L.34-5 — prospection electronique"
+    - "Loi n. 2004-575 (LCEN), article 6 — responsabilite des hebergeurs et editeurs"
+
+signature:
+  method: "<eIDAS qualifie | avance | interne>"
+  signed_at: "<AAAA-MM-JJ>"
+  signatory: "<nom et fonction>"
+  signature_ref: "<reference de la signature ou hash>"
