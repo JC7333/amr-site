@@ -1,0 +1,309 @@
+# AMR Mandate Template — Agent Infrastructure & Datacenter
+# Version 1.0 — langue: fr — juridiction: FR-EU
+# Ce fichier est un gabarit. Les valeurs entre < > doivent etre renseignees
+# par l'organisation qui emet le mandat avant chargement dans le registre AMR.
+
+metadata:
+  template_id: "amr-tpl-infrastructure-datacenter-v1"
+  template_version: "1.0.0"
+  domain: "infrastructure"
+  subdomain: "datacenter-hebergement-interconnect"
+  language: "fr"
+  jurisdiction: "FR-EU"
+  created_at: "2026-04-23"
+  reference_standards:
+    - "Regulation (EU) 2024/1689 — AI Act"
+    - "Directive (EU) 2022/2555 — NIS2"
+    - "Regulation (EU) 2016/679 — GDPR"
+    - "ISO/IEC 27001:2022 — Information security management"
+    - "ISO 22301:2019 — Business continuity management"
+    - "ANSI/TIA-942-C — Telecommunications infrastructure standard for data centers"
+
+principal:
+  type: "legal_entity"
+  legal_name: "<Raison sociale du mandant>"
+  registration:
+    country: "FR"
+    id_type: "SIREN"
+    id_value: "<SIREN 9 chiffres>"
+  representative:
+    name: "<Nom du representant habilite>"
+    role: "<Fonction — ex: Directeur des Operations, RSSI>"
+    email: "<email@entreprise.fr>"
+  nis2_status:
+    classification: "<entite_essentielle | entite_importante | non_couverte>"
+    competent_authority: "ANSSI"
+    notification_ref: "<reference de notification ANSSI si applicable>"
+  legal_basis_gdpr:
+    article: "6(1)(f)"
+    description: "Interet legitime — supervision et exploitation d'infrastructure"
+    balancing_test_ref: "<reference interne du test de mise en balance>"
+
+agent:
+  agent_id: "<identifiant unique interne de l'agent>"
+  display_name: "<nom fonctionnel — ex: NOC-Assistant-Site-Paris-01>"
+  provider: "<editeur ou equipe interne>"
+  model:
+    family: "<famille — ex: Claude, GPT, Mistral, Llama>"
+    version: "<version specifique deployee>"
+    hosted_in: "<zone d'hebergement — ex: EU-West, on-premise>"
+  purpose: "Assister les operateurs NOC et SRE humains dans la qualification d'alertes, la production de rapports operationnels et l'execution de changes preapprouves, sans aucune action corrective autonome sur la production."
+
+scope:
+  business_processes:
+    - "monitoring_alertes_lecture"
+    - "qualification_incident_sev2_sev3"
+    - "ouverture_ticket_incident"
+    - "lecture_journaux_systeme"
+    - "lecture_journaux_reseau"
+    - "production_rapport_sla"
+    - "production_rapport_capacite"
+    - "execution_change_preapprouve_hors_production"
+    - "redaction_post_mortem_brouillon"
+  scope_types:
+    # Types de scope qui declencheront l'emission de tokens d'action AMR.
+    - "read_only_monitoring"
+    - "incident_response_level_1"
+    - "change_management_approved"
+    - "physical_access_validated"
+    - "bgp_route_announce"
+  sites_covered:
+    - "<liste explicite des sites — ex: PAR2, PAR5, MRS3>"
+  environments_covered:
+    - "lab"
+    - "staging"
+    - "preproduction"
+  excluded_environments:
+    - "production_critique_tier_iii"
+    - "production_critique_tier_iv"
+  excluded_processes:
+    - "coupure_alimentation_baie_production"
+    - "modification_acl_reseau_coeur"
+    - "annonce_bgp_modification_origine"
+    - "suppression_donnees_client"
+    - "intervention_physique_datacenter"
+    - "reponse_incident_sev1"
+    - "decision_de_basculement_dr"
+    - "modification_configuration_climatisation"
+
+permissions:
+  read:
+    - resource: "monitoring_metrics"
+      max_volume_per_day: 100000
+      fields_allowed:
+        - "metric_name"
+        - "value"
+        - "timestamp"
+        - "host_id_anonymised"
+        - "rack_id"
+        - "site_id"
+      fields_forbidden:
+        - "client_payload"
+        - "client_traffic_content"
+        - "credentials"
+        - "session_tokens"
+        - "personal_data_client_end_users"
+    - resource: "system_logs_anonymised"
+      max_volume_per_day: 50000
+      anonymisation_required: true
+    - resource: "ticketing_system"
+      max_volume_per_day: 2000
+      fields_allowed:
+        - "ticket_id"
+        - "severity"
+        - "status"
+        - "summary"
+        - "assignee"
+  write:
+    - resource: "ticketing_system"
+      action: "open_or_update_ticket"
+      max_volume_per_day: 200
+      severity_max: "SEV-2"
+      requires_human_approval: false
+    - resource: "ticketing_system"
+      action: "open_or_update_ticket"
+      severity: "SEV-1"
+      requires_human_approval: true
+    - resource: "post_mortem_drafts"
+      max_volume_per_day: 20
+      requires_human_approval: true
+    - resource: "sla_reports"
+      max_volume_per_day: 10
+      requires_human_approval: true
+  invoke:
+    - action: "execute_preapproved_change"
+      change_window_required: true
+      cab_approval_ref_required: true
+      environments_allowed:
+        - "lab"
+        - "staging"
+        - "preproduction"
+      max_per_day: 50
+      requires_human_approval: false
+    - action: "execute_preapproved_change_production"
+      max_per_day: 0
+      requires_human_approval: true
+      note: "Production change always requires explicit human runner. Agent can prepare the runbook, never execute."
+    - action: "restart_non_critical_service"
+      max_per_day: 20
+      requires_human_approval: false
+      services_allowed:
+        - "<liste explicite — ex: monitoring_collector, log_shipper>"
+    - action: "trigger_physical_access_request"
+      max_per_day: 5
+      requires_human_approval: true
+
+restrictions:
+  forbidden_actions:
+    - "couper_alimentation_baie_production"
+    - "modifier_acl_reseau_coeur"
+    - "annoncer_route_bgp_modification_origine"
+    - "supprimer_donnees_client"
+    - "executer_intervention_physique_directe"
+    - "repondre_seul_a_un_incident_sev1"
+    - "declencher_plan_de_reprise_dr"
+    - "modifier_configuration_climatisation"
+    - "modifier_parametres_securite_incendie"
+    - "lire_contenu_trafic_client"
+    - "transferer_journaux_hors_UE"
+    - "entrainer_modele_tiers_sur_journaux"
+  human_only_mandatory:
+    description: >
+      Liste des actions exclusivement humaines, meme avec mandat actif.
+      Le runtime AMR refusera l'emission de token pour toute tentative
+      d'invocation de ces actions par un agent.
+    actions:
+      - "couper_alimentation_baie_production"
+      - "modifier_acl_reseau_coeur"
+      - "annoncer_route_bgp_modification_origine"
+      - "supprimer_donnees_client"
+      - "executer_intervention_physique_directe"
+      - "repondre_seul_a_un_incident_sev1"
+
+data_access:
+  categories:
+    - label: "metriques_operationnelles_anonymisees"
+      sensitivity: "operational"
+      gdpr_basis: "6(1)(f)"
+    - label: "journaux_systeme_anonymises"
+      sensitivity: "operational"
+      gdpr_basis: "6(1)(f)"
+    - label: "tickets_internes"
+      sensitivity: "internal"
+      gdpr_basis: "6(1)(f)"
+  client_data_access: "interdit"
+  client_traffic_content_access: "interdit"
+  retention:
+    operational_logs_days: 365
+    audit_logs_days: 1825
+    justification: "5 ans pour les journaux d'audit — alignement avec les exigences NIS2 de tenue d'incident et de pieces probatoires. A VALIDER PAR JURISTE selon politique interne."
+  data_minimization: true
+  transfer_outside_eu: false
+
+human_oversight:
+  regime: "human_in_the_loop"
+  ai_act_reference: "Article 14"
+  mandatory_review_triggers:
+    - trigger: "ouverture_ticket_sev1"
+      threshold: "tout_ticket_sev1_propose"
+    - trigger: "execution_change_production"
+      threshold: "tout_change_en_production"
+    - trigger: "demande_acces_physique"
+      threshold: "toute_demande"
+    - trigger: "anomalie_monitoring_correle"
+      threshold: "toute_alerte_correlant_3_metriques_critiques_ou_plus"
+    - trigger: "depassement_volume_quotidien"
+      threshold: 80
+      unit: "pourcentage_du_max_journalier"
+    - trigger: "tentative_action_hors_scope"
+      threshold: "systematique"
+  reviewer_profile:
+    role: "operateur_noc_habilite_ou_sre_de_garde"
+    training_required: true
+    training_topics:
+      - "cadre_ai_act_haut_risque"
+      - "obligations_nis2_notification_incident"
+      - "procedures_change_management_internes"
+      - "biais_et_limites_des_modeles_llm"
+      - "gestion_d_incident_sev1_sans_assistance_agent"
+  on_call_coverage: "24_7"
+
+expiration:
+  valid_from: "<AAAA-MM-JJ>"
+  valid_until: "<AAAA-MM-JJ — 6 mois maximum recommande pour ce template>"
+  max_duration_months: 6
+  revocation:
+    immediate_triggers:
+      - "incident_de_securite_confirme"
+      - "incident_sev1_imputable_a_l_agent"
+      - "mise_a_jour_majeure_du_modele_llm"
+      - "mise_a_jour_majeure_de_l_outillage_monitoring"
+      - "changement_de_perimetre_nis2"
+      - "changement_de_prestataire"
+      - "demande_d_un_client_heberge"
+    revocation_contacts:
+      - "<rssi@entreprise.fr>"
+      - "<directeur-operations@entreprise.fr>"
+      - "<astreinte-noc@entreprise.fr>"
+
+audit_trail:
+  logged_events:
+    - "lecture_metric"
+    - "lecture_journal"
+    - "production_qualification_alerte"
+    - "ouverture_ticket"
+    - "modification_ticket"
+    - "execution_change_preapprouve"
+    - "redaction_post_mortem"
+    - "demande_validation_humaine"
+    - "validation_humaine"
+    - "rejet_apres_validation"
+    - "tentative_action_hors_scope"
+    - "emission_token_action"
+    - "refus_emission_token_action"
+  log_retention_days: 1825
+  log_retention_justification: "5 ans — alignement avec exigences NIS2 et bonnes pratiques ISO 27001 sur la conservation des preuves d'incident. A VALIDER PAR JURISTE."
+  log_access:
+    - "rssi"
+    - "directeur_operations"
+    - "audit_interne"
+    - "anssi_sur_requisition"
+    - "client_heberge_sur_perimetre_le_concernant"
+  tamper_evidence: "sha256_chain"
+
+compliance_mapping:
+  ai_act:
+    classification: "high_risk_system_potentiel"
+    annex: "Annex III, point 2 — gestion et exploitation d'infrastructures critiques (a evaluer selon perimetre exact)"
+    note_classification: "L'agent decrit ici peut relever de l'Annexe III point 2 si l'infrastructure entre dans le perimetre des infrastructures critiques au sens de l'AI Act. A VALIDER PAR JURISTE."
+    articles:
+      - "Article 12 — tenue de registres"
+      - "Article 13 — transparence vis-a-vis des deployeurs"
+      - "Article 14 — supervision humaine"
+      - "Article 26 — obligations des deployeurs"
+    application_calendar:
+      annex_iii_application_date: "2026-08-02"
+      potential_postponement: "Digital Omnibus — report projete au 2026-12 ou 2027-12 selon trilogues. A SUIVRE."
+  nis2:
+    transposition_fr: "Loi n° 2024-364 du 22 avril 2024"
+    obligations_mappees:
+      - "gestion_du_risque_article_21"
+      - "notification_incident_significatif_article_23"
+      - "tenue_documentation_article_21_3"
+    competent_authority: "ANSSI"
+  gdpr:
+    articles:
+      - "Article 6 — base legale"
+      - "Article 30 — registre des activites de traitement"
+      - "Article 32 — securite du traitement"
+      - "Article 33 — notification de violation"
+  iso_standards:
+    - "ISO/IEC 27001:2022 — A.5.23 (services cloud), A.8.16 (monitoring), A.8.34 (separation des environnements)"
+    - "ISO 22301:2019 — clauses 8.4 (procedures de continuite), 8.5 (exercices)"
+    - "ANSI/TIA-942-C — niveaux de tier datacenter et exigences associees"
+
+signature:
+  method: "<eIDAS qualifie | avance | interne>"
+  signed_at: "<AAAA-MM-JJ>"
+  signatory: "<nom et fonction>"
+  signature_ref: "<reference de la signature ou hash>"

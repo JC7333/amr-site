@@ -1,0 +1,132 @@
+# Exemple 02 — Mandat RESTRICTIF
+# Profil cible : premiere experimentation sur un site unique,
+# operateur d'interconnexion ou hebergeur regional, NIS2 entite essentielle,
+# sans equipe SRE dediee a l'IA. L'agent est cantonne a la lecture
+# et a la qualification d'alertes basses ; aucune ecriture sur la
+# production, aucun change, aucun acces physique.
+
+metadata:
+  template_id: "amr-tpl-infrastructure-datacenter-v1"
+  profile: "restrictif"
+  language: "fr"
+  jurisdiction: "FR-EU"
+  created_at: "2026-04-23"
+
+principal:
+  type: "legal_entity"
+  legal_name: "Hexagone Interconnect SA"
+  registration:
+    country: "FR"
+    id_type: "SIREN"
+    id_value: "000000000"
+  representative:
+    name: "RSSI"
+    role: "RSSI"
+    email: "rssi@hexagone-ix.example"
+  nis2_status:
+    classification: "entite_essentielle"
+    competent_authority: "ANSSI"
+    notification_ref: "<en cours>"
+  legal_basis_gdpr:
+    article: "6(1)(f)"
+    description: "Interet legitime — assistance lecture des alertes monitoring"
+
+agent:
+  agent_id: "hex-noc-readonly-01"
+  display_name: "NOC-Lecture-Alertes-Site-A"
+  provider: "prestataire externe certifie"
+  model:
+    family: "Claude"
+    version: "Haiku 4.5"
+    hosted_in: "EU-West"
+  purpose: "Lire les alertes, proposer une qualification SEV-3 ou SEV-2, ouvrir un ticket en lecture pour revue humaine. Aucune action corrective, aucun change."
+
+scope:
+  business_processes:
+    - "monitoring_alertes_lecture"
+    - "qualification_incident_sev2_sev3"
+    - "lecture_journaux_systeme"
+  scope_types:
+    - "read_only_monitoring"
+  sites_covered:
+    - "Site-A-unique"
+  environments_covered:
+    - "preproduction"
+  excluded_environments:
+    - "production_critique_tier_iii"
+    - "production_critique_tier_iv"
+    - "lab"
+    - "staging"
+  excluded_processes:
+    - "execution_change_preapprouve_hors_production"
+    - "execution_change_production"
+    - "redaction_post_mortem_brouillon"
+    - "intervention_physique_datacenter"
+
+permissions:
+  read:
+    - resource: "monitoring_metrics"
+      # Volume bas — coherent avec un site unique et une lecture echantillonnee.
+      max_volume_per_day: 20000
+    - resource: "system_logs_anonymised"
+      max_volume_per_day: 10000
+      anonymisation_required: true
+  write:
+    # Aucune ecriture sortante : l'agent produit des fiches de qualification
+    # qu'un operateur humain reprend manuellement dans le ticketing.
+    - resource: "qualification_drafts_internal"
+      max_volume_per_day: 200
+      requires_human_approval: true
+  invoke: []
+
+restrictions:
+  forbidden_actions:
+    - "ouvrir_ticket_directement"
+    - "executer_change"
+    - "redemarrer_service"
+    - "demander_acces_physique"
+    - "couper_alimentation_baie_production"
+    - "modifier_acl_reseau_coeur"
+    - "supprimer_donnees_client"
+    - "lire_contenu_trafic_client"
+    - "transferer_journaux_hors_UE"
+
+human_oversight:
+  regime: "human_in_the_loop_strict"
+  ai_act_reference: "Article 14"
+  mandatory_review_triggers:
+    - trigger: "toute_qualification_produite"
+      threshold: "systematique"
+  reviewer_profile:
+    role: "operateur_noc_habilite"
+    training_required: true
+  on_call_coverage: "24_7"
+
+expiration:
+  valid_from: "2026-05-01"
+  # Mandat court : reevalue tous les 3 mois pendant l'experimentation.
+  valid_until: "2026-07-31"
+  max_duration_months: 3
+  revocation:
+    immediate_triggers:
+      - "incident_de_securite_confirme"
+      - "incident_sev1_sur_le_site"
+      - "mise_a_jour_majeure_du_modele_llm"
+
+audit_trail:
+  logged_events:
+    - "lecture_metric"
+    - "lecture_journal"
+    - "production_qualification"
+    - "validation_humaine"
+    - "rejet_apres_validation"
+    - "tentative_action_hors_scope"
+  log_retention_days: 1825
+  tamper_evidence: "sha256_chain"
+
+compliance_mapping:
+  ai_act:
+    classification: "high_risk_system_potentiel"
+    annex: "Annex III, point 2"
+  nis2:
+    transposition_fr: "Loi n° 2024-364 du 22 avril 2024"
