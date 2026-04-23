@@ -1,0 +1,198 @@
+# Exemple 03 — Mandat EQUILIBRE
+# Profil cible : hebergeur ETI ou operateur de colocation, plusieurs sites,
+# NIS2 entite essentielle, equipe SRE structuree avec procedures change
+# documentees. L'agent assiste le NOC, ouvre des tickets jusqu'a SEV-2,
+# execute des changes preapprouves uniquement en lab et staging,
+# avec sampling de revue humaine et triggers obligatoires sur cas sensibles.
+
+metadata:
+  template_id: "amr-tpl-infrastructure-datacenter-v1"
+  profile: "equilibre"
+  language: "fr"
+  jurisdiction: "FR-EU"
+  created_at: "2026-04-23"
+
+principal:
+  type: "legal_entity"
+  legal_name: "Mandatia Hosting SAS"
+  registration:
+    country: "FR"
+    id_type: "SIREN"
+    id_value: "000000000"
+  representative:
+    name: "Directeur des Operations + RSSI co-signataires"
+    role: "DirOps + RSSI"
+    email: "ops-ia@mandatia-hosting.example"
+  nis2_status:
+    classification: "entite_essentielle"
+    competent_authority: "ANSSI"
+    notification_ref: "ANSSI-2025-EE-00118"
+  legal_basis_gdpr:
+    article: "6(1)(f)"
+    description: "Interet legitime — assistance NOC et SRE multi-sites"
+
+agent:
+  agent_id: "mandatia-noc-bot-01"
+  display_name: "NOC-SRE-Assistant-Prod"
+  provider: "prestataire externe"
+  model:
+    family: "Claude"
+    version: "Sonnet 4.6"
+    hosted_in: "EU-West"
+  purpose: "Assistance NOC niveau 1, qualification d'alertes, ouverture de tickets jusqu'a SEV-2, execution de changes preapprouves en lab et staging, redaction de brouillons de post-mortem."
+
+scope:
+  business_processes:
+    - "monitoring_alertes_lecture"
+    - "qualification_incident_sev2_sev3"
+    - "ouverture_ticket_incident"
+    - "lecture_journaux_systeme"
+    - "lecture_journaux_reseau"
+    - "production_rapport_sla"
+    - "execution_change_preapprouve_hors_production"
+    - "redaction_post_mortem_brouillon"
+  scope_types:
+    - "read_only_monitoring"
+    - "incident_response_level_1"
+    - "change_management_approved"
+  sites_covered:
+    - "PAR-Nord"
+    - "LYO-Centre"
+  environments_covered:
+    - "lab"
+    - "staging"
+    - "preproduction"
+  excluded_environments:
+    - "production_critique_tier_iii"
+    - "production_critique_tier_iv"
+  excluded_processes:
+    - "coupure_alimentation_baie_production"
+    - "modification_acl_reseau_coeur"
+    - "annonce_bgp_modification_origine"
+    - "intervention_physique_datacenter"
+    - "reponse_incident_sev1"
+    - "decision_de_basculement_dr"
+
+permissions:
+  read:
+    - resource: "monitoring_metrics"
+      # Volume intermediaire — adapte a deux sites actifs.
+      max_volume_per_day: 100000
+    - resource: "system_logs_anonymised"
+      max_volume_per_day: 50000
+      anonymisation_required: true
+    - resource: "ticketing_system"
+      max_volume_per_day: 2000
+  write:
+    - resource: "ticketing_system"
+      action: "open_or_update_ticket"
+      max_volume_per_day: 200
+      severity_max: "SEV-2"
+      requires_human_approval: false
+    - resource: "ticketing_system"
+      action: "open_or_update_ticket"
+      severity: "SEV-1"
+      requires_human_approval: true
+    - resource: "post_mortem_drafts"
+      max_volume_per_day: 20
+      requires_human_approval: true
+    - resource: "sla_reports"
+      max_volume_per_day: 10
+      requires_human_approval: true
+  invoke:
+    - action: "execute_preapproved_change"
+      change_window_required: true
+      cab_approval_ref_required: true
+      environments_allowed:
+        - "lab"
+        - "staging"
+        - "preproduction"
+      max_per_day: 50
+      requires_human_approval: false
+    - action: "restart_non_critical_service"
+      max_per_day: 20
+      requires_human_approval: false
+
+restrictions:
+  forbidden_actions:
+    - "couper_alimentation_baie_production"
+    - "modifier_acl_reseau_coeur"
+    - "annoncer_route_bgp_modification_origine"
+    - "supprimer_donnees_client"
+    - "executer_intervention_physique_directe"
+    - "repondre_seul_a_un_incident_sev1"
+    - "lire_contenu_trafic_client"
+    - "transferer_journaux_hors_UE"
+
+human_oversight:
+  regime: "human_in_the_loop"
+  ai_act_reference: "Article 14"
+  mandatory_review_triggers:
+    - trigger: "ouverture_ticket_sev1"
+      threshold: "tout_ticket_sev1_propose"
+    - trigger: "execution_change_production"
+      threshold: "tout_change_en_production"
+    - trigger: "demande_acces_physique"
+      threshold: "toute_demande"
+    - trigger: "anomalie_monitoring_correle"
+      threshold: "toute_alerte_correlant_3_metriques_critiques_ou_plus"
+    - trigger: "depassement_volume_quotidien"
+      threshold: 80
+      unit: "pourcentage_du_max_journalier"
+    - trigger: "tentative_action_hors_scope"
+      threshold: "systematique"
+  reviewer_profile:
+    role: "operateur_noc_habilite_ou_sre_de_garde"
+    training_required: true
+  sampling_review:
+    frequency: "hebdomadaire"
+    sample_size_percent: 10
+    reviewer_role: "sre_senior"
+  on_call_coverage: "24_7"
+
+expiration:
+  valid_from: "2026-05-01"
+  valid_until: "2026-10-31"
+  max_duration_months: 6
+  revocation:
+    immediate_triggers:
+      - "incident_de_securite_confirme"
+      - "incident_sev1_imputable_a_l_agent"
+      - "mise_a_jour_majeure_du_modele_llm"
+      - "changement_de_perimetre_nis2"
+
+audit_trail:
+  logged_events:
+    - "lecture_metric"
+    - "lecture_journal"
+    - "qualification_alerte"
+    - "ouverture_ticket"
+    - "execution_change_preapprouve"
+    - "redaction_post_mortem"
+    - "demande_validation_humaine"
+    - "validation_humaine"
+    - "rejet_apres_validation"
+    - "tentative_action_hors_scope"
+    - "emission_token_action"
+    - "refus_emission_token_action"
+  log_retention_days: 1825
+  tamper_evidence: "sha256_chain"
+
+compliance_mapping:
+  ai_act:
+    classification: "high_risk_system_potentiel"
+    annex: "Annex III, point 2"
+    articles:
+      - "Article 12"
+      - "Article 13"
+      - "Article 14"
+      - "Article 26"
+  nis2:
+    transposition_fr: "Loi n° 2024-364 du 22 avril 2024"
+    obligations_mappees:
+      - "gestion_du_risque_article_21"
+      - "notification_incident_significatif_article_23"
+  iso_standards:
+    - "ISO/IEC 27001:2022"
+    - "ISO 22301:2019"
+    - "ANSI/TIA-942-C"

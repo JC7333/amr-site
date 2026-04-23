@@ -1,0 +1,169 @@
+# Exemple 01 — Mandat PERMISSIF
+# Profil cible : operateur d'hebergement multi-sites mature, NOC 24/7
+# avec procedures change management rodees, RSSI en place, equipe SRE
+# habituee a l'outillage IA. L'agent intervient sur un large perimetre
+# d'environnements non critiques et execute des changes preapprouves
+# en lab et staging sans validation a chaque execution.
+#
+# Attention : "permissif" ne veut pas dire "sans garde-fou".
+# Les actions human-only mandatory restent strictement bloquees.
+
+metadata:
+  template_id: "amr-tpl-infrastructure-datacenter-v1"
+  profile: "permissif"
+  language: "fr"
+  jurisdiction: "FR-EU"
+  created_at: "2026-04-23"
+
+principal:
+  type: "legal_entity"
+  legal_name: "EuroEdge Datacenters SAS"
+  registration:
+    country: "FR"
+    id_type: "SIREN"
+    id_value: "000000000"
+  representative:
+    name: "Directeur des Operations + RSSI co-signataires"
+    role: "DirOps + RSSI"
+    email: "ops-ia@euroedge.example"
+  nis2_status:
+    classification: "entite_essentielle"
+    competent_authority: "ANSSI"
+    notification_ref: "ANSSI-2025-EE-00042"
+  legal_basis_gdpr:
+    article: "6(1)(f)"
+    description: "Interet legitime — supervision operationnelle multi-sites"
+
+agent:
+  agent_id: "euroedge-noc-bot-01"
+  display_name: "NOC-Assistant-Groupe"
+  provider: "equipe interne plateforme"
+  model:
+    family: "Claude"
+    version: "Sonnet 4.6"
+    hosted_in: "EU-West"
+  purpose: "Assistance NOC niveau 1 sur l'ensemble des sites du groupe et execution de changes preapprouves en lab et staging."
+
+scope:
+  business_processes:
+    - "monitoring_alertes_lecture"
+    - "qualification_incident_sev2_sev3"
+    - "ouverture_ticket_incident"
+    - "lecture_journaux_systeme"
+    - "lecture_journaux_reseau"
+    - "production_rapport_sla"
+    - "production_rapport_capacite"
+    - "execution_change_preapprouve_hors_production"
+    - "redaction_post_mortem_brouillon"
+  scope_types:
+    - "read_only_monitoring"
+    - "incident_response_level_1"
+    - "change_management_approved"
+  sites_covered:
+    - "PAR2"
+    - "PAR5"
+    - "MRS3"
+    - "AMS1"
+  environments_covered:
+    - "lab"
+    - "staging"
+    - "preproduction"
+  excluded_environments:
+    - "production_critique_tier_iii"
+    - "production_critique_tier_iv"
+  excluded_processes:
+    - "coupure_alimentation_baie_production"
+    - "modification_acl_reseau_coeur"
+    - "annonce_bgp_modification_origine"
+    - "intervention_physique_datacenter"
+    - "reponse_incident_sev1"
+
+permissions:
+  read:
+    - resource: "monitoring_metrics"
+      # Volume eleve : 4 sites, des centaines de milliers de metriques par jour.
+      max_volume_per_day: 500000
+    - resource: "system_logs_anonymised"
+      max_volume_per_day: 200000
+      anonymisation_required: true
+    - resource: "ticketing_system"
+      max_volume_per_day: 5000
+  write:
+    - resource: "ticketing_system"
+      action: "open_or_update_ticket"
+      max_volume_per_day: 800
+      severity_max: "SEV-2"
+      requires_human_approval: false
+    - resource: "post_mortem_drafts"
+      max_volume_per_day: 50
+      requires_human_approval: true
+  invoke:
+    - action: "execute_preapproved_change"
+      change_window_required: true
+      cab_approval_ref_required: true
+      environments_allowed:
+        - "lab"
+        - "staging"
+        - "preproduction"
+      max_per_day: 200
+      requires_human_approval: false
+    - action: "restart_non_critical_service"
+      max_per_day: 100
+      requires_human_approval: false
+
+restrictions:
+  forbidden_actions:
+    - "couper_alimentation_baie_production"
+    - "modifier_acl_reseau_coeur"
+    - "supprimer_donnees_client"
+    - "executer_intervention_physique_directe"
+    - "repondre_seul_a_un_incident_sev1"
+    - "lire_contenu_trafic_client"
+    - "transferer_journaux_hors_UE"
+
+human_oversight:
+  regime: "human_on_the_loop"
+  # On_the_loop : supervision par echantillonnage, declencheurs auto sur cas sensibles.
+  ai_act_reference: "Article 14"
+  mandatory_review_triggers:
+    - trigger: "ouverture_ticket_sev1"
+      threshold: "tout_ticket_sev1_propose"
+    - trigger: "execution_change_production"
+      threshold: "tout_change_en_production"
+    - trigger: "depassement_volume_quotidien"
+      threshold: 80
+      unit: "pourcentage_du_max_journalier"
+  sampling_review:
+    frequency: "quotidien"
+    sample_size_percent: 5
+    reviewer_role: "sre_senior"
+  on_call_coverage: "24_7"
+
+expiration:
+  valid_from: "2026-05-01"
+  valid_until: "2026-10-31"
+  max_duration_months: 6
+
+audit_trail:
+  logged_events:
+    - "lecture_metric"
+    - "qualification_alerte"
+    - "ouverture_ticket"
+    - "execution_change_preapprouve"
+    - "demande_validation_humaine"
+    - "validation_humaine"
+    - "tentative_action_hors_scope"
+    - "emission_token_action"
+    - "refus_emission_token_action"
+  log_retention_days: 1825
+  tamper_evidence: "sha256_chain"
+
+compliance_mapping:
+  ai_act:
+    classification: "high_risk_system_potentiel"
+    annex: "Annex III, point 2"
+  nis2:
+    transposition_fr: "Loi n° 2024-364 du 22 avril 2024"
+  iso_standards:
+    - "ISO/IEC 27001:2022"
+    - "ANSI/TIA-942-C"
