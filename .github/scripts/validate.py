@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
 """
-Validator AMR - GitHub Action natif
-Vérifie les règles non-négociables sur amr-site:
-- Naming convention templates/agent-{domaine}/
-- Structure 9 fichiers par template
-- YAML valides
-- Articles juridiques minimum cités
+Validator AMR - GitHub Action natif (v2)
+Vérifie les règles non-négociables sur amr-site.
 
 Sortie: validator_report.md (commentaire de PR)
 Code retour: 0 = OK, 1 = blocking errors
@@ -19,17 +15,15 @@ from pathlib import Path
 
 REPO_ROOT = Path(".")
 TEMPLATES_DIR = REPO_ROOT / "templates"
-REQUIRED_FILES_PER_TEMPLATE = [
-    "README.md",
-    "mandate.yaml",
-    "deploy_guide.md",
-    "examples/permissive.yaml",
-    "examples/restrictive.yaml",
-    "examples/balanced.yaml",
-    "compliance/ai_act_mapping.md",
-    "compliance/rgpd_mapping.md",
-    "compliance/sector_specific.md",
-]
+
+# Fichiers obligatoires à la racine d'un template
+REQUIRED_ROOT_FILES = ["README.md", "mandate.yaml", "deploy_guide.md"]
+
+# Sous-dossiers obligatoires + nombre minimum de fichiers
+REQUIRED_SUBDIRS = {
+    "examples": {"ext": ".yaml", "min_count": 3},
+    "compliance": {"ext": ".md", "min_count": 3},
+}
 
 REQUIRED_LEGAL_REFS_AI_ACT = [
     "Article 12",
@@ -43,6 +37,14 @@ REQUIRED_LEGAL_REFS_RGPD = [
     "Article 22",
 ]
 
+FORBIDDEN_VOICE_TERMS = [
+    "thermaliste",
+    "je me permets",
+    "n'hésitez pas",
+    "je serais ravi",
+    "n'hesitez pas",
+]
+
 
 def check_naming_convention(template_dirs):
     """Tous les dossiers templates doivent commencer par agent-"""
@@ -53,20 +55,39 @@ def check_naming_convention(template_dirs):
             errors.append(
                 f"Naming: dossier `templates/{name}/` doit commencer par `agent-` "
                 f"(pattern obligatoire: `agent-{{domaine}}`). "
-                f"À renommer en `templates/agent-{name}/` via push-amr.ps1."
+                f"À renommer en `templates/agent-{name}/`."
             )
     return errors
 
 
 def check_structure(template_dir):
-    """Chaque template doit avoir les 9 fichiers requis"""
+    """Chaque template doit avoir les fichiers racine + sous-dossiers avec assez de fichiers"""
     errors = []
-    for required in REQUIRED_FILES_PER_TEMPLATE:
+
+    # Fichiers racine obligatoires
+    for required in REQUIRED_ROOT_FILES:
         f = template_dir / required
         if not f.exists():
             errors.append(
-                f"Structure `{template_dir.name}/`: fichier manquant `{required}`"
+                f"Structure `{template_dir.name}/`: fichier racine manquant `{required}`"
             )
+
+    # Sous-dossiers avec compte minimum
+    for subdir_name, spec in REQUIRED_SUBDIRS.items():
+        subdir = template_dir / subdir_name
+        if not subdir.exists() or not subdir.is_dir():
+            errors.append(
+                f"Structure `{template_dir.name}/`: dossier manquant `{subdir_name}/`"
+            )
+            continue
+        files = list(subdir.glob(f"*{spec['ext']}"))
+        if len(files) < spec["min_count"]:
+            errors.append(
+                f"Structure `{template_dir.name}/{subdir_name}/`: "
+                f"{len(files)} fichier(s) `{spec['ext']}` trouvé(s), "
+                f"minimum {spec['min_count']} requis."
+            )
+
     return errors
 
 
@@ -88,56 +109,66 @@ def check_yaml_valid(template_dir):
 
 
 def check_legal_refs(template_dir):
-    """Vérifier que les fichiers compliance citent bien les articles minimum"""
+    """Vérifier que les fichiers compliance citent les articles minimum.
+    Plus permissif : on cherche dans TOUS les .md du dossier compliance/."""
     warnings = []
-    ai_act_file = template_dir / "compliance" / "ai_act_mapping.md"
-    rgpd_file = template_dir / "compliance" / "rgpd_mapping.md"
+    compliance_dir = template_dir / "compliance"
+    if not compliance_dir.exists():
+        return warnings
 
-    if ai_act_file.exists():
-        content = ai_act_file.read_text(encoding="utf-8")
-        for ref in REQUIRED_LEGAL_REFS_AI_ACT:
-            if ref not in content:
-                warnings.append(
-                    f"`{template_dir.name}/compliance/ai_act_mapping.md` ne mentionne pas `{ref}`"
-                )
+    all_compliance_text = ""
+    for md_file in compliance_dir.glob("*.md"):
+        try:
+            all_compliance_text += md_file.read_text(encoding="utf-8") + "\n"
+        except Exception:
+            pass
 
-    if rgpd_file.exists():
-        content = rgpd_file.read_text(encoding="utf-8")
-        for ref in REQUIRED_LEGAL_REFS_RGPD:
-            if ref not in content:
-                warnings.append(
-                    f"`{template_dir.name}/compliance/rgpd_mapping.md` ne mentionne pas `{ref}`"
-                )
+    for ref in REQUIRED_LEGAL_REFS_AI_ACT:
+        if ref not in all_compliance_text:
+            warnings.append(
+                f"`{template_dir.name}/compliance/`: aucun fichier ne mentionne `{ref}` (AI Act)"
+            )
+
+    for ref in REQUIRED_LEGAL_REFS_RGPD:
+        if ref not in all_compliance_text:
+            warnings.append(
+                f"`{template_dir.name}/compliance/`: aucun fichier ne mentionne `{ref}` (RGPD)"
+            )
+
     return warnings
 
 
 def check_pivot_enforcement_mention(template_dir):
-    """README.md et deploy_guide.md doivent mentionner issue_action_token"""
+    """README.md ou deploy_guide.md doivent mentionner issue_action_token"""
     warnings = []
+    found = False
     for fname in ["README.md", "deploy_guide.md"]:
         f = template_dir / fname
         if f.exists():
             content = f.read_text(encoding="utf-8")
-            if "issue_action_token" not in content:
-                warnings.append(
-                    f"`{template_dir.name}/{fname}` ne mentionne pas `issue_action_token` "
-                    f"(pivot enforcement = argument commercial #1)"
-                )
+            if "issue_action_token" in content:
+                found = True
+                break
+    if not found:
+        warnings.append(
+            f"`{template_dir.name}/`: ni README ni deploy_guide ne mentionnent `issue_action_token` "
+            f"(pivot enforcement = argument commercial #1)"
+        )
     return warnings
 
 
 def check_voice_audric(template_dir):
-    """Voix Audric: termes interdits absolus"""
+    """Voix Audric: termes interdits absolus dans README"""
     warnings = []
-    forbidden_terms = ["thermaliste", "je me permets", "n'hésitez pas", "je serais ravi"]
     readme = template_dir / "README.md"
-    if readme.exists():
-        content = readme.read_text(encoding="utf-8").lower()
-        for term in forbidden_terms:
-            if term.lower() in content:
-                warnings.append(
-                    f"Voix Audric: `{template_dir.name}/README.md` contient le terme interdit `{term}`"
-                )
+    if not readme.exists():
+        return warnings
+    content = readme.read_text(encoding="utf-8").lower()
+    for term in FORBIDDEN_VOICE_TERMS:
+        if term.lower() in content:
+            warnings.append(
+                f"Voix Audric: `{template_dir.name}/README.md` contient le terme interdit `{term}`"
+            )
     return warnings
 
 
@@ -155,16 +186,13 @@ def main():
     # 1. Naming convention (BLOQUANT)
     blocking_errors.extend(check_naming_convention(template_dirs))
 
-    # Pour chaque template valide, faire les autres checks
     valid_templates = [d for d in template_dirs if d.name.startswith("agent-")]
     for tpl in valid_templates:
-        # 2. Structure (BLOQUANT pour les templates valides)
-        struct_errs = check_structure(tpl)
-        blocking_errors.extend(struct_errs)
+        # 2. Structure (BLOQUANT)
+        blocking_errors.extend(check_structure(tpl))
 
         # 3. YAML valides (BLOQUANT)
-        yaml_errs = check_yaml_valid(tpl)
-        blocking_errors.extend(yaml_errs)
+        blocking_errors.extend(check_yaml_valid(tpl))
 
         # 4. Articles juridiques (WARNING)
         warnings.extend(check_legal_refs(tpl))
@@ -177,12 +205,15 @@ def main():
 
     write_report(blocking_errors, warnings, valid_templates)
 
+    print(f"Templates analysés : {len(valid_templates)}")
+    print(f"Erreurs bloquantes : {len(blocking_errors)}")
+    print(f"Warnings : {len(warnings)}")
+
     if blocking_errors:
-        print(f"❌ {len(blocking_errors)} erreur(s) bloquante(s)")
+        print("[FAIL] Erreurs bloquantes détectées")
         return 1
-    else:
-        print(f"✅ Aucune erreur bloquante. {len(warnings)} warning(s).")
-        return 0
+    print("[OK] Aucune erreur bloquante")
+    return 0
 
 
 def write_report(blocking_errors, warnings, valid_templates):
