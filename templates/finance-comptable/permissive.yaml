@@ -1,0 +1,107 @@
+# Exemple PERMISSIF — Agent comptable interne TPE
+#
+# Cas d'usage: cabinet d'expertise comptable qui assiste sa propre equipe
+# sur des operations a faible enjeu (lettrage, controles de coherence,
+# brouillons de courriers). Pas de decision crediteur. Pas de scoring
+# personne physique. Hors champ haut risque AI Act stricto sensu.
+#
+# Caracteristiques: scope large sur lecture comptable, oversight humain
+# par revue de lot, plafonds journaliers eleves.
+
+metadata:
+  template_id: "amr-tpl-finance-comptable-v1"
+  template_version: "1.0.0"
+  variant: "permissive"
+  domain: "finance"
+  subdomain: "expertise-comptable-interne"
+  language: "fr"
+  jurisdiction: "FR-EU"
+  created_at: "2026-04-25"
+
+principal:
+  type: "legal_entity"
+  legal_name: "Cabinet Expertise Comptable Exemple SARL"
+  registration:
+    country: "FR"
+    id_type: "SIREN"
+    id_value: "<SIREN>"
+  representative:
+    name: "<Expert-comptable diplome inscrit a l'Ordre>"
+    role: "Associe gerant"
+    email: "<email@cabinet.fr>"
+  sector_status:
+    activity_type: "expert_comptable"
+    lcb_ft_scope: "entite_assujettie_L561-2 — profession reglementee"
+    dora_scope: "entite_hors_perimetre"
+
+agent:
+  display_name: "Comptable-Assistant-Cabinet-01"
+  purpose: "Assister les collaborateurs comptables sur saisie, lettrage, controle de coherence et brouillons de communication client. Aucune decision sur personne physique. Aucune ecriture inscrite sans validation."
+
+scope:
+  scope_types:
+    - "read_only_financial_analysis"
+    - "accounting_entry_proposal_only"
+  business_processes:
+    - "verification_coherence_documents_KYC"
+    - "lettrage_automatique_proposition"
+    - "controle_coherence_ecritures_comptables"
+    - "redaction_brouillon_courrier_relance"
+    - "preparation_dossier_revision_comptable"
+
+permissions:
+  read:
+    - resource: "ecritures_comptables_lecture"
+      max_volume_per_day: 100000  # eleve — cabinet traite plusieurs dizaines de dossiers
+    - resource: "rapports_comptables_internes"
+      max_volume_per_day: 500
+  write:
+    - resource: "proposition_ecriture_comptable"
+      action: "produire_proposition_ecriture"
+      max_volume_per_day: 5000  # eleve — saisie de masse
+      requires_human_approval: true  # validation par lot, pas individuelle
+      approval_mode: "batch_validation"
+    - resource: "courrier_relance_brouillon"
+      action: "produire_brouillon_relance"
+      max_volume_per_day: 500
+      requires_human_approval: true
+  invoke:
+    - action: "execute_lettrage_automatique_proposition"
+      max_per_day: 50000
+      requires_human_approval: false  # lettrage propose, supervisee en aval
+
+restrictions:
+  forbidden_actions:
+    - "ecriture_comptable_definitive"
+    - "cloture_periode_comptable"
+    - "envoi_reporting_reglementaire"
+    - "decision_credit_personne_physique"  # absent du scope cabinet
+    - "declaration_soupcon_tracfin"  # responsabilite expert-comptable directe
+
+human_oversight:
+  regime: "human_in_the_loop"
+  ai_act_reference: "Article 14 — applicable meme hors haut risque sur tenue registres"
+  mandatory_review_triggers:
+    - trigger: "ecart_lettrage_significatif"
+      threshold: "tout_ecart_superieur_a_500_eur"  # seuil bas adapte TPE
+    - trigger: "anomalie_coherence_ecritures"
+      threshold: "tout_signalement"
+
+expiration:
+  max_duration_months: 12  # validite plus longue justifiee par scope etroit
+  revocation:
+    immediate_triggers:
+      - "incident_de_securite"
+      - "reclamation_client"
+      - "controle_ordre_des_experts_comptables"
+
+audit_trail:
+  log_retention_days: 3650  # 10 ans — Code de commerce L.123-22
+  log_retention_justification: "10 ans — pieces comptables. A VALIDER PAR JURISTE."
+
+compliance_mapping:
+  ai_act:
+    classification: "non_haut_risque_si_perimetre_strict"
+    note: "Lettrage et coherence comptable sans decision sur personne ne relevent pas de l'Annexe III. Maintien des obligations Article 12 (registre) et Article 13 (transparence) en bonne pratique."
+  lcb_ft:
+    note: "L'expert-comptable est assujetti L.561-2 CMF. Les declarations de soupcon restent exclusivement humaines."

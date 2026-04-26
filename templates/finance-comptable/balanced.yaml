@@ -1,0 +1,208 @@
+# Exemple EQUILIBRE — Agent finance assistance multi-domaine
+#
+# Cas d'usage: societe de financement intermediaire qui combine assistance
+# comptable interne, premiere ligne LCB-FT et propositions de scoring sur
+# credits B2B (encours fournisseurs, financement professionnel). Deploiement
+# sur perimetre delimite avec oversight humain calibrEe selon le type d'action.
+#
+# Caracteristiques: scope multi-domaine mais delimite, oversight differencie
+# selon enjeu (lot pour lettrage, individuel pour decision credit B2B,
+# escalade pour LCB-FT).
+
+metadata:
+  template_id: "amr-tpl-finance-comptable-v1"
+  template_version: "1.0.0"
+  variant: "balanced"
+  domain: "finance"
+  subdomain: "societe-financement-multidomaine"
+  language: "fr"
+  jurisdiction: "FR-EU"
+  created_at: "2026-04-25"
+
+principal:
+  type: "legal_entity"
+  legal_name: "Societe de Financement Exemple SA"
+  registration:
+    country: "FR"
+    id_type: "SIREN"
+    id_value: "<SIREN>"
+  representative:
+    name: "<Compliance Officer>"
+    role: "Responsable conformite"
+    email: "<compliance@societe-financement.fr>"
+  sector_status:
+    activity_type: "societe_financement"
+    acpr_authorization_ref: "<ref agrement ACPR>"
+    dora_scope: "entite_dans_perimetre"
+    lcb_ft_scope: "entite_assujettie_L561-2"
+  legal_basis_gdpr:
+    article: "6(1)(b) et 6(1)(c) selon traitement"
+    note: "6(1)(b) execution contrat pour comptable, 6(1)(c) obligation legale pour LCB-FT et conservation comptable."
+  dpia_required:
+    status: "oui"
+    note: "DPIA realisee couvrant scoring credit B2B et premiere ligne LCB-FT."
+
+agent:
+  display_name: "Finance-Multi-Assistant-01"
+  purpose: "Assister sur trois domaines delimites: lettrage et coherence comptable interne, premiere lecture motivee de credit B2B, premiere analyse LCB-FT avec elevation d'alerte. Aucune decision finale autonome, aucune ecriture inscrite, aucune declaration Tracfin."
+
+scope:
+  scope_types:
+    - "read_only_financial_analysis"
+    - "credit_decision_proposal_only"
+    - "accounting_entry_proposal_only"
+    - "lcb_ft_first_line_monitoring"
+  business_processes:
+    - "verification_coherence_documents_KYC"
+    - "lettrage_automatique_proposition"
+    - "controle_coherence_ecritures_comptables"
+    - "scoring_credit_proposition"
+    - "premiere_analyse_transaction_lcb_ft"
+    - "alerte_transaction_atypique"
+    - "redaction_brouillon_courrier_relance"
+
+permissions:
+  read:
+    - resource: "donnees_dossier_credit"
+      max_volume_per_day: 1500
+      fields_forbidden:
+        - "donnees_sante"
+        - "opinions_politiques"
+        - "origine_raciale_ou_ethnique"
+        - "convictions_religieuses"
+        - "orientation_sexuelle"
+        - "appartenance_syndicale"
+        - "donnees_biometriques_identifiantes"
+    - resource: "ecritures_comptables_lecture"
+      max_volume_per_day: 30000
+    - resource: "transactions_paiement"
+      max_volume_per_day: 50000
+      note: "Pour analyse LCB-FT — base legale L.561-10-2 CMF."
+  write:
+    - resource: "proposition_decision_credit"
+      action: "produire_proposition_motivee"
+      max_volume_per_day: 800
+      requires_human_approval: true
+      approval_mode: "individual_review_above_5000_eur"
+      note: "Revue individuelle au-dessus de 5000 EUR. Revue par lot avec controle qualite par sondage en dessous."
+    - resource: "proposition_ecriture_comptable"
+      action: "produire_proposition_ecriture"
+      max_volume_per_day: 1500
+      requires_human_approval: true
+      approval_mode: "batch_validation_with_qc_sample"
+    - resource: "alerte_lcb_ft"
+      action: "elever_alerte_vers_responsable_lcb_ft"
+      max_volume_per_day: 200
+      requires_human_approval: false
+    - resource: "courrier_relance_brouillon"
+      action: "produire_brouillon_relance"
+      max_volume_per_day: 150
+      requires_human_approval: true
+  invoke:
+    - action: "execute_lettrage_automatique_proposition"
+      max_per_day: 8000
+      requires_human_approval: false
+    - action: "decision_octroi_credit"
+      max_per_day: 0
+      requires_human_approval: true
+    - action: "ecriture_comptable_definitive"
+      max_per_day: 0
+      requires_human_approval: true
+    - action: "declaration_soupcon_tracfin"
+      max_per_day: 0
+      requires_human_approval: true
+
+restrictions:
+  forbidden_actions:
+    - "decider_seul_octroi_ou_refus_credit"
+    - "inscrire_ecriture_au_grand_livre"
+    - "declarer_soupcon_a_tracfin"
+    - "envoyer_reporting_reglementaire"
+    - "modifier_grille_scoring"
+    - "decaisser_un_paiement"
+    - "transferer_donnees_financieres_hors_UE"
+    - "utiliser_donnees_sensibles_RGPD_article_9"
+  prohibited_criteria:
+    criteria:
+      - "origine_raciale_ou_ethnique"
+      - "opinions_politiques"
+      - "convictions_religieuses_ou_philosophiques"
+      - "appartenance_syndicale"
+      - "donnees_de_sante"
+      - "orientation_sexuelle"
+      - "donnees_biometriques_identifiantes"
+      - "donnees_genetiques"
+
+human_oversight:
+  regime: "human_in_the_loop"
+  ai_act_reference: "Article 14 — supervision humaine"
+  rgpd_reference: "Article 22 pour scoring credit"
+  mandatory_review_triggers:
+    - trigger: "proposition_decision_credit_montant_eleve"
+      threshold: "tout_montant_superieur_a_5000_eur"
+    - trigger: "alerte_lcb_ft_elevee"
+      threshold: "toute_alerte_de_typologie_suspecte"
+    - trigger: "ecart_lettrage_significatif"
+      threshold: "tout_ecart_superieur_a_1000_eur_ou_5_pourcent"
+    - trigger: "depassement_volume_quotidien"
+      threshold: 80
+      unit: "pourcentage_du_max_journalier"
+    - trigger: "tentative_action_hors_scope"
+      threshold: "systematique"
+  reviewer_profile:
+    roles_par_domaine:
+      credit: "operateur_credit_habilite"
+      comptable: "comptable_diplome"
+      lcb_ft: "responsable_lcb_ft_designe"
+    training_required: true
+  contestation_channel:
+    description: "Canal de contestation pour decision credit accessible au demandeur."
+    contact: "<contestation@societe-financement.fr>"
+
+expiration:
+  max_duration_months: 6
+  revocation:
+    immediate_triggers:
+      - "incident_de_securite"
+      - "biais_systematique_detecte"
+      - "reclamation_client"
+      - "mise_a_jour_modele"
+      - "controle_acpr"
+      - "controle_cnil"
+
+audit_trail:
+  log_retention_days: 3650  # 10 ans pour pieces comptables
+  log_retention_justification: "10 ans pour logs lies a ecritures comptables — Code commerce L.123-22. 5 ans pour logs LCB-FT et credit — L.561-12 CMF. A VALIDER PAR JURISTE."
+  log_access:
+    - "compliance_officer"
+    - "responsable_lcb_ft"
+    - "directeur_financier"
+    - "dpo"
+    - "audit_interne"
+    - "commissaire_aux_comptes"
+    - "acpr_sur_requisition"
+    - "tracfin_sur_requisition"
+
+compliance_mapping:
+  ai_act:
+    classification: "high_risk_system_pour_le_scoring_credit"
+    annex: "Annex III, point 5(b) pour le volet scoring credit. Volet lettrage et premiere ligne LCB-FT hors haut risque stricto sensu mais sous obligations transparence et tenue de registres."
+    articles:
+      - "Article 12 — registres"
+      - "Article 13 — transparence"
+      - "Article 14 — supervision humaine"
+      - "Article 26 — obligations deployeur"
+  gdpr:
+    articles:
+      - "Article 6 — base legale"
+      - "Article 9 — categories particulieres interdites"
+      - "Article 22 — pour scoring credit"
+      - "Article 35 — DPIA realisee"
+  dora:
+    application_date: "2025-01-17"
+  lcb_ft:
+    note: "Premiere ligne automatisee, declaration humaine."
+  comptable:
+    references:
+      - "Code commerce L.123-12 et L.123-22"
+      - "Plan Comptable General — Reglement ANC 2014-03"
