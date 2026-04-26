@@ -1,0 +1,204 @@
+# Exemple RESTRICTIF — Agent scoring credit BNPL
+#
+# Cas d'usage: fintech BNPL qui teste un agent en premiere lecture des
+# dossiers de financement court terme (split-payment 3x ou 4x, montants
+# unitaires de 50 a 3000 EUR). Decision finale exclusivement humaine.
+# Strictement classe en haut risque AI Act Annexe III point 5(b).
+#
+# Caracteristiques: scope tres etroit, oversight humain individuel sur
+# chaque decision, plafonds journaliers conservateurs, restrictions
+# discriminatoires durcies.
+
+metadata:
+  template_id: "amr-tpl-finance-comptable-v1"
+  template_version: "1.0.0"
+  variant: "restrictive"
+  domain: "finance"
+  subdomain: "bnpl-scoring-credit"
+  language: "fr"
+  jurisdiction: "FR-EU"
+  created_at: "2026-04-25"
+
+principal:
+  type: "legal_entity"
+  legal_name: "Fintech BNPL Exemple SAS"
+  registration:
+    country: "FR"
+    id_type: "SIREN"
+    id_value: "<SIREN>"
+  representative:
+    name: "<Compliance Officer>"
+    role: "Responsable conformite et controle interne"
+    email: "<compliance@fintech.fr>"
+  sector_status:
+    activity_type: "fintech_BNPL"
+    acpr_authorization_ref: "<ref agrement etablissement de paiement ou intermediaire credit>"
+    dora_scope: "entite_dans_perimetre"
+    lcb_ft_scope: "entite_assujettie_L561-2"
+  legal_basis_gdpr:
+    article: "6(1)(b) execution contrat + 6(1)(f) interet legitime sur historique scoring"
+    balancing_test_ref: "<ref test mise en balance interne>"
+  dpia_required:
+    status: "oui"
+    reference: "<DPIA scoring credit BNPL ref>"
+
+agent:
+  display_name: "BNPL-Scoring-Premiere-Lecture-01"
+  purpose: "Premiere lecture motivee de dossier de financement BNPL. Production d'une proposition de decision avec motivation. Aucune decision finale prise par l'agent. Validation humaine individuelle obligatoire pour chaque dossier — RGPD article 22."
+
+scope:
+  scope_types:
+    - "read_only_financial_analysis"
+    - "credit_decision_proposal_only"
+  business_processes:
+    - "analyse_dossier_credit_premiere_lecture"
+    - "verification_coherence_documents_KYC"
+    - "scoring_credit_proposition"
+  excluded_processes:
+    - "decision_finale_octroi_credit"
+    - "decision_finale_refus_credit"
+    - "modification_grille_scoring"
+    - "ecriture_comptable_definitive"
+    - "lettrage_automatique"  # hors scope BNPL premiere ligne
+
+permissions:
+  read:
+    - resource: "donnees_dossier_credit"
+      max_volume_per_day: 2000  # conservateur
+      fields_allowed:
+        - "identite_demandeur"
+        - "revenus_declares"
+        - "charges_declarees"
+        - "historique_credit_interne"
+        - "score_externe_anonymise"
+      fields_forbidden:
+        - "donnees_sante"
+        - "opinions_politiques"
+        - "origine_raciale_ou_ethnique"
+        - "convictions_religieuses"
+        - "orientation_sexuelle"
+        - "appartenance_syndicale"
+        - "donnees_genetiques"
+        - "donnees_biometriques_identifiantes"
+        - "code_postal_seul_comme_proxy"
+        - "patronyme_seul_comme_proxy"
+  write:
+    - resource: "proposition_decision_credit"
+      action: "produire_proposition_motivee"
+      max_volume_per_day: 1500
+      requires_human_approval: true
+      approval_mode: "individual_review_mandatory"
+      note: "Chaque proposition est revisee individuellement par un operateur credit habilite. Pas de validation par lot."
+  invoke:
+    - action: "decision_octroi_credit"
+      max_per_day: 0
+      requires_human_approval: true
+      note: "Action interdite a l'agent."
+    - action: "decision_refus_credit"
+      max_per_day: 0
+      requires_human_approval: true
+      note: "Action interdite a l'agent."
+
+restrictions:
+  forbidden_actions:
+    - "decider_seul_octroi_ou_refus_credit"
+    - "modifier_grille_scoring"
+    - "modifier_referentiel_clients"
+    - "decaisser_un_paiement"
+    - "modifier_taux_interet"
+    - "transferer_donnees_financieres_hors_UE"
+    - "entrainer_modele_tiers_sur_donnees_clients"
+    - "utiliser_donnees_sensibles_RGPD_article_9"
+  prohibited_criteria:
+    description: "Criteres durcis pour scoring BNPL — interdiction absolue."
+    criteria:
+      - "origine_raciale_ou_ethnique"
+      - "opinions_politiques"
+      - "convictions_religieuses_ou_philosophiques"
+      - "appartenance_syndicale"
+      - "donnees_de_sante"
+      - "orientation_sexuelle"
+      - "donnees_biometriques_identifiantes"
+      - "donnees_genetiques"
+      - "code_postal_seul_comme_proxy_discriminatoire"
+      - "patronyme_seul_comme_proxy_discriminatoire"
+      - "etat_matrimonial_seul"
+      - "age_seul_en_dehors_des_obligations_legales"
+
+human_oversight:
+  regime: "human_in_the_loop"
+  ai_act_reference: "Article 14 — Annexe III point 5(b)"
+  rgpd_reference: "Article 22 — intervention humaine significative obligatoire"
+  mandatory_review_triggers:
+    - trigger: "proposition_decision_credit"
+      threshold: "TOUTE_proposition_sans_exception"  # individuel obligatoire
+    - trigger: "depassement_volume_quotidien"
+      threshold: 70  # conservateur
+      unit: "pourcentage_du_max_journalier"
+    - trigger: "tentative_action_hors_scope"
+      threshold: "systematique"
+  reviewer_profile:
+    role: "operateur_credit_habilite_carte_professionnelle"
+    training_required: true
+    training_topics:
+      - "cadre_ai_act_haut_risque_annexe_iii_point_5"
+      - "obligations_rgpd_article_22"
+      - "criteres_discriminatoires_interdits"
+      - "biais_modeles_llm_en_scoring_credit"
+      - "procedures_internes_de_decision_credit"
+      - "droit_a_l_explication_du_demandeur"
+  review_capacity:
+    note: "Effectif humain dimensionne pour permettre une revue individuelle reelle. Une revue qui se reduit a un clic systematique ne constitue pas une intervention humaine significative."
+  contestation_channel:
+    description: "Canal de contestation de la decision automatisee accessible au demandeur. Recours humain garanti."
+    contact: "<contestation@fintech.fr>"
+
+expiration:
+  max_duration_months: 6  # validite courte — secteur tres surveille
+  revocation:
+    immediate_triggers:
+      - "incident_de_securite_confirme"
+      - "biais_systematique_detecte_dans_le_scoring"
+      - "reclamation_client_pour_decision_automatisee"
+      - "mise_a_jour_modele_llm"
+      - "modification_grille_scoring"
+      - "controle_acpr_ou_cnil_en_cours"
+      - "alerte_dpo"
+    revocation_contacts:
+      - "<compliance-officer@fintech.fr>"
+      - "<dpo@fintech.fr>"
+      - "<directeur-credit@fintech.fr>"
+
+audit_trail:
+  log_retention_days: 1825  # 5 ans — LCB-FT et dossiers credit
+  log_retention_justification: "5 ans — article L.561-12 CMF et conservation dossiers credit. A VALIDER PAR JURISTE."
+  log_access:
+    - "compliance_officer"
+    - "dpo"
+    - "audit_interne"
+    - "acpr_sur_requisition"
+    - "cnil_sur_requisition"
+    - "personne_concernee_pour_decision_la_concernant"
+
+compliance_mapping:
+  ai_act:
+    classification: "high_risk_system"
+    annex: "Annex III, point 5(b) — scoring de credit personne physique"
+    articles:
+      - "Article 12 — tenue de registres"
+      - "Article 13 — transparence"
+      - "Article 14 — supervision humaine"
+      - "Article 26 — obligations deployeur"
+      - "Article 27 — analyse impact droits fondamentaux"
+      - "Article 99 — sanctions"
+  gdpr:
+    articles:
+      - "Article 6(1)(b) et 6(1)(f) — base legale"
+      - "Article 9 — categories particulieres interdites"
+      - "Article 22 — droit intervention humaine + droit explication + droit contestation"
+      - "Article 35 — DPIA realisee"
+  dora:
+    application_date: "2025-01-17"
+    note: "Entite dans perimetre DORA. Tests de resilience operationnelle requis."
+  lcb_ft:
+    note: "Entite assujettie L.561-2. KYC obligatoire avant scoring."

@@ -1,0 +1,377 @@
+# AMR Mandate Template — Agent Finance & Comptable
+# Version 1.0 — langue: fr — juridiction: FR-EU
+# Ce fichier est un gabarit. Les valeurs entre < > doivent etre renseignees
+# par l'organisation qui emet le mandat avant chargement dans le registre AMR.
+
+metadata:
+  template_id: "amr-tpl-finance-comptable-v1"
+  template_version: "1.0.0"
+  domain: "finance"
+  subdomain: "credit-comptabilite-lcbft"
+  language: "fr"
+  jurisdiction: "FR-EU"
+  created_at: "2026-04-25"
+  reference_standards:
+    - "Regulation (EU) 2024/1689 — AI Act"
+    - "Regulation (EU) 2022/2554 — DORA"
+    - "Regulation (EU) 2016/679 — GDPR"
+    - "Code monetaire et financier — articles L.561-1 et suivants (LCB-FT)"
+    - "Code de commerce — articles L.123-12 et suivants (obligations comptables)"
+    - "Plan Comptable General — Reglement ANC 2014-03"
+    - "IFRS si entite concernee par les normes internationales"
+
+principal:
+  type: "legal_entity"
+  legal_name: "<Raison sociale du mandant>"
+  registration:
+    country: "FR"
+    id_type: "SIREN"
+    id_value: "<SIREN 9 chiffres>"
+  representative:
+    name: "<Nom du representant habilite>"
+    role: "<Fonction — ex: Directeur Financier, Compliance Officer, Responsable LCB-FT>"
+    email: "<email@entreprise.fr>"
+  sector_status:
+    activity_type: "<etablissement_credit | societe_financement | EME | EP | fintech_BNPL | expert_comptable | entite_non_regulee>"
+    acpr_authorization_ref: "<ref agrement ACPR si applicable>"
+    dora_scope: "<entite_dans_perimetre | entite_hors_perimetre>"
+    lcb_ft_scope: "<entite_assujettie_L561-2 | entite_non_assujettie>"
+  legal_basis_gdpr:
+    article: "6(1)(b) ou 6(1)(c) ou 6(1)(f)"
+    description: "Selon le contexte: 6(1)(b) execution contrat pour la facturation/comptabilite, 6(1)(c) obligation legale pour LCB-FT et obligations comptables, 6(1)(f) interet legitime pour le scoring interne. A VALIDER PAR JURISTE selon cas d'usage precis."
+    balancing_test_ref: "<reference interne du test de mise en balance si 6(1)(f)>"
+  dpia_required:
+    status: "<oui | non>"
+    reference: "<reference DPIA interne si oui>"
+    note: "DPIA quasi systematique pour scoring credit — article 35(3)(a) RGPD."
+
+agent:
+  agent_id: "<identifiant unique interne de l'agent>"
+  display_name: "<nom fonctionnel — ex: Finance-Assistant-Cycle-Octroi-01>"
+  provider: "<editeur ou equipe interne>"
+  model:
+    family: "<famille — ex: Claude, GPT, Mistral, Llama>"
+    version: "<version specifique deployee>"
+    hosted_in: "<zone d'hebergement — ex: EU-West, on-premise>"
+  purpose: "Assister les operateurs finance, comptables et compliance officers humains dans l'analyse de dossiers, la production de propositions, le rapprochement comptable et la premiere ligne de surveillance LCB-FT, sans aucune decision finale autonome de credit, d'ecriture comptable opposable ou de declaration reglementaire."
+
+scope:
+  business_processes:
+    - "analyse_dossier_credit_premiere_lecture"
+    - "verification_coherence_documents_KYC"
+    - "scoring_credit_proposition"
+    - "lettrage_automatique_proposition"
+    - "controle_coherence_ecritures_comptables"
+    - "production_brouillon_reporting_reglementaire"
+    - "premiere_analyse_transaction_lcb_ft"
+    - "alerte_transaction_atypique"
+    - "redaction_brouillon_courrier_relance"
+    - "preparation_dossier_revision_comptable"
+  scope_types:
+    # Types de scope qui declencheront l'emission de tokens d'action AMR.
+    - "read_only_financial_analysis"
+    - "credit_decision_proposal_only"
+    - "accounting_entry_proposal_only"
+    - "lcb_ft_first_line_monitoring"
+    - "regulatory_report_draft_only"
+  entities_covered:
+    - "<liste explicite des entites juridiques couvertes>"
+  excluded_processes:
+    - "decision_finale_octroi_credit"
+    - "decision_finale_refus_credit"
+    - "ecriture_comptable_definitive"
+    - "cloture_comptable_periodique"
+    - "declaration_soupcon_tracfin"
+    - "envoi_reporting_reglementaire_acpr"
+    - "modification_referentiel_clients"
+    - "modification_grille_scoring"
+    - "decaissement_paiement"
+    - "modification_taux_interet"
+
+permissions:
+  read:
+    - resource: "donnees_dossier_credit"
+      max_volume_per_day: 5000
+      fields_allowed:
+        - "identite_demandeur"
+        - "revenus_declares"
+        - "charges_declarees"
+        - "historique_credit_interne"
+        - "score_externe_anonymise"
+        - "documents_justificatifs"
+      fields_forbidden:
+        - "donnees_sante"
+        - "opinions_politiques"
+        - "origine_raciale_ou_ethnique"
+        - "convictions_religieuses"
+        - "orientation_sexuelle"
+        - "appartenance_syndicale"
+        - "donnees_genetiques"
+        - "donnees_biometriques_identifiantes"
+    - resource: "ecritures_comptables_lecture"
+      max_volume_per_day: 50000
+      fields_allowed:
+        - "numero_ecriture"
+        - "date_ecriture"
+        - "compte_debit"
+        - "compte_credit"
+        - "montant"
+        - "libelle"
+        - "piece_justificative_ref"
+    - resource: "transactions_paiement"
+      max_volume_per_day: 100000
+      anonymisation_required: false
+      note: "Acces aux transactions necessaire pour analyse LCB-FT — article L.561-10-2 CMF."
+    - resource: "rapports_comptables_internes"
+      max_volume_per_day: 200
+  write:
+    - resource: "proposition_decision_credit"
+      action: "produire_proposition_motivee"
+      max_volume_per_day: 1000
+      requires_human_approval: true
+      note: "L'agent ne decide JAMAIS — il propose. Validation humaine obligatoire (RGPD article 22)."
+    - resource: "proposition_ecriture_comptable"
+      action: "produire_proposition_ecriture"
+      max_volume_per_day: 2000
+      requires_human_approval: true
+      note: "Aucune ecriture inscrite au grand livre sans validation comptable humaine."
+    - resource: "alerte_lcb_ft"
+      action: "elever_alerte_vers_responsable_lcb_ft"
+      max_volume_per_day: 500
+      requires_human_approval: false
+      note: "L'agent peut elever une alerte vers le responsable LCB-FT, jamais declarer a Tracfin."
+    - resource: "brouillon_reporting_reglementaire"
+      action: "produire_brouillon_corep_finrep"
+      max_volume_per_day: 50
+      requires_human_approval: true
+    - resource: "courrier_relance_brouillon"
+      action: "produire_brouillon_relance"
+      max_volume_per_day: 200
+      requires_human_approval: true
+  invoke:
+    - action: "execute_lettrage_automatique_proposition"
+      max_per_day: 10000
+      requires_human_approval: false
+      note: "Lettrage propose, validation par lot par comptable humain."
+    - action: "decision_octroi_credit"
+      max_per_day: 0
+      requires_human_approval: true
+      note: "Action interdite a l'agent. Decision finale exclusivement humaine — RGPD article 22."
+    - action: "ecriture_comptable_definitive"
+      max_per_day: 0
+      requires_human_approval: true
+      note: "Action interdite a l'agent. Ecriture definitive exclusivement humaine."
+    - action: "declaration_soupcon_tracfin"
+      max_per_day: 0
+      requires_human_approval: true
+      note: "Action interdite a l'agent. Declaration exclusivement humaine — Code monetaire L.561-15."
+
+restrictions:
+  forbidden_actions:
+    - "decider_seul_octroi_ou_refus_credit"
+    - "inscrire_ecriture_au_grand_livre"
+    - "declarer_soupcon_a_tracfin"
+    - "envoyer_reporting_reglementaire"
+    - "modifier_grille_scoring"
+    - "modifier_referentiel_clients"
+    - "decaisser_un_paiement"
+    - "modifier_taux_interet_ou_conditions_contractuelles"
+    - "cloturer_periode_comptable"
+    - "transferer_donnees_financieres_hors_UE"
+    - "entrainer_modele_tiers_sur_donnees_clients"
+    - "utiliser_donnees_sensibles_RGPD_article_9"
+  prohibited_criteria:
+    description: >
+      Criteres explicitement interdits dans toute proposition de decision
+      automatisee, conformement a l'article 9 du RGPD et au Code de la consommation.
+    criteria:
+      - "origine_raciale_ou_ethnique"
+      - "opinions_politiques"
+      - "convictions_religieuses_ou_philosophiques"
+      - "appartenance_syndicale"
+      - "donnees_de_sante"
+      - "orientation_sexuelle"
+      - "donnees_biometriques_identifiantes"
+      - "donnees_genetiques"
+      - "code_postal_seul_comme_proxy_discriminatoire"
+      - "patronyme_seul_comme_proxy_discriminatoire"
+  human_only_mandatory:
+    description: >
+      Liste des actions exclusivement humaines, meme avec mandat actif.
+      Le runtime AMR refusera l'emission de token pour toute tentative
+      d'invocation de ces actions par un agent.
+    actions:
+      - "decision_finale_octroi_credit"
+      - "decision_finale_refus_credit"
+      - "ecriture_comptable_definitive"
+      - "cloture_comptable_periodique"
+      - "declaration_soupcon_tracfin"
+      - "envoi_reporting_reglementaire_acpr"
+      - "modification_grille_scoring"
+      - "decaissement_paiement"
+
+data_access:
+  categories:
+    - label: "donnees_dossier_credit"
+      sensitivity: "personal_financial"
+      gdpr_basis: "6(1)(b) execution contrat ou 6(1)(f) interet legitime selon contexte"
+    - label: "ecritures_comptables"
+      sensitivity: "internal_financial"
+      gdpr_basis: "6(1)(c) obligation legale comptable"
+    - label: "transactions_paiement_lcb_ft"
+      sensitivity: "personal_financial"
+      gdpr_basis: "6(1)(c) obligation legale LCB-FT"
+    - label: "documents_KYC"
+      sensitivity: "personal_identifying"
+      gdpr_basis: "6(1)(c) obligation legale LCB-FT et KYC"
+  special_categories_article_9: "interdit"
+  retention:
+    credit_decision_records_years: 5
+    accounting_records_years: 10
+    lcb_ft_records_years: 5
+    operational_logs_days: 365
+    audit_logs_days: 1825
+    justification: "10 ans pour les pieces comptables — article L.123-22 Code de commerce. 5 ans pour les pieces LCB-FT et dossiers credit — article L.561-12 CMF. A VALIDER PAR JURISTE selon politique interne et statut de l'entite."
+  data_minimization: true
+  transfer_outside_eu: false
+
+human_oversight:
+  regime: "human_in_the_loop"
+  ai_act_reference: "Article 14 — supervision humaine sur systeme haut risque Annexe III point 5"
+  rgpd_reference: "Article 22 — droit a l'intervention humaine significative pour decisions automatisees"
+  mandatory_review_triggers:
+    - trigger: "proposition_decision_credit"
+      threshold: "toute_proposition_au_dessus_de_500_eur"
+    - trigger: "alerte_lcb_ft_elevee"
+      threshold: "tout_alerte_signalant_typologie_suspecte"
+    - trigger: "ecart_lettrage_significatif"
+      threshold: "tout_ecart_superieur_a_1000_eur_ou_5_pourcent_du_montant"
+    - trigger: "anomalie_coherence_ecritures"
+      threshold: "tout_signalement_d_incoherence_comptable"
+    - trigger: "depassement_volume_quotidien"
+      threshold: 80
+      unit: "pourcentage_du_max_journalier"
+    - trigger: "tentative_action_hors_scope"
+      threshold: "systematique"
+    - trigger: "transaction_montant_eleve"
+      threshold: "tout_montant_superieur_a_10000_eur_pour_revue_lcb_ft"
+  reviewer_profile:
+    role: "operateur_credit_habilite_ou_comptable_diplome_ou_responsable_lcb_ft"
+    training_required: true
+    training_topics:
+      - "cadre_ai_act_haut_risque_annexe_iii_point_5"
+      - "obligations_rgpd_article_22_decision_automatisee"
+      - "obligations_lcb_ft_article_L.561_et_suivants"
+      - "obligations_dora_gestion_risque_IT"
+      - "biais_et_limites_des_modeles_llm_en_scoring"
+      - "criteres_discriminatoires_interdits"
+      - "procedures_internes_de_decision_credit"
+  review_capacity:
+    note: "L'organisation doit dimensionner l'effectif humain de revue en fonction du volume de propositions de l'agent. Une revue qui se reduit a un clic systematique ne constitue pas une intervention humaine significative au sens de l'article 22 RGPD."
+
+expiration:
+  valid_from: "<AAAA-MM-JJ>"
+  valid_until: "<AAAA-MM-JJ — 6 mois maximum recommande pour ce template>"
+  max_duration_months: 6
+  revocation:
+    immediate_triggers:
+      - "incident_de_securite_confirme"
+      - "biais_systematique_detecte_dans_le_scoring"
+      - "reclamation_client_pour_decision_automatisee"
+      - "mise_a_jour_majeure_du_modele_llm"
+      - "modification_de_la_grille_de_scoring"
+      - "changement_de_perimetre_DORA"
+      - "changement_de_perimetre_LCB_FT"
+      - "controle_acpr_ou_cnil_en_cours"
+      - "changement_de_prestataire_critique"
+    revocation_contacts:
+      - "<compliance-officer@entreprise.fr>"
+      - "<directeur-financier@entreprise.fr>"
+      - "<responsable-lcb-ft@entreprise.fr>"
+      - "<dpo@entreprise.fr>"
+
+audit_trail:
+  logged_events:
+    - "lecture_dossier_credit"
+    - "production_proposition_credit"
+    - "validation_humaine_proposition_credit"
+    - "rejet_apres_validation_humaine"
+    - "lecture_ecriture_comptable"
+    - "production_proposition_ecriture"
+    - "validation_humaine_ecriture"
+    - "lettrage_automatique_propose"
+    - "validation_humaine_lettrage"
+    - "premiere_analyse_lcb_ft"
+    - "alerte_lcb_ft_elevee"
+    - "production_brouillon_reporting"
+    - "tentative_action_hors_scope"
+    - "emission_token_action"
+    - "refus_emission_token_action"
+    - "depassement_volume_quotidien"
+  log_retention_days: 1825
+  log_retention_justification: "5 ans — alignement avec exigences LCB-FT (article L.561-12 CMF) et bonnes pratiques DORA. 10 ans pour les logs lies a une ecriture comptable — alignement Code de commerce article L.123-22. A VALIDER PAR JURISTE."
+  log_access:
+    - "compliance_officer"
+    - "directeur_financier"
+    - "responsable_lcb_ft"
+    - "dpo"
+    - "audit_interne"
+    - "commissaire_aux_comptes_sur_perimetre_le_concernant"
+    - "acpr_sur_requisition"
+    - "tracfin_sur_requisition"
+    - "personne_concernee_pour_decision_la_concernant"
+  tamper_evidence: "sha256_chain"
+
+compliance_mapping:
+  ai_act:
+    classification: "high_risk_system"
+    annex: "Annex III, point 5(b) — evaluation de la solvabilite des personnes physiques ou etablissement de leur score de credit"
+    note_classification: "Le scoring de credit envers une personne physique est explicitement classe en haut risque par l'AI Act. Le lettrage automatique pur (sans decision sur personne) reste hors haut risque mais sous obligations transparence et tenue de registre. A VALIDER PAR JURISTE selon perimetre exact."
+    articles:
+      - "Article 12 — tenue de registres automatiques"
+      - "Article 13 — transparence vis-a-vis des deployeurs"
+      - "Article 14 — supervision humaine effective"
+      - "Article 26 — obligations des deployeurs de systemes haut risque"
+      - "Article 27 — analyse d'impact sur les droits fondamentaux"
+      - "Article 99 — sanctions administratives"
+    application_calendar:
+      annex_iii_application_date: "2026-08-02"
+      potential_postponement: "Digital Omnibus — report projete au 2026-12-02 selon trilogues. A SUIVRE."
+  gdpr:
+    articles:
+      - "Article 6 — base legale"
+      - "Article 9 — categories particulieres (interdit dans le scoring)"
+      - "Article 22 — decision individuelle automatisee + intervention humaine significative"
+      - "Article 30 — registre des activites de traitement"
+      - "Article 32 — securite du traitement"
+      - "Article 35 — analyse d'impact (DPIA) — quasi systematique pour scoring credit"
+      - "Article 33 — notification de violation"
+    article_22_specifics: "L'article 22 ouvre droit a une intervention humaine, a l'expression du point de vue du demandeur et a la contestation de la decision. L'organisation doit prevoir un canal de contestation effectif."
+  dora:
+    application_date: "2025-01-17"
+    obligations_mappees:
+      - "gestion_du_risque_TIC_article_5"
+      - "tests_de_resilience_operationnelle_article_24"
+      - "gestion_des_prestataires_tiers_critiques_articles_28_a_44"
+      - "notification_d_incident_majeur_article_19"
+    competent_authority: "ACPR"
+  lcb_ft:
+    code_monetaire_articles:
+      - "L.561-2 — entites assujetties"
+      - "L.561-4-1 — vigilance"
+      - "L.561-10 — vigilance complementaire"
+      - "L.561-15 — declaration de soupcon a Tracfin"
+      - "L.561-32 — controle interne"
+    note: "L'agent en premiere ligne LCB-FT eleve des alertes ; la declaration de soupcon a Tracfin (L.561-15) reste exclusivement humaine."
+  comptable:
+    code_commerce_articles:
+      - "L.123-12 — obligation de tenir une comptabilite"
+      - "L.123-22 — duree de conservation 10 ans"
+    plan_comptable: "Reglement ANC 2014-03 du Plan Comptable General — applicable hors entites IFRS"
+    ifrs_si_applicable: "IAS/IFRS pour les entites cotees ou consolidees au-dessus des seuils legaux. A VALIDER PAR JURISTE selon statut de l'entite."
+
+signature:
+  method: "<eIDAS qualifie | avance | interne>"
+  signed_at: "<AAAA-MM-JJ>"
+  signatory: "<nom et fonction>"
+  signature_ref: "<reference de la signature ou hash>"
