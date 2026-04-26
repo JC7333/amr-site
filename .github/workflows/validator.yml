@@ -1,0 +1,73 @@
+name: Validator
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'templates/**'
+      - 'index.html'
+      - '.github/workflows/**'
+
+jobs:
+  lint:
+    name: Structural checks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Run validator
+        id: validator
+        run: python .github/scripts/validate.py
+        continue-on-error: true
+
+      - name: Comment PR with results
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let body;
+            try {
+              body = fs.readFileSync('validator_report.md', 'utf8');
+            } catch (e) {
+              body = '## Validator\n\nErreur interne du Validator. Voir les logs du workflow.';
+            }
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const existing = comments.find(c => c.user.type === 'Bot' && c.body.startsWith('## Validator'));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body: body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: body,
+              });
+            }
+
+      - name: Fail if blocking errors
+        if: steps.validator.outcome == 'failure'
+        run: exit 1
