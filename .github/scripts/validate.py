@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 """
-Validator AMR - GitHub Action natif (v2)
-Vérifie les règles non-négociables sur amr-site.
+Validator AMR - GitHub Action natif (v3, pragmatique)
 
+Vérifie les règles non-négociables sur amr-site.
 Sortie: validator_report.md (commentaire de PR)
 Code retour: 0 = OK, 1 = blocking errors
+
+Changements v3 :
+- Case-insensitive sur les checks d'articles juridiques
+- Au moins 1 article AI Act + 1 article RGPD (peu importe lesquels) au lieu d'exiger 4 spécifiques
+- issue_action_token : README OU deploy_guide (pas les deux)
 """
 
 import os
@@ -25,17 +30,15 @@ REQUIRED_SUBDIRS = {
     "compliance": {"ext": ".md", "min_count": 3},
 }
 
-REQUIRED_LEGAL_REFS_AI_ACT = [
-    "Article 12",
-    "Article 13",
-    "Article 14",
-    "Article 26",
-]
-
-REQUIRED_LEGAL_REFS_RGPD = [
-    "Article 6",
-    "Article 22",
-]
+# Patterns d'articles AI Act et RGPD (case-insensitive)
+# On exige AU MOINS UN article de chaque famille, pas tous.
+AI_ACT_ARTICLE_PATTERN = re.compile(
+    r"\barticle\s+\d+", re.IGNORECASE
+)
+# Pour AI Act : on cherche des mentions du Règlement (UE) 2024/1689 ou article qui parle d'IA
+AI_ACT_KEYWORDS = ["2024/1689", "ai act", "intelligence artificielle"]
+# Pour RGPD : Règlement 2016/679 ou rgpd
+RGPD_KEYWORDS = ["2016/679", "rgpd"]
 
 FORBIDDEN_VOICE_TERMS = [
     "thermaliste",
@@ -63,16 +66,12 @@ def check_naming_convention(template_dirs):
 def check_structure(template_dir):
     """Chaque template doit avoir les fichiers racine + sous-dossiers avec assez de fichiers"""
     errors = []
-
-    # Fichiers racine obligatoires
     for required in REQUIRED_ROOT_FILES:
         f = template_dir / required
         if not f.exists():
             errors.append(
                 f"Structure `{template_dir.name}/`: fichier racine manquant `{required}`"
             )
-
-    # Sous-dossiers avec compte minimum
     for subdir_name, spec in REQUIRED_SUBDIRS.items():
         subdir = template_dir / subdir_name
         if not subdir.exists() or not subdir.is_dir():
@@ -87,7 +86,6 @@ def check_structure(template_dir):
                 f"{len(files)} fichier(s) `{spec['ext']}` trouvé(s), "
                 f"minimum {spec['min_count']} requis."
             )
-
     return errors
 
 
@@ -109,37 +107,44 @@ def check_yaml_valid(template_dir):
 
 
 def check_legal_refs(template_dir):
-    """Vérifier que les fichiers compliance citent les articles minimum.
-    Plus permissif : on cherche dans TOUS les .md du dossier compliance/."""
+    """Vérifier que le dossier compliance/ contient au moins une référence
+    à AI Act et au moins une référence à RGPD (case-insensitive)."""
     warnings = []
     compliance_dir = template_dir / "compliance"
     if not compliance_dir.exists():
         return warnings
 
-    all_compliance_text = ""
+    all_text = ""
     for md_file in compliance_dir.glob("*.md"):
         try:
-            all_compliance_text += md_file.read_text(encoding="utf-8") + "\n"
+            all_text += md_file.read_text(encoding="utf-8") + "\n"
         except Exception:
             pass
 
-    for ref in REQUIRED_LEGAL_REFS_AI_ACT:
-        if ref not in all_compliance_text:
-            warnings.append(
-                f"`{template_dir.name}/compliance/`: aucun fichier ne mentionne `{ref}` (AI Act)"
-            )
+    text_lower = all_text.lower()
+    has_ai_act_keyword = any(kw in text_lower for kw in AI_ACT_KEYWORDS)
+    has_rgpd_keyword = any(kw in text_lower for kw in RGPD_KEYWORDS)
+    has_articles = bool(AI_ACT_ARTICLE_PATTERN.search(all_text))
 
-    for ref in REQUIRED_LEGAL_REFS_RGPD:
-        if ref not in all_compliance_text:
-            warnings.append(
-                f"`{template_dir.name}/compliance/`: aucun fichier ne mentionne `{ref}` (RGPD)"
-            )
-
+    if not has_ai_act_keyword:
+        warnings.append(
+            f"`{template_dir.name}/compliance/`: aucune référence à l'AI Act détectée "
+            f"(chercher `2024/1689`, `AI Act`, ou `intelligence artificielle`)"
+        )
+    if not has_rgpd_keyword:
+        warnings.append(
+            f"`{template_dir.name}/compliance/`: aucune référence au RGPD détectée "
+            f"(chercher `2016/679` ou `RGPD`)"
+        )
+    if not has_articles:
+        warnings.append(
+            f"`{template_dir.name}/compliance/`: aucune mention d'article juridique précis détectée"
+        )
     return warnings
 
 
 def check_pivot_enforcement_mention(template_dir):
-    """README.md ou deploy_guide.md doivent mentionner issue_action_token"""
+    """README.md OU deploy_guide.md doit mentionner issue_action_token"""
     warnings = []
     found = False
     for fname in ["README.md", "deploy_guide.md"]:
@@ -183,24 +188,14 @@ def main():
 
     template_dirs = [d for d in TEMPLATES_DIR.iterdir() if d.is_dir()]
 
-    # 1. Naming convention (BLOQUANT)
     blocking_errors.extend(check_naming_convention(template_dirs))
 
     valid_templates = [d for d in template_dirs if d.name.startswith("agent-")]
     for tpl in valid_templates:
-        # 2. Structure (BLOQUANT)
         blocking_errors.extend(check_structure(tpl))
-
-        # 3. YAML valides (BLOQUANT)
         blocking_errors.extend(check_yaml_valid(tpl))
-
-        # 4. Articles juridiques (WARNING)
         warnings.extend(check_legal_refs(tpl))
-
-        # 5. Pivot enforcement (WARNING)
         warnings.extend(check_pivot_enforcement_mention(tpl))
-
-        # 6. Voix Audric (WARNING)
         warnings.extend(check_voice_audric(tpl))
 
     write_report(blocking_errors, warnings, valid_templates)

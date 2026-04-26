@@ -29,6 +29,12 @@ Déployer un agent de recrutement sans mandat explicite et vérifiable, c'est la
 - `compliance/` : trois fiches courtes qui cartographient le mandat avec l'AI Act, le RGPD et les règles sectorielles RH françaises.
 - `deploy_guide.md` : checklist de mise en production et points d'attention.
 
+## Lien avec le pivot enforcement AMR
+
+Ce template fournit la configuration de mandat que le tool MCP `issue_action_token` utilisera pour émettre les jetons d'action signés en Ed25519 lors du runtime. Le mandat décrit ce qui est autorisé ; le runtime AMR n'émet un token que si le mandat est actif et couvre l'action demandée dans son scope. Pas de mandat valide, pas de token, pas d'action possible.
+
+C'est un verrou structurel avant l'acte, pas un audit après. Pour le recrutement, cela signifie qu'aucun envoi de réponse négative en masse, aucune modification d'offre publiée, aucune programmation d'entretien ne peut se déclencher si le mandat ne couvre pas explicitement cette catégorie d'action. La spécification d'émission est documentée dans `docs/token-issuance-spec.md` du registre AMR.
+
 ## Pourquoi c'est risqué sans mandat
 
 Un agent de recrutement sans mandat documenté expose l'organisation à plusieurs risques concrets :
