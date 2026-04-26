@@ -628,6 +628,7 @@ html[lang="fr"] .hero-ctas a[data-lang="en"] { display: none; }
     <li><a href="#problem" class="nav-hide-mobile" data-lang="en">Problem</a><a href="#problem" class="nav-hide-mobile" data-lang="fr">Problème</a></li>
     <li><a href="#solution" class="nav-hide-mobile" data-lang="en">Solution</a><a href="#solution" class="nav-hide-mobile" data-lang="fr">Solution</a></li>
     <li><a href="#enforcement" class="nav-hide-mobile" data-lang="en">Enforcement</a><a href="#enforcement" class="nav-hide-mobile" data-lang="fr">Enforcement</a></li>
+    <li><a href="#templates" class="nav-hide-mobile" data-lang="en">Templates</a><a href="#templates" class="nav-hide-mobile" data-lang="fr">Templates</a></li>
     <li><a href="#about" class="nav-hide-mobile" data-lang="en">About</a><a href="#about" class="nav-hide-mobile" data-lang="fr">À propos</a></li>
     <li><a href="https://github.com/JC7333/amr" target="_blank" rel="noopener">GitHub</a></li>
     <li><button class="lang-toggle" id="langToggle" aria-label="Switch language">FR / EN</button></li>
@@ -690,8 +691,8 @@ html[lang="fr"] .hero-ctas a[data-lang="en"] { display: none; }
 <!-- SOLUTION -->
 <section class="solution" id="solution">
   <div class="reveal">
-    <h2 class="section-title" data-lang="en">Four tools. One mandate chain.</h2>
-    <h2 class="section-title" data-lang="fr">Quatre outils. Une chaîne de mandats.</h2>
+    <h2 class="section-title" data-lang="en">Five tools. One mandate chain.</h2>
+    <h2 class="section-title" data-lang="fr">Cinq outils. Une chaîne de mandats.</h2>
 
     <p class="section-subtitle" data-lang="en">AMR is a Model Context Protocol server. Install it, and any MCP-compatible AI agent can issue, verify, and audit legal mandates natively.</p>
     <p class="section-subtitle" data-lang="fr">AMR est un serveur Model Context Protocol. Installez-le, et tout agent IA compatible MCP peut émettre, vérifier et auditer des mandats légaux nativement.</p>
@@ -709,14 +710,22 @@ html[lang="fr"] .hero-ctas a[data-lang="en"] { display: none; }
       <p data-lang="fr">Avant toute action sensible, l'agent vérifie : ce mandat est-il valide, actif, dans le périmètre ? Un appel. Réponse instantanée.</p>
     </div>
     <div class="card reveal">
-      <div class="card-tool">revoke_mandate</div>
-      <p data-lang="en">Revoke any mandate instantly. The revocation propagates through the chain. No more ghost authorizations.</p>
-      <p data-lang="fr">Révoquez n'importe quel mandat instantanément. La révocation se propage dans la chaîne. Plus d'autorisations fantômes.</p>
+      <div class="card-tool">log_action</div>
+      <p data-lang="en">Log every action taken under a mandate. Each event is hashed, timestamped, and chained to the parent mandate. Court-ready audit trail by construction.</p>
+      <p data-lang="fr">Enregistrez chaque action prise sous un mandat. Chaque événement est hashé, horodaté et chaîné au mandat parent. Piste d'audit opposable par construction.</p>
     </div>
     <div class="card reveal">
-      <div class="card-tool">audit_mandate_chain</div>
-      <p data-lang="en">Full audit trail: who mandated whom, when, for what, with what legal basis. Tamper-proof. Court-ready.</p>
-      <p data-lang="fr">Traçabilité complète : qui a mandaté qui, quand, pour quoi, sur quelle base légale. Inviolable. Opposable.</p>
+      <div class="card-tool">get_proof</div>
+      <p data-lang="en">Generate a cryptographic proof of any mandate or action. SHA-256 chain verification. Tamper-proof. Court-ready.</p>
+      <p data-lang="fr">Générez une preuve cryptographique de tout mandat ou action. Vérification de chaîne SHA-256. Inviolable. Opposable.</p>
+    </div>
+  </div>
+
+  <div class="cards-grid" style="grid-template-columns: 1fr; margin-top: var(--space-md);">
+    <div class="card reveal" style="border-color: var(--sage); background: rgba(92, 107, 94, 0.04); padding: var(--space-md);">
+      <div class="card-tool" style="color: var(--gold); font-weight: 500;">issue_action_token <span style="color: var(--sage); font-size: 0.7rem; padding-left: 0.5rem;">— PIVOT ENFORCEMENT · LIVE</span></div>
+      <p data-lang="en"><strong>The lock.</strong> AMR sits in the token issuance layer. No valid mandate → no Ed25519-signed JWS token → no action possible. Structural enforcement before the act, not audit after. Live in production since April 23, 2026.</p>
+      <p data-lang="fr"><strong>Le verrou.</strong> AMR se place dans la couche d'émission de jetons. Pas de mandat valide → pas de jeton JWS signé Ed25519 → pas d'action possible. Verrou structurel avant l'acte, pas un audit après. En production depuis le 23 avril 2026.</p>
     </div>
   </div>
 </section>
@@ -761,12 +770,12 @@ html[lang="fr"] .hero-ctas a[data-lang="en"] { display: none; }
     </div>
     <div class="enforcement-arrow">→</div>
     <div class="enforcement-col enforcement-col-pro">
-      <div class="enforcement-label" data-lang="en">Pro · Coming Q3 2026</div>
-      <div class="enforcement-label" data-lang="fr">Pro · Prévu T3 2026</div>
+      <div class="enforcement-label" data-lang="en">Pro · Live since April 2026</div>
+      <div class="enforcement-label" data-lang="fr">Pro · En production depuis avril 2026</div>
       <h3 data-lang="en">The Lock</h3>
       <h3 data-lang="fr">Le Verrou</h3>
-      <p data-lang="en">No valid mandate → no execution authorization → no action possible. The system refuses to work without the mandate. Structural enforcement, not procedural.</p>
-      <p data-lang="fr">Pas de mandat valide → pas d'autorisation d'exécution → pas d'action possible. Le système refuse de fonctionner sans le mandat. Enforcement structurel, pas procédural.</p>
+      <p data-lang="en">No valid mandate → no Ed25519-signed token → no action possible. The system refuses to work without the mandate. Structural enforcement, not procedural. Available now via the <code style="font-family: var(--font-mono); font-size: 0.85rem;">issue_action_token</code> tool.</p>
+      <p data-lang="fr">Pas de mandat valide → pas de jeton signé Ed25519 → pas d'action possible. Le système refuse de fonctionner sans le mandat. Verrou structurel, pas procédural. Disponible via le tool <code style="font-family: var(--font-mono); font-size: 0.85rem;">issue_action_token</code>.</p>
     </div>
   </div>
 
@@ -801,6 +810,54 @@ html[lang="fr"] .hero-ctas a[data-lang="en"] { display: none; }
       <p data-lang="fr">Les agents IA traitant des données employés ont besoin de mandats conformes RGPD. AMR intègre les exigences CNIL dans chaque mandat.</p>
     </div>
   </div>
+</section>
+
+<!-- TEMPLATES -->
+<section class="use-cases" id="templates">
+  <div class="reveal">
+    <h2 class="section-title" data-lang="en">Sector templates — ready to deploy</h2>
+    <h2 class="section-title" data-lang="fr">Templates sectoriels — prêts à déployer</h2>
+
+    <p class="section-text" data-lang="en">Mandate templates calibrated for specific industries. Each pack includes a structured <code style="font-family: var(--font-mono); font-size: 0.9rem;">mandate.yaml</code>, three concrete examples (permissive, restrictive, balanced), AI Act / GDPR / sector-specific compliance mappings, and a deployment checklist.</p>
+    <p class="section-text" data-lang="fr">Templates de mandat calibrés pour des industries précises. Chaque pack contient un <code style="font-family: var(--font-mono); font-size: 0.9rem;">mandate.yaml</code> structuré, trois exemples concrets (permissif, restrictif, équilibré), des cartographies AI Act / RGPD / sectorielle, et une checklist de déploiement.</p>
+  </div>
+
+  <div class="use-cases-grid" style="grid-template-columns: 1fr 1fr; margin-top: var(--space-lg);">
+    <div class="use-case-item reveal">
+      <h3><a href="https://github.com/JC7333/amr-site/tree/main/templates/agent-infrastructure-datacenter" target="_blank" rel="noopener" style="color: var(--text); text-decoration: none; border-bottom: 1px solid var(--gold-light);">agent-infrastructure-datacenter</a></h3>
+      <p data-lang="en">NOC and SRE assistants on hosting, colocation and edge infrastructure. NIS2 + ISO 27001 + ISO 22301 + TIA-942.</p>
+      <p data-lang="fr">Assistants NOC et SRE sur infrastructure d'hébergement, colocation et edge. NIS2 + ISO 27001 + ISO 22301 + TIA-942.</p>
+    </div>
+    <div class="use-case-item reveal">
+      <h3><a href="https://github.com/JC7333/amr-site/tree/main/templates/agent-finance-comptable" target="_blank" rel="noopener" style="color: var(--text); text-decoration: none; border-bottom: 1px solid var(--gold-light);">agent-finance-comptable</a></h3>
+      <p data-lang="en">Credit scoring, BNPL, automatic reconciliation, first-line AML. AI Act Annex III pt 5(b) high-risk + DORA + GDPR Art. 22 + AML Code.</p>
+      <p data-lang="fr">Scoring crédit, BNPL, lettrage automatique, première ligne LCB-FT. AI Act Annexe III pt 5(b) haut risque + DORA + RGPD art. 22 + LCB-FT.</p>
+    </div>
+    <div class="use-case-item reveal">
+      <h3><a href="https://github.com/JC7333/amr-site/tree/main/templates/agent-rh-recrutement" target="_blank" rel="noopener" style="color: var(--text); text-decoration: none; border-bottom: 1px solid var(--gold-light);">agent-rh-recrutement</a></h3>
+      <p data-lang="en">CV screening, interview prep, candidate sourcing. AI Act Annex III pt 4 high-risk + GDPR + Labor Code non-discrimination.</p>
+      <p data-lang="fr">Tri de CV, préparation d'entretien, sourcing candidats. AI Act Annexe III pt 4 haut risque + RGPD + non-discrimination Code du travail.</p>
+    </div>
+    <div class="use-case-item reveal">
+      <h3><a href="https://github.com/JC7333/amr-site/tree/main/templates/agent-support-client" target="_blank" rel="noopener" style="color: var(--text); text-decoration: none; border-bottom: 1px solid var(--gold-light);">agent-support-client</a></h3>
+      <p data-lang="en">Customer support level 1, ticket routing, FAQ retrieval. GDPR + Consumer Code + LCEN.</p>
+      <p data-lang="fr">Support client niveau 1, routage de tickets, réponses FAQ. RGPD + Code de la consommation + LCEN.</p>
+    </div>
+    <div class="use-case-item reveal">
+      <h3><a href="https://github.com/JC7333/amr-site/tree/main/templates/agent-marketing-contenu" target="_blank" rel="noopener" style="color: var(--text); text-decoration: none; border-bottom: 1px solid var(--gold-light);">agent-marketing-contenu</a></h3>
+      <p data-lang="en">Editorial content generation, SEO, social media drafts. AI Act Art. 50.4 transparency + Consumer Code + Intellectual Property Code.</p>
+      <p data-lang="fr">Génération de contenu éditorial, SEO, brouillons réseaux sociaux. Transparence AI Act Art. 50.4 + Code conso + Propriété intellectuelle.</p>
+    </div>
+    <div class="use-case-item reveal" style="border: 1px dashed rgba(0,0,0,0.12); padding: var(--space-md); border-radius: 3px; opacity: 0.7;">
+      <h3 style="color: var(--text-light);" data-lang="en">More sectors coming</h3>
+      <h3 style="color: var(--text-light);" data-lang="fr">Plus de secteurs à venir</h3>
+      <p data-lang="en">Legal monitoring, healthcare GDPR, IT helpdesk, data analytics, B2B sales, procurement. Need a specific template? <a href="mailto:audric@mandatia.eu" style="color: var(--sage);">Reach out</a>.</p>
+      <p data-lang="fr">Veille juridique, santé RGPD, IT helpdesk, data analytics, vente B2B, achats. Un template précis vous manque ? <a href="mailto:audric@mandatia.eu" style="color: var(--sage);">Écrivez-moi</a>.</p>
+    </div>
+  </div>
+
+  <p class="section-text" style="margin-top: var(--space-lg); text-align: center; max-width: 100%;" data-lang="en">Sector packs from <strong>3 000 € to 5 000 €</strong> depending on adaptation. <a href="mailto:audric@mandatia.eu" style="color: var(--sage); border-bottom: 1px solid var(--sage-light);">Contact for pricing</a>.</p>
+  <p class="section-text" style="margin-top: var(--space-lg); text-align: center; max-width: 100%;" data-lang="fr">Packs sectoriels de <strong>3 000 € à 5 000 €</strong> selon adaptation. <a href="mailto:audric@mandatia.eu" style="color: var(--sage); border-bottom: 1px solid var(--sage-light);">Contact pour tarification</a>.</p>
 </section>
 
 <!-- TECH -->
@@ -851,8 +908,8 @@ html[lang="fr"] .hero-ctas a[data-lang="en"] { display: none; }
     <h2 class="section-title" data-lang="en">Why a physician built this</h2>
     <h2 class="section-title" data-lang="fr">Pourquoi un médecin a créé AMR</h2>
 
-    <p class="about-text" data-lang="en">I'm a physician in the French Alps. Every day, I write prescriptions — formal mandates that authorize pharmacists to act on my patients' behalf. The system works because every prescription is traceable, scoped, time-limited, and legally binding.</p>
-    <p class="about-text" data-lang="fr">Je suis médecin thermaliste dans les Alpes françaises. Chaque jour, je rédige des ordonnances — des mandats formels qui autorisent les pharmaciens à agir au nom de mes patients. Le système fonctionne parce que chaque ordonnance est traçable, bornée, limitée dans le temps et juridiquement opposable.</p>
+    <p class="about-text" data-lang="en">I'm a physician in Aix-les-Bains, France. Every day, I write prescriptions — formal mandates that authorize pharmacists to act on my patients' behalf. The system works because every prescription is traceable, scoped, time-limited, and legally binding.</p>
+    <p class="about-text" data-lang="fr">Je suis médecin à Aix-les-Bains. Chaque jour, je rédige des ordonnances — des mandats formels qui autorisent les pharmaciens à agir au nom de mes patients. Le système fonctionne parce que chaque ordonnance est traçable, bornée, limitée dans le temps et juridiquement opposable.</p>
 
     <p class="about-text" style="margin-top: var(--space-md);" data-lang="en">When I started building AI agents, I realized the same problem existed: agents were acting without verifiable mandates. No audit trail. No legal basis. No expiration.</p>
     <p class="about-text" style="margin-top: var(--space-md);" data-lang="fr">Quand j'ai commencé à construire des agents IA, j'ai réalisé que le même problème existait : les agents agissaient sans mandat vérifiable. Pas de traçabilité. Pas de base légale. Pas d'expiration.</p>
@@ -877,7 +934,7 @@ html[lang="fr"] .hero-ctas a[data-lang="en"] { display: none; }
     <div class="hero-ctas">
       <a href="https://github.com/JC7333/amr" target="_blank" rel="noopener" class="btn-primary" data-lang="en">Star on GitHub →</a>
       <a href="https://github.com/JC7333/amr" target="_blank" rel="noopener" class="btn-primary" data-lang="fr">Star sur GitHub →</a>
-      <a href="mailto:contact@mandatia.eu" class="btn-secondary">Contact</a>
+      <a href="mailto:audric@mandatia.eu" class="btn-secondary">Contact</a>
     </div>
   </div>
 </section>
