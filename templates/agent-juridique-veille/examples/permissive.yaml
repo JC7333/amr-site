@@ -1,0 +1,84 @@
+metadata:
+  variant: permissif
+  description: >
+    Profil pour direction juridique d'ETI mature qui veut un agent de veille
+    couvrant un large spectre de sources et produisant des synthèses élaborées.
+    Suppose une équipe juridique étoffée pour la supervision humaine.
+
+principal:
+  type: legal_entity
+  representative:
+    role: directeur_juridique
+    full_name: "Marie Durand"
+    function: "Directrice juridique groupe"
+    organization: "Exemple SAS"
+    siret: "12345678901234"
+  signature:
+    method: signed_pdf
+    signed_at: "2026-04-26"
+
+agent:
+  identifier: legal-watch-agent-permissive-v1
+  llm_provider: Anthropic
+  llm_model: claude-sonnet-4-7-20260101
+  purpose: >
+    Veille juridique transverse multi-secteurs avec production de synthèses
+    élaborées. La qualification juridique reste humaine.
+
+scope:
+  monitored_sources_allowed:
+    - legifrance.gouv.fr
+    - eur-lex.europa.eu
+    - courdecassation.fr
+    - conseil-etat.fr
+    - cnil.fr
+    - acpr.banque-france.fr
+    - amf-france.org
+    - anssi.gouv.fr
+    - arcom.fr
+    - dalloz-actualite.fr
+    - lexis360.fr
+  output_types_allowed:
+    - synthese_legislative
+    - synthese_jurisprudentielle
+    - alerte_compliance
+    - fiche_lecture_brut_avec_extrait
+    - note_de_synthese_thematique_multi_sources
+
+permissions:
+  read:
+    fields_allowed: [contenu_public_integral, metadata_textes, dates, references, citations]
+  write:
+    actions_allowed:
+      - generer_fiche_synthese
+      - generer_note_thematique
+      - proposer_score_criticite
+      - proposer_creation_ticket
+      - alerter_juriste_referent
+  max_volume_per_day:
+    syntheses: 100
+    alertes: 500
+    notes_thematiques: 10
+
+restrictions:
+  forbidden_actions:
+    - rendre_un_avis_juridique_qualifie_sans_validation_humaine
+    - publier_sur_canal_externe
+    - traiter_un_dossier_contentieux_actif
+
+human_oversight:
+  regime: human_on_the_loop
+  reviewer_profile: juriste_experimenté
+  mandatory_validation_before_publication: true
+  triggers_for_human_review:
+    - score_criticite_eleve
+    - source_nouvelle_non_referencee
+    - jurisprudence_avec_partie_potentiellement_client
+
+expiration:
+  duration_days: 365
+  renewal_review: annual
+
+audit_trail:
+  log_retention_days: 1825
+  tamper_evidence: sha256_chain

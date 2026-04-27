@@ -1,0 +1,100 @@
+metadata:
+  variant: restrictif
+  description: >
+    Profil pour cabinet d'avocats ou service juridique débutant son adoption
+    d'agents IA. Sources réduites, productions strictement encadrées,
+    cloisonnement client maximal, supervision humaine systématique avant
+    toute diffusion interne.
+
+principal:
+  type: legal_entity
+  representative:
+    role: associe_responsable_cabinet
+    full_name: "Jean Martin"
+    function: "Associé responsable du service veille"
+    organization: "Cabinet Exemple Avocats"
+    siret: "98765432109876"
+    bar_membership: "Barreau de Paris, n° 12345"
+  signature:
+    method: eidas_qualified
+    signed_at: "2026-04-26"
+
+agent:
+  identifier: legal-watch-agent-restrictive-v1
+  llm_provider: Anthropic
+  llm_model: claude-sonnet-4-7-20260101
+  purpose: >
+    Veille juridique limitée aux sources officielles publiques, production
+    de fiches brutes uniquement, sans synthèse thématique, sans qualification.
+    Toute sortie est validée par un avocat avant diffusion interne.
+
+scope:
+  monitored_sources_allowed:
+    - legifrance.gouv.fr
+    - eur-lex.europa.eu
+    - courdecassation.fr
+    - conseil-etat.fr
+    - cnil.fr
+  monitored_sources_forbidden:
+    - blogs_personnels
+    - reseaux_sociaux
+    - sites_aggregateurs
+    - bases_jurisprudence_payantes
+  output_types_allowed:
+    - fiche_lecture_brut_avec_extrait
+  output_types_forbidden:
+    - avis_juridique_engageant
+    - synthese_thematique
+    - reponse_directe_client
+
+permissions:
+  read:
+    fields_allowed: [contenu_public_integral, references_textes_uniquement]
+    fields_forbidden: [donnees_clients_internes, dossiers_actifs, donnees_extraites_de_dossiers_clients]
+  write:
+    actions_allowed:
+      - generer_fiche_brute
+      - alerter_juriste_referent
+    actions_forbidden:
+      - generer_synthese_thematique
+      - publier_sur_canal_quelconque
+      - envoyer_a_client
+  max_volume_per_day:
+    fiches_brutes: 30
+    alertes: 100
+
+restrictions:
+  forbidden_actions:
+    - rendre_un_avis_juridique
+    - traiter_un_dossier_client
+    - exporter_donnees_hors_ue
+    - entrainer_un_modele_tiers_sur_les_dossiers
+  prohibited_criteria_in_alerts:
+    - origine_ethnique_ou_nationale
+    - religion
+    - orientation_sexuelle_ou_genre
+    - opinion_politique_des_parties
+
+human_oversight:
+  regime: human_in_the_loop_strict
+  reviewer_profile: avocat_inscrit_au_barreau
+  mandatory_validation_before_publication: true
+  triggers_for_human_review:
+    - toute_sortie_avant_publication
+    - alerte_quel_que_soit_score
+    - reference_a_client_ou_partie_potentielle
+
+expiration:
+  duration_days: 180
+  renewal_review: every_six_months
+
+audit_trail:
+  log_retention_days: 1825
+  tamper_evidence: sha256_chain
+
+compliance_mapping:
+  rin_avocats:
+    art_21_6_3: respect_strict
+    art_21_6_4: cloisonnement_total_dossiers_clients
+  secret_professionnel:
+    code_penal_226_13: respect_absolu
