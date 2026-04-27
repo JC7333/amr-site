@@ -1,0 +1,110 @@
+metadata:
+  variant: equilibre
+  description: >
+    Profil intermédiaire pour service compliance d'opérateur réglementé
+    (banque-finance, assurance, énergie). Couvre les sources officielles
+    et sectorielles, autorise les synthèses élaborées sur scope défini,
+    supervision humaine sur seuils explicites.
+
+principal:
+  type: legal_entity
+  representative:
+    role: directeur_compliance
+    full_name: "Sophie Bernard"
+    function: "Directrice compliance et risques"
+    organization: "Établissement régulé Exemple"
+    siret: "11223344556677"
+  signature:
+    method: signed_pdf
+    signed_at: "2026-04-26"
+
+agent:
+  identifier: legal-watch-agent-balanced-v1
+  llm_provider: Anthropic
+  llm_model: claude-sonnet-4-7-20260101
+  purpose: >
+    Veille réglementaire sectorielle finance-assurance avec qualification
+    initiale du niveau de criticité. La qualification fine et la décision
+    d'engager une revue interne restent humaines.
+
+scope:
+  monitored_sources_allowed:
+    - legifrance.gouv.fr
+    - eur-lex.europa.eu
+    - acpr.banque-france.fr
+    - amf-france.org
+    - cnil.fr
+    - eba.europa.eu
+    - esma.europa.eu
+    - efrag.org
+    - cncc.fr
+  monitored_sources_forbidden:
+    - blogs_personnels_non_certifies
+    - reseaux_sociaux_non_officiels
+  output_types_allowed:
+    - synthese_legislative
+    - alerte_compliance
+    - fiche_lecture_brut_avec_extrait
+    - score_criticite_avec_justification
+  output_types_forbidden:
+    - avis_juridique_engageant
+    - reponse_directe_client_externe
+    - publication_externe_sans_validation
+
+permissions:
+  read:
+    fields_allowed: [contenu_public_integral, metadata_textes, dates, references]
+    fields_forbidden: [donnees_clients_internes, dossiers_individuels_actifs]
+  write:
+    actions_allowed:
+      - generer_fiche_synthese
+      - proposer_score_criticite
+      - proposer_creation_ticket
+      - alerter_juriste_referent
+      - alerter_responsable_compliance_si_score_eleve
+    actions_forbidden:
+      - publier_sur_canal_externe
+      - declencher_dpia_automatique
+      - notifier_autorite_de_controle
+  max_volume_per_day:
+    syntheses: 50
+    alertes: 200
+    tickets_proposes: 30
+
+restrictions:
+  forbidden_actions:
+    - rendre_un_avis_juridique_engageant
+    - declencher_une_action_aupres_d_une_autorite_sans_validation_humaine
+    - exporter_donnees_hors_ue_sans_clauses_contractuelles_types
+  prohibited_criteria_in_alerts:
+    - origine_ethnique_ou_nationale
+    - religion
+    - orientation_sexuelle_ou_genre
+
+human_oversight:
+  regime: human_on_the_loop
+  reviewer_profile: juriste_compliance_certifie
+  mandatory_validation_before_publication: true
+  triggers_for_human_review:
+    - score_criticite_superieur_a_7_sur_10
+    - source_nouvelle_non_referencee
+    - alerte_concernant_un_dossier_actif
+    - ecart_significatif_entre_score_propose_et_historique
+
+expiration:
+  duration_days: 270
+  renewal_review: every_nine_months
+
+audit_trail:
+  log_retention_days: 1825
+  tamper_evidence: sha256_chain
+
+compliance_mapping:
+  ai_act:
+    classification: usage_general_avec_obligations_transparence_art_50
+    annexe_iii_applicable: non_par_defaut_a_revoir_si_lien_avec_decisions_clients
+  rgpd:
+    base_legale: art_6_1_e_mission_interet_public_pour_compliance_reglementaire
+  sectoriel:
+    acpr_lcb_ft_obligations: a_articuler_avec_dispositif_existant
+    art_l561_1_code_monetaire: respect_des_obligations_d_alerte

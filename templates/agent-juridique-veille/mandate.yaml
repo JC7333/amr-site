@@ -1,0 +1,177 @@
+metadata:
+  id: amr-template-juridique-veille-v1
+  version: "1.0.0"
+  domain: legal_monitoring
+  language: fr
+  jurisdiction: FR-EU
+  created_at: "2026-04-26"
+  template_pricing_eur: [2500, 4000]
+  spec_url: https://github.com/JC7333/amr/blob/main/docs/token-issuance-spec.md
+
+principal:
+  type: legal_entity
+  representative:
+    role: directeur_juridique_ou_associe_cabinet
+    full_name: "<Nom et prénom du mandant - À COMPLÉTER>"
+    function: "<Direction juridique / Associé cabinet / Responsable compliance - À COMPLÉTER>"
+    organization: "<Raison sociale - À COMPLÉTER>"
+    siret: "<SIRET - À COMPLÉTER>"
+    bar_membership: "<Barreau et numéro si avocat - À COMPLÉTER ou laisser vide>"
+  signature:
+    method: signed_pdf_or_eidas_qualified
+    signed_at: "<Date signature - À COMPLÉTER lors du déploiement>"
+
+agent:
+  identifier: legal-watch-agent-v1
+  llm_provider: "<Anthropic / OpenAI / Mistral - À COMPLÉTER>"
+  llm_model: "<Nom et version exacte du modèle - À COMPLÉTER>"
+  llm_provider_compliance:
+    eu_data_residency_required: true
+    sub_processor_agreement_signed: true
+    art_28_rgpd_contract_in_place: true
+  purpose: >
+    Capture et qualification préalable d'informations juridiques publiques
+    pour assistance aux juristes humains. Aucune qualification juridique finale
+    autonome. Aucun avis juridique externalisé sans validation humaine.
+  user_disclosure:
+    article_50_ai_act_required: true
+    disclosure_text_fr: >
+      Cette synthèse de veille a été préparée avec l'assistance d'un agent IA.
+      La qualification juridique finale et la décision d'action restent humaines.
+    disclosure_channels: [internal_messaging, dms_attachments, watch_emails]
+
+scope:
+  monitored_sources_allowed:
+    - legifrance.gouv.fr
+    - eur-lex.europa.eu
+    - courdecassation.fr
+    - conseil-etat.fr
+    - cnil.fr
+    - acpr.banque-france.fr
+    - amf-france.org
+    - anssi.gouv.fr
+    - arcom.fr
+    - cncc.fr
+    - ohada.org
+  monitored_sources_forbidden:
+    - blogs_personnels_non_certifies
+    - reseaux_sociaux_non_officiels
+    - sites_aggregateurs_non_sources
+    - bases_jurisprudence_payantes_sans_licence_active
+  output_types_allowed:
+    - synthese_legislative
+    - synthese_jurisprudentielle
+    - alerte_compliance
+    - fiche_lecture_brut_avec_extrait
+  output_types_forbidden:
+    - avis_juridique_engageant
+    - reponse_directe_client_sans_validation
+    - publication_externe_sans_validation
+    - communication_avec_partie_adverse
+  jurisdictions_allowed: [FR, EU]
+  jurisdictions_forbidden_without_specific_extension: [US, UK, CH, autres]
+
+permissions:
+  read:
+    sources_allowed: liste_ci_dessus
+    fields_allowed: [contenu_public_integral, metadata_textes, dates, references]
+    fields_forbidden: [donnees_clients_internes_si_non_anonymisees, dossiers_individuels_actifs]
+  write:
+    actions_allowed:
+      - generer_fiche_synthese
+      - proposer_score_criticite
+      - proposer_creation_ticket
+      - alerter_juriste_referent
+    actions_forbidden:
+      - publier_sur_site_externe
+      - envoyer_a_client_externe
+      - modifier_dossier_juridique
+      - signer_acte_quel_qu_il_soit
+  max_volume_per_day:
+    syntheses: 50
+    alertes: 200
+    tickets_proposes: 30
+
+restrictions:
+  forbidden_actions:
+    - rendre_un_avis_juridique_qualifie_sans_validation_humaine
+    - traiter_un_dossier_client_sans_cloisonnement_explicite
+    - exporter_des_donnees_hors_ue_sans_clauses_contractuelles_types
+    - entrainer_un_modele_tiers_sur_les_dossiers_internes
+  prohibited_criteria_in_alerts:
+    - origine_ethnique_ou_nationale
+    - religion
+    - orientation_sexuelle_ou_genre
+    - opinion_politique_des_parties
+    - sante_des_parties_sauf_pertinence_juridique_directe
+
+data_access:
+  data_categories:
+    - donnees_publiques_legifrance_eurlex_etc
+    - donnees_personnelles_des_parties_aux_decisions_publiees
+  rgpd_legal_basis: art_6_1_e_mission_interet_public_ou_art_6_1_f_interet_legitime
+  rgpd_legal_basis_validation: a_documenter_au_cas_par_cas
+  art_9_categories_speciales: a_traiter_avec_precaution_specifique_si_jurisprudence_sante_ou_orientations_politiques
+  art_22_decision_automatisee: non_applicable_pour_veille_pure
+  cross_tenant_isolation: strict
+  retention_days:
+    syntheses_publiees_internes: 1825
+    fiches_brutes: 365
+    logs_interrogation_sources: 365
+
+human_oversight:
+  regime: human_in_the_loop
+  reviewer_profile: juriste_diplome_ou_avocat_inscrit
+  mandatory_validation_before_publication: true
+  triggers_for_human_review:
+    - score_criticite_eleve
+    - source_nouvelle_non_referencee
+    - jurisprudence_avec_partie_identifiee_potentiellement_client
+    - alerte_concernant_un_dossier_actif
+  escalation_path:
+    primary: juriste_referent_thematique
+    secondary: directeur_juridique_ou_associe_responsable
+
+expiration:
+  duration_days: 365
+  renewal_review: annual
+  revocation_immediate_triggers:
+    - mise_a_jour_majeure_du_modele_llm
+    - changement_associe_responsable
+    - decision_disciplinaire_concernant_l_outil
+    - publication_d_un_decret_modifiant_le_RIN_sur_les_outils_numeriques
+
+audit_trail:
+  logged_events:
+    - mandate_created
+    - mandate_modified
+    - source_consulted
+    - synthese_generated
+    - human_review_triggered
+    - escalation_to_supervisor
+    - publication_validated_by_human
+    - mandate_revoked
+  log_retention_days: 1825
+  tamper_evidence: sha256_chain
+  access_log:
+    read_only: true
+    accessible_by: [DPO, directeur_juridique, batonnier_si_demande_disciplinaire, audit_interne]
+
+compliance_mapping:
+  ai_act:
+    classification: usage_general_avec_obligations_transparence_art_50
+    annexe_iii_applicable: non_par_defaut
+    annexe_iii_a_revoir_si: usage_pour_aide_a_la_decision_judiciaire_ou_administrative
+    articles_applicables: [art_12, art_14, art_26, art_50, art_99]
+  rgpd:
+    base_legale: art_6_1_e_ou_f
+    art_9: traitement_de_jurisprudence_avec_precaution_categorise
+    art_22: non_applicable_veille_pure
+    art_35_dpia: requise_si_traitement_a_grande_echelle_de_donnees_judiciaires_nominatives
+  rin_avocats:
+    art_21_6_3: respect_obligation_outils_numeriques
+    art_21_6_4: cloisonnement_dossiers_par_client
+  secret_professionnel:
+    code_penal_226_13: respect_strict_isolation_dossiers
+  sectoriel_specifique:
+    a_completer_selon_secteur: [banque_finance_acpr, sante_ars, telecoms_arcep, energie_cre]
