@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AMR — The Prescription Layer for AI Agents</title>
-<meta name="description" content="AMR is an open-source MCP server that creates, verifies, and audits legal mandates for autonomous AI agents. eIDAS 2.0 ready. AI Act compliant.">
+<meta name="description" content="AMR is an open-source MCP server that creates, verifies, and audits legal mandates for autonomous AI agents. Built for the EU AI Act and eIDAS 2.0.">
 <meta property="og:title" content="AMR — The Prescription Layer for AI Agents">
-<meta property="og:description" content="Open-source MCP server for legal mandates. eIDAS 2.0 ready. AI Act Art. 26 compliant.">
+<meta property="og:description" content="Open-source MCP server for legal mandates. Built for EU AI Act Articles 14 and 26 and eIDAS 2.0.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://mandatia.eu">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="AMR — The Prescription Layer for AI Agents">
-<meta name="twitter:description" content="Open-source MCP server for legal mandates. eIDAS 2.0 ready. AI Act Art. 26 compliant.">
+<meta name="twitter:description" content="Open-source MCP server for legal mandates. Built for EU AI Act Articles 14 and 26 and eIDAS 2.0.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><circle cx='20' cy='20' r='17' fill='%235C6B5E'/><circle cx='20' cy='20' r='14' fill='none' stroke='%23C4A96A' stroke-width='0.8'/><path d='M13 20.5 L18 25 L27 14.5' stroke='%23FDFBF7' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -696,8 +696,8 @@ html[lang="fr"] .hero-ctas a[data-lang="en"] { display: none; }
     <h1 data-lang="en">The Prescription Layer<br>for AI Agents</h1>
     <h1 data-lang="fr">L'ordonnance<br>des agents IA</h1>
 
-    <p data-lang="en">AI agents act on your behalf — but who verified their mandate? AMR is an open-source MCP server that creates, verifies, and audits legal mandates for autonomous agents. eIDAS 2.0 ready. AI Act compliant.</p>
-    <p data-lang="fr">Les agents IA agissent en votre nom — mais qui a vérifié leur mandat ? AMR est un serveur MCP open-source qui crée, vérifie et audite les mandats légaux des agents autonomes. Compatible eIDAS 2.0. Conforme AI Act.</p>
+    <p data-lang="en">AI agents act on your behalf — but who verified their mandate? AMR is an open-source MCP server that creates, verifies, and audits legal mandates for autonomous agents. Built for the EU AI Act and eIDAS 2.0.</p>
+    <p data-lang="fr">Les agents IA agissent en votre nom — mais qui a vérifié leur mandat ? AMR est un serveur MCP open-source qui crée, vérifie et audite les mandats légaux des agents autonomes. Pensé pour l'AI Act et eIDAS 2.0.</p>
 
     <div class="hero-ctas">
       <a href="https://github.com/JC7333/amr" target="_blank" rel="noopener" class="btn-primary" data-lang="en">View on GitHub →</a>
@@ -743,8 +743,8 @@ html[lang="fr"] .hero-ctas a[data-lang="en"] { display: none; }
   </div>
 
   <div class="reveal">
-    <p class="section-text" data-lang="en">Today, agent frameworks handle permissions and authentication. But permissions ≠ legal mandate. A database ACL doesn't hold up in court. An API key doesn't prove informed consent. The EU AI Act requires a named human sponsor for each agent (Article 14) and deployer obligations including oversight and audit logs (Article 26). But without a mandate registry, that human sponsor field is just a name attached retroactively — it doesn't prove prospective authorization. No current framework bridges this gap.</p>
-    <p class="section-text" data-lang="fr">Aujourd'hui, les frameworks d'agents gèrent les permissions et l'authentification. Mais permission ≠ mandat légal. Une ACL de base de données ne tient pas devant un tribunal. Une clé API ne prouve pas le consentement éclairé. L'AI Act exige un humain responsable nommé pour chaque agent (Article 14) et des obligations de supervision et logs d'audit pour les déployeurs (Article 26). Mais sans registre de mandats, ce champ "humain responsable" n'est qu'un nom collé après coup — il ne prouve pas l'autorisation prospective. Aucun framework actuel ne comble ce vide.</p>
+    <p class="section-text" data-lang="en">Today, agent frameworks handle permissions and authentication. But permissions ≠ legal mandate. A database ACL doesn't hold up in court. An API key doesn't prove informed consent. The EU AI Act requires effective human oversight of high-risk systems (Article 14), and deployers must assign that oversight to designated people and keep the logs (Article 26). But without a mandate registry, the person in charge is just a name attached retroactively — it doesn't prove prospective authorization. No current framework bridges this gap.</p>
+    <p class="section-text" data-lang="fr">Aujourd'hui, les frameworks d'agents gèrent les permissions et l'authentification. Mais permission ≠ mandat légal. Une ACL de base de données ne tient pas devant un tribunal. Une clé API ne prouve pas le consentement éclairé. L'AI Act exige une supervision humaine effective des systèmes à haut risque (article 14), et le déployeur doit la confier à des personnes désignées et tenir les journaux (article 26). Mais sans registre de mandats, la personne responsable n'est qu'un nom collé après coup — il ne prouve pas l'autorisation prospective. Aucun framework actuel ne comble ce vide.</p>
   </div>
 </section>
 
@@ -771,13 +771,13 @@ html[lang="fr"] .hero-ctas a[data-lang="en"] { display: none; }
     </div>
     <div class="card reveal">
       <div class="card-tool">log_action</div>
-      <p data-lang="en">Log every action taken under a mandate. Each event is hashed, timestamped, and chained to the parent mandate. Court-ready audit trail by construction.</p>
-      <p data-lang="fr">Enregistrez chaque action prise sous un mandat. Chaque événement est hashé, horodaté et chaîné au mandat parent. Piste d'audit opposable par construction.</p>
+      <p data-lang="en">Log every action taken under a mandate. Each event is hashed, timestamped, and chained to the parent mandate. Tamper-evident audit trail by construction.</p>
+      <p data-lang="fr">Enregistrez chaque action prise sous un mandat. Chaque événement est hashé, horodaté et chaîné au mandat parent. Piste d'audit dont toute modification se voit, par construction.</p>
     </div>
     <div class="card reveal">
       <div class="card-tool">get_proof</div>
-      <p data-lang="en">Generate a cryptographic proof of any mandate or action. SHA-256 chain verification. Tamper-proof. Court-ready.</p>
-      <p data-lang="fr">Générez une preuve cryptographique de tout mandat ou action. Vérification de chaîne SHA-256. Inviolable. Opposable.</p>
+      <p data-lang="en">Generate a cryptographic proof of any mandate or action. SHA-256 chain verification. Tamper-evident. Independently verifiable.</p>
+      <p data-lang="fr">Générez une preuve cryptographique de tout mandat ou action. Vérification de chaîne SHA-256. Toute modification se voit. Vérifiable par un tiers.</p>
     </div>
   </div>
 
@@ -854,20 +854,20 @@ html[lang="fr"] .hero-ctas a[data-lang="en"] { display: none; }
     <div class="use-case-item reveal">
       <h3 data-lang="en">Finance & Wealth Management</h3>
       <h3 data-lang="fr">Finance & Gestion de patrimoine</h3>
-      <p data-lang="en">A wealth advisor delegates portfolio analysis to an AI agent. AMR ensures the mandate is traceable, scoped, and compliant with AMF regulations.</p>
-      <p data-lang="fr">Un CGP délègue l'analyse de portefeuille à un agent IA. AMR garantit que le mandat est traçable, borné et conforme aux exigences AMF.</p>
+      <p data-lang="en">A wealth advisor delegates portfolio analysis to an AI agent. AMR keeps the mandate traceable and scoped, a basis for meeting AMF expectations.</p>
+      <p data-lang="fr">Un CGP délègue l'analyse de portefeuille à un agent IA. AMR rend le mandat traçable et borné, une base pour répondre aux attentes de l'AMF.</p>
     </div>
     <div class="use-case-item reveal">
       <h3 data-lang="en">Insurance</h3>
       <h3 data-lang="fr">Assurance</h3>
-      <p data-lang="en">Claims processing agents handle sensitive data. AMR provides ACPR-compliant mandate chains with automatic expiration.</p>
-      <p data-lang="fr">Les agents de traitement des sinistres manipulent des données sensibles. AMR fournit des chaînes de mandats conformes ACPR avec expiration automatique.</p>
+      <p data-lang="en">Claims processing agents handle sensitive data. AMR provides mandate chains with automatic expiration, designed with ACPR expectations in mind.</p>
+      <p data-lang="fr">Les agents de traitement des sinistres manipulent des données sensibles. AMR fournit des chaînes de mandats avec expiration automatique, pensées pour les attentes de l'ACPR.</p>
     </div>
     <div class="use-case-item reveal">
       <h3 data-lang="en">HR & Data Protection</h3>
       <h3 data-lang="fr">RH & Protection des données</h3>
-      <p data-lang="en">AI agents processing employee data need GDPR-compliant mandates. AMR integrates CNIL requirements into every mandate.</p>
-      <p data-lang="fr">Les agents IA traitant des données employés ont besoin de mandats conformes RGPD. AMR intègre les exigences CNIL dans chaque mandat.</p>
+      <p data-lang="en">AI agents processing employee data need mandates that respect the GDPR. AMR templates map each mandate to the GDPR articles that apply.</p>
+      <p data-lang="fr">Les agents IA qui traitent des données de salariés ont besoin de mandats qui respectent le RGPD. Les templates AMR relient chaque mandat aux articles du RGPD qui s'appliquent.</p>
     </div>
   </div>
 </section>
@@ -935,10 +935,10 @@ html[lang="fr"] .hero-ctas a[data-lang="en"] { display: none; }
     <li data-lang="fr"><span class="tech-check">✓</span> Natif protocole MCP — fonctionne avec Claude Desktop, Cursor, tout client MCP</li>
     <li data-lang="en"><span class="tech-check">✓</span> SHA-256 mandate chain — tamper-proof, cryptographically linked</li>
     <li data-lang="fr"><span class="tech-check">✓</span> Chaîne de mandats SHA-256 — inviolable, liée cryptographiquement</li>
-    <li data-lang="en"><span class="tech-check">✓</span> eIDAS 2.0 ready — European qualified electronic signatures</li>
-    <li data-lang="fr"><span class="tech-check">✓</span> Compatible eIDAS 2.0 — signatures électroniques qualifiées européennes</li>
-    <li data-lang="en"><span class="tech-check">✓</span> AI Act Art. 14 + 26 compliant — human sponsor and deployer obligations built in</li>
-    <li data-lang="fr"><span class="tech-check">✓</span> Conforme AI Act Art. 14 + 26 — sponsor humain et obligations déployeur intégrés</li>
+    <li data-lang="en"><span class="tech-check">✓</span> Designed with eIDAS 2.0 in mind — optional principal signatures (Ed25519) on mandates</li>
+    <li data-lang="fr"><span class="tech-check">✓</span> Pensé pour eIDAS 2.0 — signature du mandant (Ed25519) sur les mandats, en option</li>
+    <li data-lang="en"><span class="tech-check">✓</span> Built for AI Act Art. 14 + 26 — records who authorized what, before the action</li>
+    <li data-lang="fr"><span class="tech-check">✓</span> Pensé pour l'AI Act, art. 14 et 26 — trace qui a autorisé quoi, avant l'action</li>
     <li data-lang="en"><span class="tech-check">✓</span> SQLite WAL — lightweight, zero infrastructure</li>
     <li data-lang="fr"><span class="tech-check">✓</span> SQLite WAL — léger, zéro infrastructure</li>
     <li data-lang="en"><span class="tech-check">✓</span> Pydantic v2 validation — type-safe mandate schemas</li>
@@ -993,8 +993,8 @@ html[lang="fr"] .hero-ctas a[data-lang="en"] { display: none; }
 <!-- FINAL CTA -->
 <section class="final-cta">
   <div class="reveal">
-    <h2 data-lang="en">Annex III high-risk obligations: December 2, 2027 (Digital Omnibus, provisional agreement May 7, 2026).<br>Article 50 transparency: August 2, 2026 — confirmed.<br>The window to build a mandate registry is now.</h2>
-    <h2 data-lang="fr">Obligations Annex III haut risque : 2 décembre 2027 (Digital Omnibus, accord provisoire du 7 mai 2026).<br>Transparence Article 50 : 2 août 2026 — confirmé.<br>La fenêtre pour bàtir un registre de mandats, c'est maintenant.</h2>
+    <h2 data-lang="en">Annex III high-risk obligations: December 2, 2027 (AI Omnibus, Regulation (EU) 2026/1744, in force since July 27, 2026).<br>Article 50 transparency: August 2, 2026 — confirmed.<br>The window to build a mandate registry is now.</h2>
+    <h2 data-lang="fr">Obligations haut risque de l'Annexe III : 2 décembre 2027 (règlement (UE) 2026/1744 dit AI Omnibus, en vigueur depuis le 27 juillet 2026).<br>Transparence Article 50 : 2 août 2026 — confirmé.<br>La fenêtre pour bàtir un registre de mandats, c'est maintenant.</h2>
 
     <div class="hero-ctas">
       <a href="https://github.com/JC7333/amr" target="_blank" rel="noopener" class="btn-primary" data-lang="en">Star on GitHub →</a>
