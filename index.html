@@ -9,6 +9,10 @@
 <meta property="og:description" content="Open-source MCP server for legal mandates. eIDAS 2.0 ready. AI Act Art. 26 compliant.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://mandatia.eu">
+<meta property="og:image" content="https://www.mandatia.eu/og-mandatia.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://www.mandatia.eu/og-mandatia.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="AMR — The Prescription Layer for AI Agents">
 <meta name="twitter:description" content="Open-source MCP server for legal mandates. eIDAS 2.0 ready. AI Act Art. 26 compliant.">
@@ -631,29 +635,12 @@ footer a:hover { text-decoration: underline; }
 }
 
 /* --- LANG TOGGLE --- */
-[data-lang="fr"] { display: none; }
-html[lang="fr"] [data-lang="fr"] { display: unset; }
-html[lang="fr"] [data-lang="en"] { display: none; }
-
-/* For block elements */
-div[data-lang="fr"], p[data-lang="fr"], h1[data-lang="fr"], 
-h2[data-lang="fr"], h3[data-lang="fr"], li[data-lang="fr"],
-span[data-lang="fr"], a[data-lang="fr"] { display: none; }
-
-html[lang="fr"] div[data-lang="fr"], html[lang="fr"] p[data-lang="fr"],
-html[lang="fr"] h1[data-lang="fr"], html[lang="fr"] h2[data-lang="fr"],
-html[lang="fr"] h3[data-lang="fr"], html[lang="fr"] li[data-lang="fr"],
-html[lang="fr"] span[data-lang="fr"], html[lang="fr"] a[data-lang="fr"] { display: unset; }
-
-html[lang="fr"] div[data-lang="en"], html[lang="fr"] p[data-lang="en"],
-html[lang="fr"] h1[data-lang="en"], html[lang="fr"] h2[data-lang="en"],
-html[lang="fr"] h3[data-lang="en"], html[lang="fr"] li[data-lang="en"],
-html[lang="fr"] span[data-lang="en"], html[lang="fr"] a[data-lang="en"] { display: none; }
-
-/* Fix for flex/grid children */
-html[lang="fr"] .hero-ctas a[data-lang="fr"] { display: inline-flex; }
-html[lang="fr"] .hero-ctas a[data-lang="en"] { display: none; }
-.hero-ctas a[data-lang="fr"] { display: none; }
+/* Only the other language is hidden ; the shown language keeps its own display
+   (block, flex, inline-flex...). The former rules set "display: unset" on the French
+   blocks, which turned paragraphs and headings into inline text in French, and showed
+   the French menu on phones (page 727 px wide for a 390 px screen, seen 20/10/2026). */
+html:not([lang="fr"]) [data-lang="fr"] { display: none !important; }
+html[lang="fr"] [data-lang="en"] { display: none !important; }
 </style>
 </head>
 <body>
@@ -706,7 +693,7 @@ html[lang="fr"] .hero-ctas a[data-lang="en"] { display: none; }
       <a href="#solution" class="btn-secondary" data-lang="fr">Découvrir</a>
     </div>
 
-    <p class="hero-badge">Open Source · MIT License · MCP Native</p>
+    <p class="hero-badge">Open Source · Apache-2.0 · MCP Native</p>
   </div>
 
   <div class="code-block reveal">
@@ -783,7 +770,7 @@ html[lang="fr"] .hero-ctas a[data-lang="en"] { display: none; }
 
   <div class="cards-grid" style="grid-template-columns: 1fr; margin-top: var(--space-md);">
     <div class="card reveal" style="border-color: var(--sage); background: rgba(92, 107, 94, 0.04); padding: var(--space-md);">
-      <div class="card-tool" style="color: var(--gold); font-weight: 500;">issue_action_token <span style="color: var(--sage); font-size: 0.7rem; padding-left: 0.5rem;">— PIVOT ENFORCEMENT · LIVE</span></div>
+      <div class="card-tool" style="color: var(--gold); font-weight: 500;">issue_action_token <span style="color: var(--sage); font-size: 0.7rem; padding-left: 0.5rem;">— ENFORCEMENT · LIVE</span></div>
       <p data-lang="en"><strong>The lock.</strong> AMR sits in the token issuance layer. No valid mandate → no Ed25519-signed JWS token → no action possible. Structural enforcement before the act, not audit after. Live in production since April 23, 2026.</p>
       <p data-lang="fr"><strong>Le verrou.</strong> AMR se place dans la couche d'émission de jetons. Pas de mandat valide → pas de jeton JWS signé Ed25519 → pas d'action possible. Verrou structurel avant l'acte, pas un audit après. En production depuis le 23 avril 2026.</p>
     </div>
@@ -943,8 +930,8 @@ html[lang="fr"] .hero-ctas a[data-lang="en"] { display: none; }
     <li data-lang="fr"><span class="tech-check">✓</span> SQLite WAL — léger, zéro infrastructure</li>
     <li data-lang="en"><span class="tech-check">✓</span> Pydantic v2 validation — type-safe mandate schemas</li>
     <li data-lang="fr"><span class="tech-check">✓</span> Validation Pydantic v2 — schémas de mandats typés</li>
-    <li data-lang="en"><span class="tech-check">✓</span> Open source — MIT license, audit the code yourself</li>
-    <li data-lang="fr"><span class="tech-check">✓</span> Open source — licence MIT, auditez le code vous-même</li>
+    <li data-lang="en"><span class="tech-check">✓</span> Open source — Apache-2.0 license, audit the code yourself</li>
+    <li data-lang="fr"><span class="tech-check">✓</span> Open source — licence Apache-2.0, auditez le code vous-même</li>
     <li data-lang="en"><span class="tech-check">✓</span> Composable — AMR authorizes before the action; action-certification proxies prove what happened during. Full trust chain.</li>
     <li data-lang="fr"><span class="tech-check">✓</span> Composable — AMR autorise avant l'action ; les proxies de certification prouvent ce qui s'est passé pendant. Chaîne de confiance complète.</li>
   </ul>
@@ -994,7 +981,7 @@ html[lang="fr"] .hero-ctas a[data-lang="en"] { display: none; }
 <section class="final-cta">
   <div class="reveal">
     <h2 data-lang="en">Annex III high-risk obligations: December 2, 2027 (Digital Omnibus, provisional agreement May 7, 2026).<br>Article 50 transparency: August 2, 2026 — confirmed.<br>The window to build a mandate registry is now.</h2>
-    <h2 data-lang="fr">Obligations Annex III haut risque : 2 décembre 2027 (Digital Omnibus, accord provisoire du 7 mai 2026).<br>Transparence Article 50 : 2 août 2026 — confirmé.<br>La fenêtre pour bàtir un registre de mandats, c'est maintenant.</h2>
+    <h2 data-lang="fr">Obligations Annex III haut risque : 2 décembre 2027 (Digital Omnibus, accord provisoire du 7 mai 2026).<br>Transparence Article 50 : 2 août 2026 — confirmé.<br>La fenêtre pour bâtir un registre de mandats, c'est maintenant.</h2>
 
     <div class="hero-ctas">
       <a href="https://github.com/JC7333/amr" target="_blank" rel="noopener" class="btn-primary" data-lang="en">Star on GitHub →</a>
@@ -1014,7 +1001,7 @@ html[lang="fr"] .hero-ctas a[data-lang="en"] { display: none; }
     </svg>
   </div>
   <p>AMR — Agent Mandate Registry</p>
-  <p>Open Source · MIT License · <a href="https://github.com/JC7333/amr" target="_blank" rel="noopener">GitHub</a></p>
+  <p>Open Source · Apache-2.0 · <a href="https://github.com/JC7333/amr" target="_blank" rel="noopener">GitHub</a></p>
   <p style="margin-top: 0.5rem;">
     <a href="/pourquoi-autorisation-prospective" data-lang="en">Why prospective authorization</a><a href="/pourquoi-autorisation-prospective" data-lang="fr">Pourquoi l'autorisation prospective</a>
     ·
