@@ -738,8 +738,8 @@ html[lang="fr"] [data-lang="en"] { display: none !important; }
 <!-- SOLUTION -->
 <section class="solution" id="solution">
   <div class="reveal">
-    <h2 class="section-title" data-lang="en">Five tools. One mandate chain.</h2>
-    <h2 class="section-title" data-lang="fr">Cinq outils. Une chaîne de mandats.</h2>
+    <h2 class="section-title" data-lang="en">Seventeen tools. One mandate chain.</h2>
+    <h2 class="section-title" data-lang="fr">Dix-sept outils. Une chaîne de mandats.</h2>
 
     <p class="section-subtitle" data-lang="en">AMR is a Model Context Protocol server. Install it, and any MCP-compatible AI agent can issue, verify, and audit legal mandates natively.</p>
     <p class="section-subtitle" data-lang="fr">AMR est un serveur Model Context Protocol. Installez-le, et tout agent IA compatible MCP peut émettre, vérifier et auditer des mandats légaux nativement.</p>
@@ -773,6 +773,70 @@ html[lang="fr"] [data-lang="en"] { display: none !important; }
       <div class="card-tool" style="color: var(--gold); font-weight: 500;">issue_action_token <span style="color: var(--sage); font-size: 0.7rem; padding-left: 0.5rem;">— ENFORCEMENT · LIVE</span></div>
       <p data-lang="en"><strong>The lock.</strong> AMR sits in the token issuance layer. No valid mandate → no Ed25519-signed JWS token → no action possible. Structural enforcement before the act, not audit after. Live in production since April 23, 2026.</p>
       <p data-lang="fr"><strong>Le verrou.</strong> AMR se place dans la couche d'émission de jetons. Pas de mandat valide → pas de jeton JWS signé Ed25519 → pas d'action possible. Verrou structurel avant l'acte, pas un audit après. En production depuis le 23 avril 2026.</p>
+    </div>
+  </div>
+  <p class="section-subtitle reveal" data-lang="en" style="margin-top: var(--space-lg);">Also in the registry: signatures by the principal, sub-mandates with a perimeter and a delegation depth, instant revocation of a whole branch, and proofs a third party can check offline.</p>
+  <p class="section-subtitle reveal" data-lang="fr" style="margin-top: var(--space-lg);">Dans le registre aussi : signature par le mandant, sous-mandats avec périmètre et profondeur de délégation, révocation immédiate de toute une branche, et preuves qu'un tiers vérifie hors ligne.</p>
+  <div class="cards-grid" style="margin-top: var(--space-md);">
+    <div class="card reveal">
+      <div class="card-tool">issue_mandate_attestation</div>
+      <p data-lang="en">A signed attestation of a mandate, for the agent to show a third party. The receiver verifies it offline with the registry's public key, without an account.</p>
+      <p data-lang="fr">Une attestation signée d'un mandat, que l'agent montre à un tiers. Le destinataire la vérifie hors ligne avec la clé publique du registre, sans compte.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-tool">get_registry_public_key</div>
+      <p data-lang="en">The registry's public key, for checking attestations and tokens without calling the registry.</p>
+      <p data-lang="fr">La clé publique du registre, pour vérifier attestations et jetons sans appeler le registre.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-tool">check_action_token</div>
+      <p data-lang="en">Re-check an action token with the registry at the moment of acting: the signature proves the authorization at issue time, this says whether it still holds now.</p>
+      <p data-lang="fr">Revérifier un jeton d'action auprès du registre au moment d'agir : la signature prouve l'autorisation à l'émission, ce contrôle dit si elle tient encore.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-tool">register_principal_key</div>
+      <p data-lang="en">The principal registers its own Ed25519 public key, so that its mandates can carry its signature.</p>
+      <p data-lang="fr">Le mandant enregistre sa propre clé publique Ed25519, pour que ses mandats portent sa signature.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-tool">prepare_mandate_signature</div>
+      <p data-lang="en">The exact bytes of a mandate for the principal to sign with its own key. An agent cannot sign in its place.</p>
+      <p data-lang="fr">Les octets exacts d'un mandat que le mandant signe avec sa propre clé. Un agent ne peut pas signer à sa place.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-tool">revoke_mandate</div>
+      <p data-lang="en">Revoke a mandate now. Final. The mandate and its whole branch of sub-mandates stop at once; tokens already issued are reported until they end.</p>
+      <p data-lang="fr">Révoquer un mandat maintenant. Définitif. Le mandat et toute sa branche de sous-mandats s'arrêtent aussitôt ; les jetons déjà émis sont signalés jusqu'à leur fin.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-tool">prepare_revocation_signature</div>
+      <p data-lang="en">The bytes of a revocation for the principal to sign, when it has a registered key.</p>
+      <p data-lang="fr">Les octets d'une révocation que le mandant signe, quand il a une clé enregistrée.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-tool">contest_action</div>
+      <p data-lang="en">Record that a principal contests an action an agent already performed: a dated, chained record, one per action, that cannot be edited.</p>
+      <p data-lang="fr">Consigner qu'un mandant conteste un acte déjà accompli par un agent : une trace datée et chaînée, une par acte, non modifiable.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-tool">prepare_contest_signature</div>
+      <p data-lang="en">The bytes of a contest for the principal to sign, when it has a registered key.</p>
+      <p data-lang="fr">Les octets d'une contestation que le mandant signe, quand il a une clé enregistrée.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-tool">list_action_contests</div>
+      <p data-lang="en">List the contested actions, with a response-deadline reminder chosen by the operator. No legal deadline is computed.</p>
+      <p data-lang="fr">Lister les actes contestés, avec un rappel de délai de réponse choisi par l'opérateur. Aucun délai légal n'est calculé.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-tool">export_insurer_dossier</div>
+      <p data-lang="en">A signed dossier of a mandate over a period, for an insurer or an auditor: perimeter, status, sub-mandates, actions, tokens and integrity checks. JSON and printable page.</p>
+      <p data-lang="fr">Un dossier signé d'un mandat sur une période, pour un assureur ou un auditeur : périmètre, statut, sous-mandats, actions, jetons et contrôles d'intégrité. JSON et page imprimable.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-tool">report_issue</div>
+      <p data-lang="en">Report a problem with AMR itself. Without an operator token, no network call: a pre-filled link to open.</p>
+      <p data-lang="fr">Signaler un problème d'AMR lui-même. Sans jeton de l'opérateur, aucun appel réseau : un lien prérempli à ouvrir.</p>
     </div>
   </div>
 </section>
