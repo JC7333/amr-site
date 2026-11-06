@@ -1008,13 +1008,14 @@ html[lang="fr"] [data-lang="en"] { display: none !important; }
 
   <div class="install-block" data-lang="en">
     <h3 style="margin-bottom: var(--space-sm);">Quickstart for agents</h3>
-    <p class="section-text">Written so that an AI agent (Claude Code, Cursor, any MCP client) can install AMR and reach a first verified mandate alone: no account, no email, nobody to ask. Everything runs on your machine; AMR makes no network call, except <code>report_issue</code>, which stays off until the operator sets <code>AMR_ISSUE_TOKEN</code>.</p>
-    <pre><span class="install-comment"># 1. Run the server (needs uv). The PyPI package "mandatia" is not published yet:</span>
-<span class="install-cmd">uvx --from git+https://github.com/JC7333/amr --with "mcp&lt;2" amr</span>
-<span class="install-comment"># the "mcp&lt;2" part is needed, AMR is written for version 1 of the MCP Python SDK</span>
+    <p class="section-text">Written so that an AI agent (Claude Code, Cursor, any MCP client) can install AMR and reach a first verified mandate alone: no account, no email, nobody to ask. Everything runs on your machine; AMR makes no network call, except two options that stay off by default: <code>report_issue</code> once the operator sets <code>AMR_ISSUE_TOKEN</code>, and the <code>did:web</code> key check once the operator sets <code>AMR_DID_WEB_RESOLVE=1</code>.</p>
+    <pre><span class="install-comment"># 1. Run the server (needs uv). The PyPI package is named "mandatia":</span>
+<span class="install-cmd">uvx mandatia</span>
+<span class="install-comment"># the latest code of the repository instead:</span>
+<span class="install-cmd">uvx --from git+https://github.com/JC7333/amr amr</span>
 
 <span class="install-comment"># 2. Declare it in Claude Code</span>
-<span class="install-cmd">claude mcp add amr --</span> uvx --from git+https://github.com/JC7333/amr --with "mcp&lt;2" amr
+<span class="install-cmd">claude mcp add amr --</span> uvx mandatia
 
 <span class="install-comment"># or clone and run</span>
 <span class="install-cmd">git clone</span> https://github.com/JC7333/amr.git &amp;&amp; <span class="install-cmd">cd</span> amr &amp;&amp; <span class="install-cmd">uv sync</span> &amp;&amp; <span class="install-cmd">uv run</span> amr
@@ -1023,19 +1024,20 @@ html[lang="fr"] [data-lang="en"] { display: none !important; }
 AMR_DB_PATH=/absolute/path/amr_mandates.db
 AMR_SIGNING_KEY_PATH=/absolute/path/amr_signing_key.pem
 AMR_PUBLIC_KEY_PATH=/absolute/path/amr_signing_key.pub</pre>
-    <p class="section-text"><code>uvx amr</code> installs a different, unrelated project: do not use it.</p>
+    <p class="section-text"><code>uvx amr</code> installs a different, unrelated project: do not use it. AMR runs with version 1 and version 2 of the MCP Python SDK (<code>mcp&gt;=1.2,&lt;3</code>); no extra version pin is needed.</p>
     <p class="section-text"><strong>Then, in this order:</strong> <code>create_mandate</code>, <code>verify_mandate</code>, <code>log_action</code>, <code>issue_mandate_attestation</code> with <code>get_registry_public_key</code>, <code>revoke_mandate</code>, <code>get_proof</code>. A runnable example, checked by the test suite: <code>uv run python examples/quickstart_agent.py</code>.</p>
     <p class="section-text">Machine-readable summaries for agents: <a href="https://github.com/JC7333/amr/blob/main/AGENTS.md" target="_blank" rel="noopener">AGENTS.md</a>, <a href="https://github.com/JC7333/amr/blob/main/llms.txt" target="_blank" rel="noopener">llms.txt</a>, <a href="https://github.com/JC7333/amr#quickstart-for-agents" target="_blank" rel="noopener">README</a>.</p>
   </div>
   <div class="install-block" data-lang="fr">
     <h3 style="margin-bottom: var(--space-sm);">Quickstart pour agents</h3>
-    <p class="section-text">Écrit pour qu'un agent IA (Claude Code, Cursor, tout client MCP) installe AMR et obtienne seul un premier mandat vérifié : sans compte, sans e-mail, sans personne à qui demander. Tout tourne sur votre machine ; AMR ne fait aucun appel réseau, sauf <code>report_issue</code>, désactivé tant que l'opérateur ne définit pas <code>AMR_ISSUE_TOKEN</code>.</p>
-    <pre><span class="install-comment"># 1. Lancer le serveur (nécessite uv). Le paquet PyPI « mandatia » n'est pas encore publié :</span>
-<span class="install-cmd">uvx --from git+https://github.com/JC7333/amr --with "mcp&lt;2" amr</span>
-<span class="install-comment"># la partie "mcp&lt;2" est nécessaire : AMR est écrit pour la version 1 du SDK Python MCP</span>
+    <p class="section-text">Écrit pour qu'un agent IA (Claude Code, Cursor, tout client MCP) installe AMR et obtienne seul un premier mandat vérifié : sans compte, sans e-mail, sans personne à qui demander. Tout tourne sur votre machine ; AMR ne fait aucun appel réseau, sauf deux options désactivées par défaut : <code>report_issue</code> si l'opérateur définit <code>AMR_ISSUE_TOKEN</code>, et la vérification de clé <code>did:web</code> s'il définit <code>AMR_DID_WEB_RESOLVE=1</code>.</p>
+    <pre><span class="install-comment"># 1. Lancer le serveur (nécessite uv). Le paquet PyPI s'appelle « mandatia » :</span>
+<span class="install-cmd">uvx mandatia</span>
+<span class="install-comment"># le dernier code du dépôt, à la place :</span>
+<span class="install-cmd">uvx --from git+https://github.com/JC7333/amr amr</span>
 
 <span class="install-comment"># 2. Le déclarer dans Claude Code</span>
-<span class="install-cmd">claude mcp add amr --</span> uvx --from git+https://github.com/JC7333/amr --with "mcp&lt;2" amr
+<span class="install-cmd">claude mcp add amr --</span> uvx mandatia
 
 <span class="install-comment"># ou cloner et lancer</span>
 <span class="install-cmd">git clone</span> https://github.com/JC7333/amr.git &amp;&amp; <span class="install-cmd">cd</span> amr &amp;&amp; <span class="install-cmd">uv sync</span> &amp;&amp; <span class="install-cmd">uv run</span> amr
@@ -1044,7 +1046,7 @@ AMR_PUBLIC_KEY_PATH=/absolute/path/amr_signing_key.pub</pre>
 AMR_DB_PATH=/absolute/path/amr_mandates.db
 AMR_SIGNING_KEY_PATH=/absolute/path/amr_signing_key.pem
 AMR_PUBLIC_KEY_PATH=/absolute/path/amr_signing_key.pub</pre>
-    <p class="section-text"><code>uvx amr</code> installe un autre projet, sans rapport : ne l'utilisez pas.</p>
+    <p class="section-text"><code>uvx amr</code> installe un autre projet, sans rapport : ne l'utilisez pas. AMR fonctionne avec les versions 1 et 2 du SDK Python MCP (<code>mcp&gt;=1.2,&lt;3</code>) ; aucune épingle de version n'est nécessaire.</p>
     <p class="section-text"><strong>Ensuite, dans cet ordre :</strong> <code>create_mandate</code>, <code>verify_mandate</code>, <code>log_action</code>, <code>issue_mandate_attestation</code> avec <code>get_registry_public_key</code>, <code>revoke_mandate</code>, <code>get_proof</code>. Un exemple exécutable, vérifié par la suite de tests : <code>uv run python examples/quickstart_agent.py</code>.</p>
     <p class="section-text">Résumés lisibles par machine pour les agents : <a href="https://github.com/JC7333/amr/blob/main/AGENTS.md" target="_blank" rel="noopener">AGENTS.md</a>, <a href="https://github.com/JC7333/amr/blob/main/llms.txt" target="_blank" rel="noopener">llms.txt</a>, <a href="https://github.com/JC7333/amr#quickstart-for-agents" target="_blank" rel="noopener">README</a>.</p>
   </div>
