@@ -744,8 +744,8 @@ html[lang="fr"] [data-lang="en"] { display: none !important; }
 <!-- SOLUTION -->
 <section class="solution" id="solution">
   <div class="reveal">
-    <h2 class="section-title" data-lang="en">Eighteen tools. One mandate chain.</h2>
-    <h2 class="section-title" data-lang="fr">Dix-huit outils. Une chaîne de mandats.</h2>
+    <h2 class="section-title" data-lang="en">Nineteen tools. One mandate chain.</h2>
+    <h2 class="section-title" data-lang="fr">Dix-neuf outils. Une chaîne de mandats.</h2>
 
     <p class="section-subtitle" data-lang="en">AMR is a Model Context Protocol server. Install it, and any MCP-compatible AI agent can issue, verify, and audit legal mandates natively.</p>
     <p class="section-subtitle" data-lang="fr">AMR est un serveur Model Context Protocol. Installez-le, et tout agent IA compatible MCP peut émettre, vérifier et auditer des mandats légaux nativement.</p>
@@ -816,8 +816,13 @@ html[lang="fr"] [data-lang="en"] { display: none !important; }
     </div>
     <div class="card reveal">
       <div class="card-tool">prepare_mandate_pdf</div>
-      <p data-lang="en">The mandate as a PDF for the principal to read and sign with its own signature tool. The registry does not sign it and does not check a signature made on it in this version.</p>
-      <p data-lang="fr">Le mandat en PDF, que le mandant lit et signe avec son propre outil de signature. Le registre ne le signe pas et, dans cette version, ne vérifie pas une signature posée dessus.</p>
+      <p data-lang="en">The mandate as a PDF for the principal to read and sign with its own signature tool. The registry does not sign it; once signed, the file goes to attach_signed_mandate_pdf.</p>
+      <p data-lang="fr">Le mandat en PDF, que le mandant lit et signe avec son propre outil de signature. Le registre ne le signe pas ; une fois signé, le fichier va à attach_signed_mandate_pdf.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-tool">attach_signed_mandate_pdf</div>
+      <p data-lang="en">Checks, offline, the PAdES signature the principal put on that PDF, against the trust roots the operator chose, and records the signer in the proof. It does not read the EU trusted lists, does not check revocation, and does not decide whether the signer may act for the principal.</p>
+      <p data-lang="fr">Vérifie, hors ligne, la signature PAdES posée par le mandant sur ce PDF, selon les autorités de confiance choisies par l'opérateur, et inscrit le signataire dans la preuve. Il ne lit pas les listes de confiance européennes, ne vérifie pas la révocation et ne décide pas si le signataire peut engager le mandant.</p>
     </div>
     <div class="card reveal">
       <div class="card-tool">prepare_revocation_signature</div>
