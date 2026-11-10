@@ -802,7 +802,9 @@ html[lang="fr"] [data-lang="en"] { display: none !important; }
     <div class="card reveal">
       <div class="card-tool">register_principal_key</div>
       <p data-lang="en">The principal registers its own Ed25519 public key, so that its mandates can carry its signature.</p>
+      <p data-lang="en">Known limit: for an ordinary <code>principal_id</code>, the registry does not check who registers a key (first registration wins), so a valid signature proves possession of that key, not the identity of the person behind it. A <code>did:web</code> identifier closes this gap at the level of a domain name: the key is accepted only if the domain publishes it (network option, off by default).</p>
       <p data-lang="fr">Le mandant enregistre sa propre clé publique Ed25519, pour que ses mandats portent sa signature.</p>
+      <p data-lang="fr">Limite connue : pour un <code>principal_id</code> ordinaire, le registre ne vérifie pas qui enregistre une clé (la première enregistrée gagne) ; une signature valable prouve donc la possession de cette clé, pas l'identité de la personne derrière. Un identifiant <code>did:web</code> comble ce manque au niveau d'un nom de domaine : la clé n'est acceptée que si le domaine la publie (option réseau, désactivée par défaut).</p>
     </div>
     <div class="card reveal">
       <div class="card-tool">prepare_mandate_signature</div>
