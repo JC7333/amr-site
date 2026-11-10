@@ -364,11 +364,11 @@ footer a:hover { text-decoration: underline; }
 
     <p>AMR est un registre de mandats vérifiables pour agents IA. Il fonctionne en trois couches que vous pouvez activer indépendamment selon votre maturité.</p>
 
-    <p><strong>La couche registre (Tier 0, gratuit, open source)</strong> stocke les mandats en chaîne SHA-256. Chaque mandat décrit un mandant nommé, un agent identifié, un périmètre d'action explicite, des plafonds chiffrés, une durée de validité, une base légale citée, et des seuils de supervision humaine. Vous pouvez interroger le registre en lecture seule, exporter une preuve cryptographique de la chaîne, et donner à un tiers — auditeur interne, régulateur — un accès vérifiable indépendant de votre infrastructure d'exécution.</p>
+    <p><strong>La couche registre (gratuite, open source)</strong> stocke les mandats en chaîne SHA-256. Chaque mandat décrit un mandant nommé, un agent identifié, un périmètre d'action explicite, des plafonds chiffrés, une durée de validité, une base légale citée, et des seuils de supervision humaine. Vous pouvez interroger le registre en lecture seule, exporter une preuve cryptographique de la chaîne, et donner à un tiers — auditeur interne, régulateur — un accès vérifiable indépendant de votre infrastructure d'exécution.</p>
 
-    <p><strong>La couche d'émission de jetons (Tier 1, 350 €/mois)</strong> transforme le registre en verrou. L'agent qui veut agir doit demander un jeton signé. Le système émet ce jeton uniquement si un mandat actif autorise l'action précise dans son périmètre. Pas de mandat valide, pas de jeton. Pas de jeton, pas d'action. Cette couche est en production depuis le 23 avril 2026.</p>
+    <p><strong>La couche d'émission de jetons (gratuite, open source)</strong> transforme le registre en verrou. L'agent qui veut agir doit demander un jeton signé. Le système émet ce jeton uniquement si un mandat actif autorise l'action précise dans son périmètre. Pas de mandat valide, pas de jeton. Pas de jeton, pas d'action. Cette couche existe dans le code depuis le 23 avril 2026.</p>
 
-    <p><strong>Les templates sectoriels (Tier 3, 3 000-5 000 € par pack)</strong> fournissent des mandats pré-cartographiés pour des cas d'usage précis. Chaque pack contient un <code>mandate.yaml</code> structuré, trois variantes commentées, des cartographies AI Act et RGPD avec articles cités, des règles sectorielles spécifiques, et un guide de déploiement. Aujourd'hui cinq templates sont publiés (infrastructure datacenter, finance et comptable, RH recrutement, support client, marketing et contenu) et d'autres suivent.</p>
+    <p><strong>Les templates sectoriels</strong> fournissent des mandats pré-cartographiés pour des cas d'usage précis. Chaque pack contient un <code>mandate.yaml</code> structuré, trois variantes commentées, des cartographies AI Act et RGPD avec articles cités, des règles sectorielles spécifiques, et un guide de déploiement. Aujourd'hui six templates sont publiés (infrastructure datacenter, finance et comptable, juridique et veille, RH recrutement, support client, marketing et contenu) et d'autres suivent.</p>
 
     <h2>Ce que ça change dans votre quotidien</h2>
 
@@ -376,7 +376,7 @@ footer a:hover { text-decoration: underline; }
 
     <p>Pendant l'exploitation, vos agents ne peuvent pas agir hors du périmètre défini. Le verrou est technique, pas procédural. Une dérive de scope déclenche un refus de jeton, donc une absence d'action, donc une alerte propre — pas un incident à reconstituer.</p>
 
-    <p>Lors d'un audit, interne ou externe, vous fournissez la chaîne des mandats et les logs d'exécution. Le mandat dit ce qui était autorisé. Le log dit ce qui s'est passé. Les deux ensemble forment une preuve opposable.</p>
+    <p>Lors d'un audit, interne ou externe, vous fournissez la chaîne des mandats et les logs d'exécution. Le mandat dit ce qui était autorisé. Le log dit ce qui s'est passé. Les deux ensemble forment une preuve que vous pouvez montrer à un auditeur, à un assureur ou à un juge.</p>
 
     <p>Lors d'une revue de conformité avec un régulateur, vous pouvez démontrer non seulement la traçabilité des actions, mais aussi le cadre prospectif d'autorisation. Vous répondez à la question "qu'avez-vous autorisé" avant de répondre à la question "que s'est-il passé".</p>
 
