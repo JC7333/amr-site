@@ -494,6 +494,8 @@ section {
 .install-block pre { margin-top: var(--space-sm); }
 .install-block a { color: #D4BE8A; }
 .install-block code { font-family: var(--font-mono); font-size: 0.85rem; }
+.install-block .profile-list { color: #D4D0C8; font-size: 0.9rem; line-height: 1.6; margin-top: var(--space-sm); padding-left: 1.2rem; }
+.install-block .profile-list li { margin-top: 0.4rem; }
 .install-comment { color: #7A8A7C; }
 .install-cmd { color: #D4BE8A; }
 
@@ -1040,6 +1042,13 @@ AMR_DB_PATH=/absolute/path/amr_mandates.db
 AMR_SIGNING_KEY_PATH=/absolute/path/amr_signing_key.pem
 AMR_PUBLIC_KEY_PATH=/absolute/path/amr_signing_key.pub</pre>
     <p class="section-text"><code>uvx amr</code> installs a different, unrelated project: do not use it. AMR runs with version 1 and version 2 of the MCP Python SDK (<code>mcp&gt;=1.2,&lt;3</code>); no extra version pin is needed.</p>
+    <p class="section-text"><strong>Give each side only its own tools.</strong> An agent that can create, sign or revoke its own mandate authorizes itself, and the mandate then proves nothing. Set <code>AMR_TOOL_PROFILE</code> in the environment of each client, all pointing at the same <code>AMR_DB_PATH</code>:</p>
+    <ul class="profile-list">
+      <li><code>principal</code>: the person or body that grants mandates (create, sign, revoke, contest, prove).</li>
+      <li><code>agent</code>: the agent that acts under a mandate (<code>verify_mandate</code>, <code>issue_action_token</code>, <code>log_action</code>, <code>issue_mandate_attestation</code>, <code>get_registry_public_key</code>); <code>create_mandate</code> for sub-mandates under its own mandate only.</li>
+      <li><code>receiver</code>: a third party the agent acts upon (<code>check_action_token</code>, <code>get_registry_public_key</code>).</li>
+      <li><code>full</code> (default): every tool, for tests and single-user setups.</li>
+    </ul>
     <p class="section-text"><strong>Then, in this order:</strong> <code>create_mandate</code>, <code>verify_mandate</code>, <code>log_action</code>, <code>issue_mandate_attestation</code> with <code>get_registry_public_key</code>, <code>revoke_mandate</code>, <code>get_proof</code>. A runnable example, checked by the test suite: <code>uv run python examples/quickstart_agent.py</code>.</p>
     <p class="section-text">Machine-readable summaries for agents: <a href="https://github.com/JC7333/amr/blob/main/AGENTS.md" target="_blank" rel="noopener">AGENTS.md</a>, <a href="https://github.com/JC7333/amr/blob/main/llms.txt" target="_blank" rel="noopener">llms.txt</a>, <a href="https://github.com/JC7333/amr#quickstart-for-agents" target="_blank" rel="noopener">README</a>.</p>
   </div>
@@ -1062,6 +1071,13 @@ AMR_DB_PATH=/absolute/path/amr_mandates.db
 AMR_SIGNING_KEY_PATH=/absolute/path/amr_signing_key.pem
 AMR_PUBLIC_KEY_PATH=/absolute/path/amr_signing_key.pub</pre>
     <p class="section-text"><code>uvx amr</code> installe un autre projet, sans rapport : ne l'utilisez pas. AMR fonctionne avec les versions 1 et 2 du SDK Python MCP (<code>mcp&gt;=1.2,&lt;3</code>) ; aucune épingle de version n'est nécessaire.</p>
+    <p class="section-text"><strong>Donnez à chaque côté ses seuls outils.</strong> Un agent qui peut créer, signer ou révoquer son propre mandat s'autorise lui-même, et le mandat ne prouve alors rien. Définissez <code>AMR_TOOL_PROFILE</code> dans l'environnement de chaque client, tous pointant vers le même <code>AMR_DB_PATH</code> :</p>
+    <ul class="profile-list">
+      <li><code>principal</code> : la personne ou l'organe qui donne les mandats (créer, signer, révoquer, contester, prouver).</li>
+      <li><code>agent</code> : l'agent qui agit sous un mandat (<code>verify_mandate</code>, <code>issue_action_token</code>, <code>log_action</code>, <code>issue_mandate_attestation</code>, <code>get_registry_public_key</code>) ; <code>create_mandate</code> uniquement pour des sous-mandats sous son propre mandat.</li>
+      <li><code>receiver</code> : un tiers sur lequel l'agent agit (<code>check_action_token</code>, <code>get_registry_public_key</code>).</li>
+      <li><code>full</code> (par défaut) : tous les outils, pour les tests et les installations à un seul utilisateur.</li>
+    </ul>
     <p class="section-text"><strong>Ensuite, dans cet ordre :</strong> <code>create_mandate</code>, <code>verify_mandate</code>, <code>log_action</code>, <code>issue_mandate_attestation</code> avec <code>get_registry_public_key</code>, <code>revoke_mandate</code>, <code>get_proof</code>. Un exemple exécutable, vérifié par la suite de tests : <code>uv run python examples/quickstart_agent.py</code>.</p>
     <p class="section-text">Résumés lisibles par machine pour les agents : <a href="https://github.com/JC7333/amr/blob/main/AGENTS.md" target="_blank" rel="noopener">AGENTS.md</a>, <a href="https://github.com/JC7333/amr/blob/main/llms.txt" target="_blank" rel="noopener">llms.txt</a>, <a href="https://github.com/JC7333/amr#quickstart-for-agents" target="_blank" rel="noopener">README</a>.</p>
   </div>
