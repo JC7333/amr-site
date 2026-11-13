@@ -1,0 +1,63 @@
+<section class="page-head">
+  <div class="wrap">
+    <h1>Verify a mandate</h1>
+    <p class="lede">Before accepting what an agent asks for, you check its mandate, the way you check a company register extract before signing with a company. Try it on the demonstration registry. Nothing is sent, your browser does the check.</p>
+  </div>
+</section>
+
+<section class="page-body">
+  <div class="wrap">
+    <div class="checker" id="checker">
+      <p id="checker-nojs">This demonstration needs JavaScript. Without it, both files can be checked by hand, with the commands given below.</p>
+      <form id="checker-form" hidden>
+        <label for="mandate-id">Mandate identifier</label>
+        <div class="field">
+          <input type="text" id="mandate-id" value="{{f:demo_mandate_id}}" autocomplete="off" spellcheck="false">
+          <button class="btn" type="submit">Verify</button>
+        </div>
+        <div class="picks">
+          <span>Try with</span>
+          <button type="button" class="pick" data-id="{{f:demo_mandate_id}}">an active mandate</button>
+          <button type="button" class="pick" data-id="{{f:demo_revoked_id}}">a revoked mandate</button>
+          <button type="button" class="pick" data-id="00000000-0000-4000-8000-000000000000">an unknown identifier</button>
+        </div>
+        <div class="tamper">
+          <input type="checkbox" id="tamper">
+          <label for="tamper">Tamper with the file before verifying (replace the €100 ceiling with €100,000)</label>
+        </div>
+      </form>
+      <div class="outcome" id="outcome" aria-live="polite"></div>
+    </div>
+
+    <div class="prose">
+      <h2>What your browser just did</h2>
+      <ol class="plain">
+        <li>It read two files from this site: a signed snapshot of the demonstration registry, and the public key of that registry.</li>
+        <li>It checked the signature of the snapshot with that key. Change a single character, and the signature no longer holds.</li>
+        <li>It looked up the mandate, then applied the registry's rule. A mandate is active if it is neither revoked nor expired, and if every mandate above it holds too.</li>
+      </ol>
+
+      <h2>What the snapshot does not say</h2>
+      <ul class="plain">
+        <li>It dates from {{f:demo_date_en}}. A revocation made after that date is not in it.</li>
+        <li>The principal appears under a pseudonym (a hash), never in clear. The text of the mandate, the logged actions and the contests are not published.</li>
+        <li>Trusting a public key means trusting whoever publishes it. Here, that is this site, for a demonstration registry.</li>
+        <li>Everything is fictional. The organizations and agents of this demonstration do not exist.</li>
+      </ul>
+
+      <h2>Do it again without this site</h2>
+      <p>The same files, checked by the AMR code on your machine.</p>
+<pre><code>curl -O https://www.mandatia.eu/assets/demo/registry-snapshot.jws
+curl -O https://www.mandatia.eu/assets/demo/registry-key.pem
+pip install mandatia
+python -m amr.public_registry serve --export registry-snapshot.jws --public-key registry-key.pem</code></pre>
+      <p>Then open <code>http://127.0.0.1:8080/</code>.</p>
+      <p class="note">The format is described in the <a href="https://github.com/JC7333/amr/blob/main/docs/public-registry-spec.md">public registry specification</a>. The data was produced by the AMR code on {{f:demo_date_en}}, with <a href="https://github.com/JC7333/amr-site/blob/main/tools/make_demo_registry.py">this script</a>.</p>
+    </div>
+  </div>
+</section>
+
+<template id="icon-ok">{{icon:ok}}</template>
+<template id="icon-no">{{icon:no}}</template>
+<template id="icon-idle">{{icon:idle}}</template>
+<script type="application/json" id="checker-text">{"locale": "en-GB", "loadError": "The demonstration files could not be read. Reload the page.", "unsupported": "Your browser cannot check this kind of signature", "unsupportedHelp": "A recent browser is needed (Ed25519 signature). The check can also be done by hand, with the commands given below.", "sigBad": "Invalid signature: trust nothing in this file", "sigBadTampered": "The file was changed after the registry signed it. The forged ceiling is not even read.", "sigBadOther": "The file does not match the registry's public key.", "sigOk": "Registry signature valid", "key": "Registry key", "snapshot": "Snapshot of", "count": "Published mandates", "time": "Check done in", "timeValue": "{ms} ms, in your browser", "needId": "Enter a mandate identifier", "unknown": "No mandate has this identifier", "unknownHelp": "For whoever receives the agent, what follows is simple. No published mandate, no action.", "agent": "Agent", "principal": "Principal (pseudonym)", "signed": "Signed by the principal", "yes": "yes", "no": "no", "created": "Given on", "expires": "Valid until", "revokedOn": "Revoked on", "may": "May", "never": "May never", "ceiling": "Ceiling per action", "status": {"active": "Mandate active", "revoked": "Mandate revoked by the principal", "inactive": "Mandate inactive", "expired": "Mandate expired", "cut_by_parent": "Mandate cut: a mandate above it no longer holds"}}</script>

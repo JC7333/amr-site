@@ -1,0 +1,26 @@
+name: Site
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  controles:
+    name: Pages à jour et contrôles
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Les pages générées sont à jour
+        run: python tools/build.py --check
+      - name: Contrôles du site
+        run: python tools/check.py
+      - name: Les contrôles voient chaque défaut réintroduit
+        run: python tools/check.py --selftest

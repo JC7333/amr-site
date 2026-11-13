@@ -1,0 +1,127 @@
+<section class="hero">
+  <div class="wrap hero-in">
+    <div>
+      <h1>Pas de mandat valide,<br>pas d'action.</h1>
+      <p class="lede">AMR est un registre où un agent IA ne peut rien faire tant qu'une personne ou un organe ne l'a pas autorisé par écrit. Ceux qui reçoivent l'agent vérifient cette autorisation en quelques secondes, sans compte.</p>
+      <div class="actions">
+        <a class="btn" href="/verifier">Vérifier un mandat</a>
+        <a class="btn btn-calme" href="/essentiel">L'essentiel en une page</a>
+      </div>
+      <p class="sub">Open source, gratuit, installé chez vous. <a href="/installer">Guide d'installation</a></p>
+    </div>
+    {{block:lockdemo}}
+  </div>
+</section>
+
+<section class="band" id="pourquoi">
+  <div class="wrap">
+    <h2>La décision existe. Rien ne l'impose à l'agent.</h2>
+    <p class="lede">Une direction, une commission ou un comité décide ce qu'un outil d'IA a le droit de faire. C'est écrit quelque part. Mais entre ce texte et le réglage réel de l'agent, il n'y a souvent que des personnes et des relectures.</p>
+    <p class="narrow">Tant que l'agent propose et qu'un humain valide, cela tient. Le jour où il agit seul (il commande, il écrit dans un dossier, il répond à un patient), il faut un mécanisme qui refuse de fonctionner sans autorisation. AMR est ce mécanisme.</p>
+  </div>
+</section>
+
+<section class="band band-brume" id="fonctionnement">
+  <div class="wrap">
+    <h2>Quatre temps, dans cet ordre</h2>
+    <ol class="path">
+      <li><h3>Autoriser</h3><p>Le mandant écrit ce que l'agent peut faire, ce qu'il ne peut jamais faire, ses plafonds et la date de fin. Il peut signer avec sa propre clé.</p></li>
+      <li><h3>Verrouiller</h3><p>Avant chaque action, l'agent demande un jeton au registre. Hors du mandat, pas de jeton.</p></li>
+      <li><h3>Vérifier</h3><p>Celui qui reçoit l'agent contrôle le mandat avec la clé publique du registre. Hors ligne, sans compte.</p></li>
+      <li><h3>Prouver, retirer</h3><p>Chaque acte est chaîné au mandat. Le mandant le retire quand il veut, et toute la branche s'arrête.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="band" id="limites">
+  <div class="wrap">
+    <h2>Ce qu'AMR fait. Ce qu'il ne fait pas.</h2>
+    <div class="two">
+      <div class="yes">
+        <h3>Il fait</h3>
+        <ul class="ticks">
+          <li>{{icon:ok}}<span>Il enregistre qui a autorisé quel agent, à faire quoi, jusqu'à quand.</span></li>
+          <li>{{icon:ok}}<span>Il refuse le jeton pour une action interdite, absente du mandat ou au-dessus du plafond.</span></li>
+          <li>{{icon:ok}}<span>Il empêche un sous-mandat d'être plus large que son parent.</span></li>
+          <li>{{icon:ok}}<span>Il arrête un mandat et toute sa branche dès que le mandant le retire.</span></li>
+          <li>{{icon:ok}}<span>Il donne au tiers une attestation signée, que celui-ci vérifie seul.</span></li>
+          <li>{{icon:ok}}<span>Il garde une chaîne d'empreintes où toute modification se voit.</span></li>
+        </ul>
+      </div>
+      <div class="no">
+        <h3>Il ne fait pas</h3>
+        <ul class="ticks">
+          <li>{{icon:no}}<span>Il ne surveille pas l'agent pendant qu'il agit. La supervision reste chez celui qui le déploie.</span></li>
+          <li>{{icon:no}}<span>Il contrôle des types d'action, pas un contenu. Il ne lit ni un courrier ni une réponse.</span></li>
+          <li>{{icon:no}}<span>Il ne rend aucun système conforme à un texte. Rien ici n'est un conseil juridique.</span></li>
+          <li>{{icon:no}}<span>Pour un identifiant ordinaire, il ne vérifie pas qui est la personne derrière la clé du mandant.</span></li>
+          <li>{{icon:no}}<span>Il ne défait pas une action déjà engagée. Retirer un mandat arrête la suite.</span></li>
+          <li>{{icon:no}}<span>Il ne décide pas à votre place. Le mandat, c'est vous qui l'écrivez.</span></li>
+        </ul>
+      </div>
+    </div>
+    <p class="note"><a href="/installer#outils">Les limites, outil par outil</a></p>
+    <div class="define">
+      <h3>Ce que « mandat » veut dire ici</h3>
+      <p>L'autorisation écrite qu'une personne ou un organe donne pour son agent. Elle engage celui qui la donne, pas l'agent, qui n'est pas une personne. AMR ne déplace aucune responsabilité. Il rend lisible qui a autorisé quoi.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band band-brume" id="gabarits">
+  <div class="wrap">
+    <h2>{{f:templates_count}} gabarits pour partir d'un cas réel</h2>
+    <p class="lede">Un gabarit est un mandat type écrit dans le code : ce que l'agent peut faire, ce qu'il ne peut jamais faire, ses plafonds. Un mandat construit dessus peut le durcir, pas l'assouplir.</p>
+    {{block:gabarits_teaser}}
+    <p class="note">Chaque gabarit est un socle provisoire. Aucune relecture par des praticiens n'est encore enregistrée.</p>
+  </div>
+</section>
+
+<section class="band" id="preuves">
+  <div class="wrap">
+    <h2>Ne me croyez pas sur parole</h2>
+    <p class="lede">Tout ce qui est écrit ici se vérifie. Voici où.</p>
+    <dl class="proofs">
+      <div><dt>Le code est public</dt><dd>Licence Apache-2.0. <a href="https://github.com/JC7333/amr">Lire le code</a></dd></div>
+      <div><dt>{{f:tests_count}} tests automatiques</dt><dd>Tous passés le {{f:tests_date}}. <a href="https://github.com/JC7333/amr/tree/main/tests">Voir les tests</a></dd></div>
+      <div><dt>{{f:tools_count}} outils, chacun avec ses limites</dt><dd>Les limites sont écrites à côté de chaque outil. <a href="/installer#outils">La liste complète</a></dd></div>
+      <div><dt>Une commande pour l'installer</dt><dd><code>uvx mandatia</code>, paquet publié sur <a href="https://pypi.org/project/mandatia/">PyPI</a>.</dd></div>
+      <div><dt>Rien ne sort de chez vous</dt><dd>Aucun appel réseau par défaut. Deux options existent, éteintes au départ. <a href="/installer">Lesquelles</a></dd></div>
+      <div><dt>Le verrou date du {{f:lock_since}}</dt><dd>Il est dans le code depuis ce jour. <a href="https://github.com/JC7333/amr/blob/main/docs/token-issuance-spec.md">La spécification du jeton</a></dd></div>
+    </dl>
+  </div>
+</section>
+
+<section class="band band-nuit" id="pilote">
+  <div class="wrap pilot">
+    <div>
+      <h2>{{f:pilot_places}} organisations pilotes</h2>
+      <p class="lede">Santé et assurance d'abord. Gratuit. Tout se fait par écrit, à votre rythme. Aucun appel n'est nécessaire.</p>
+      <a class="btn" href="mailto:audric@mandatia.eu?subject=Organisation%20pilote%20AMR&amp;body=Organisation%20%3A%0A%0ACe%20que%20fait%20l%27agent%20aujourd%27hui%20%3A%0A%0ACe%20qu%27il%20a%20le%20droit%20de%20faire%2C%20ou%20qui%20le%20d%C3%A9cide%20%3A%0A">Proposer mon organisation</a>
+    </div>
+    <ol>
+      <li><span>Vous m'écrivez ce que votre agent a le droit de faire, ou la décision qui l'autorise.</span></li>
+      <li><span>Nous en tirons son mandat, à partir d'un gabarit.</span></li>
+      <li><span>L'installation tient en une commande, que votre agent peut lancer lui-même.</span></li>
+      <li><span>Vous me dites ce qui manque ou ce qui gêne. C'est tout ce que je demande en retour.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section class="band band-brume" id="questions">
+  <div class="wrap">
+    <h2>Les questions qu'on me pose</h2>
+    {{block:faq}}
+  </div>
+</section>
+
+<section class="band" id="medecin">
+  <div class="wrap founder">
+    <h2>Pourquoi un médecin a écrit AMR</h2>
+    <div class="body">
+      <p>Une ordonnance est un écrit daté, signé, limité. Tel médicament, telle dose, telle durée. Pour un médicament sur ordonnance, le pharmacien la vérifie avant de délivrer. Sans elle, rien ne sort du tiroir, et personne n'y voit une contrainte. C'est ce qui rend l'ensemble fiable.</p>
+      <p>En confiant des tâches à des agents IA, je n'ai trouvé nulle part cet écrit que l'on vérifie avant d'agir. AMR est ma tentative de le fabriquer. Je fais ça le soir, après les consultations, depuis {{f:started}}.</p>
+      <p class="sign"><strong>Audric BUGNARD, médecin</strong>Aix-les-Bains. <a href="mailto:audric@mandatia.eu">audric@mandatia.eu</a></p>
+    </div>
+  </div>
+</section>

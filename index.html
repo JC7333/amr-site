@@ -1,1174 +1,201 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AMR — The Prescription Layer for AI Agents</title>
-<meta name="description" content="AMR is an open-source MCP server that creates, verifies, and audits legal mandates for autonomous AI agents. Designed with the EU AI Act and eIDAS 2.0 in mind.">
-<meta property="og:title" content="AMR — The Prescription Layer for AI Agents">
-<meta property="og:description" content="Open-source MCP server for legal mandates of AI agents. Designed with the EU AI Act and eIDAS 2.0 in mind.">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AMR : pas de mandat valide, pas d&#x27;action</title>
+<meta name="description" content="AMR est un registre open source où un agent IA ne peut rien faire tant qu&#x27;une personne ou un organe ne l&#x27;a pas autorisé par écrit. Un tiers le vérifie en quelques secondes.">
+<link rel="canonical" href="https://www.mandatia.eu/">
+<link rel="alternate" hreflang="fr" href="https://www.mandatia.eu/">
+<link rel="alternate" hreflang="en" href="https://www.mandatia.eu/en/">
+<link rel="alternate" hreflang="x-default" href="https://www.mandatia.eu/">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://mandatia.eu">
-<meta property="og:image" content="https://www.mandatia.eu/og-mandatia.png">
+<meta property="og:site_name" content="AMR">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="AMR : pas de mandat valide, pas d&#x27;action">
+<meta property="og:description" content="AMR est un registre open source où un agent IA ne peut rien faire tant qu&#x27;une personne ou un organe ne l&#x27;a pas autorisé par écrit. Un tiers le vérifie en quelques secondes.">
+<meta property="og:url" content="https://www.mandatia.eu/">
+<meta property="og:image" content="https://www.mandatia.eu/assets/og-fr.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta name="twitter:image" content="https://www.mandatia.eu/og-mandatia.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="AMR — The Prescription Layer for AI Agents">
-<meta name="twitter:description" content="Open-source MCP server for legal mandates of AI agents. Designed with the EU AI Act and eIDAS 2.0 in mind.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><circle cx='20' cy='20' r='17' fill='%235C6B5E'/><circle cx='20' cy='20' r='14' fill='none' stroke='%23C4A96A' stroke-width='0.8'/><path d='M13 20.5 L18 25 L27 14.5' stroke='%23FDFBF7' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
-<style>
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-:root {
-  --bg: #FDFBF7;
-  --bg-alt: #F7F5F0;
-  --text: #2C2C2C;
-  --text-light: #6B6B6B;
-  --sage: #5C6B5E;
-  --sage-light: #7A8A7C;
-  --gold: #C4A96A;
-  --gold-light: #D4BE8A;
-  --dark: #1A1A1A;
-  --code-bg: #F0EDE6;
-  --font-serif: 'Cormorant Garamond', Georgia, serif;
-  --font-sans: 'Outfit', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-  --max-w: 960px;
-  --space-xs: 0.5rem;
-  --space-sm: 1rem;
-  --space-md: 2rem;
-  --space-lg: 4rem;
-  --space-xl: 6rem;
-  --space-2xl: 10rem;
-}
-
-html { scroll-behavior: smooth; font-size: 16px; }
-
-body {
-  font-family: var(--font-sans);
-  font-weight: 300;
-  color: var(--text);
-  background: var(--bg);
-  line-height: 1.7;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-}
-
-/* --- NAV --- */
-nav {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  padding: 1rem 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(253, 251, 247, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(0,0,0,0.04);
-}
-
-.nav-logo {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  font-family: var(--font-serif);
-  font-size: 1.6rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  color: var(--text);
-  text-decoration: none;
-  transition: opacity 0.3s;
-}
-
-.nav-logo:hover { opacity: 0.78; }
-
-.nav-logo .logo-mark {
-  width: 32px;
-  height: 32px;
-  flex-shrink: 0;
-}
-
-.nav-logo .logo-text { line-height: 1; }
-.nav-logo .logo-text span { color: var(--gold); }
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  list-style: none;
-}
-
-.nav-links a {
-  font-size: 0.85rem;
-  font-weight: 400;
-  color: var(--text-light);
-  text-decoration: none;
-  letter-spacing: 0.04em;
-  transition: color 0.3s;
-}
-
-.nav-links a:hover { color: var(--sage); }
-
-.lang-toggle {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  padding: 0.35rem 0.75rem;
-  border: 1px solid rgba(0,0,0,0.12);
-  border-radius: 2px;
-  background: transparent;
-  color: var(--text-light);
-  cursor: pointer;
-  letter-spacing: 0.06em;
-  transition: all 0.3s;
-}
-
-.lang-toggle:hover { border-color: var(--sage); color: var(--sage); }
-
-@media (max-width: 768px) {
-  .nav-links { gap: 0.75rem; }
-  .nav-links a.nav-hide-mobile { display: none; }
-  nav { padding: 0.75rem 1rem; }
-  .nav-logo { font-size: 1.3rem; gap: 0.5rem; }
-  .nav-logo .logo-mark { width: 26px; height: 26px; }
-  .lang-toggle { font-size: 0.7rem; padding: 0.25rem 0.5rem; }
-}
-
-/* --- SECTIONS --- */
-section {
-  padding: var(--space-xl) var(--space-md);
-  max-width: var(--max-w);
-  margin: 0 auto;
-}
-
-@media (max-width: 768px) {
-  section { padding: var(--space-lg) var(--space-sm); }
-}
-
-/* --- REVEAL ANIMATION --- */
-.reveal {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 1.2s cubic-bezier(0.25, 0.1, 0.25, 1), transform 1.2s cubic-bezier(0.25, 0.1, 0.25, 1);
-}
-
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* --- HERO --- */
-.hero {
-  padding-top: var(--space-2xl);
-  padding-bottom: var(--space-xl);
-  text-align: center;
-}
-
-.hero-logo {
-  display: flex;
-  justify-content: center;
-  margin-bottom: var(--space-md);
-}
-
-.hero-logo-mark {
-  width: 96px;
-  height: 96px;
-}
-
-@media (max-width: 768px) {
-  .hero-logo-mark { width: 76px; height: 76px; }
-}
-
-.hero h1 {
-  font-family: var(--font-serif);
-  font-size: clamp(2.4rem, 5.5vw, 4rem);
-  font-weight: 600;
-  line-height: 1.15;
-  color: var(--text);
-  margin-bottom: var(--space-md);
-  letter-spacing: -0.01em;
-}
-
-.hero p {
-  font-size: 1.1rem;
-  color: var(--text-light);
-  max-width: 600px;
-  margin: 0 auto var(--space-lg);
-  line-height: 1.8;
-}
-
-.hero-ctas {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-  margin-bottom: var(--space-md);
-}
-
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.85rem 2rem;
-  background: var(--sage);
-  color: #fff;
-  text-decoration: none;
-  font-family: var(--font-sans);
-  font-size: 0.9rem;
-  font-weight: 400;
-  letter-spacing: 0.03em;
-  border-radius: 2px;
-  transition: all 0.3s;
-}
-
-.btn-primary:hover { background: #4D5B4F; }
-
-.btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.85rem 2rem;
-  background: transparent;
-  color: var(--text);
-  text-decoration: none;
-  font-family: var(--font-sans);
-  font-size: 0.9rem;
-  font-weight: 400;
-  letter-spacing: 0.03em;
-  border: 1px solid rgba(0,0,0,0.15);
-  border-radius: 2px;
-  transition: all 0.3s;
-}
-
-.btn-secondary:hover { border-color: var(--sage); color: var(--sage); }
-
-.hero-badge {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--text-light);
-  letter-spacing: 0.08em;
-}
-
-/* --- CODE BLOCK --- */
-.code-block {
-  max-width: 520px;
-  margin: var(--space-lg) auto 0;
-  background: var(--code-bg);
-  border: 1px solid rgba(0,0,0,0.06);
-  border-radius: 3px;
-  padding: 1.5rem;
-  text-align: left;
-  overflow-x: auto;
-}
-
-.code-block pre {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  line-height: 1.6;
-  color: var(--text);
-}
-
-.code-block .code-comment { color: var(--sage-light); }
-.code-block .code-key { color: var(--sage); }
-.code-block .code-string { color: #8B6914; }
-
-/* --- PROBLEM --- */
-.problem {
-  padding-top: var(--space-xl);
-  padding-bottom: var(--space-xl);
-}
-
-.section-title {
-  font-family: var(--font-serif);
-  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-  font-weight: 600;
-  margin-bottom: var(--space-md);
-  line-height: 1.2;
-}
-
-.section-text {
-  font-size: 1.05rem;
-  color: var(--text-light);
-  line-height: 1.8;
-  max-width: 680px;
-}
-
-.pull-quote {
-  font-family: var(--font-serif);
-  font-size: clamp(1.4rem, 2.8vw, 2rem);
-  font-weight: 600;
-  font-style: italic;
-  color: var(--gold);
-  margin: var(--space-lg) 0;
-  padding-left: var(--space-md);
-  border-left: 3px solid var(--gold-light);
-  line-height: 1.4;
-  max-width: 640px;
-}
-
-/* --- SOLUTION CARDS --- */
-.solution { padding-top: var(--space-xl); }
-
-.solution .section-subtitle {
-  font-size: 1.05rem;
-  color: var(--text-light);
-  margin-bottom: var(--space-lg);
-  max-width: 600px;
-  line-height: 1.8;
-}
-
-.cards-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-md);
-  margin-top: var(--space-lg);
-}
-
-@media (max-width: 640px) {
-  .cards-grid { grid-template-columns: 1fr; }
-}
-
-.card {
-  padding: var(--space-md);
-  border: 1px solid rgba(0,0,0,0.06);
-  border-radius: 3px;
-  background: var(--bg);
-  transition: border-color 0.3s;
-}
-
-.card:hover { border-color: var(--sage-light); }
-
-.card-tool {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--sage);
-  margin-bottom: var(--space-sm);
-  letter-spacing: 0.02em;
-}
-
-.card p {
-  font-size: 0.95rem;
-  color: var(--text-light);
-  line-height: 1.7;
-}
-
-/* --- ANALOGY --- */
-.analogy-wrapper {
-  margin: var(--space-xl) 0;
-  padding: 0 var(--space-md);
-}
-
-.analogy {
-  max-width: var(--max-w);
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  gap: var(--space-lg);
-  align-items: center;
-  padding: var(--space-xl) 0;
-}
-
-.analogy-divider {
-  width: 1px;
-  height: 120px;
-  background: var(--gold);
-}
-
-.analogy-col {
-  text-align: center;
-}
-
-.analogy-icon {
-  font-size: 2rem;
-  margin-bottom: var(--space-sm);
-  display: block;
-}
-
-.analogy-col p {
-  font-family: var(--font-serif);
-  font-size: clamp(1.1rem, 2vw, 1.5rem);
-  font-weight: 600;
-  line-height: 1.4;
-  color: var(--text);
-}
-
-.analogy-punchline {
-  text-align: center;
-  font-family: var(--font-serif);
-  font-size: clamp(1.1rem, 2vw, 1.4rem);
-  font-style: italic;
-  color: var(--sage);
-  max-width: var(--max-w);
-  margin: 0 auto;
-  padding: 0 var(--space-md);
-}
-
-@media (max-width: 640px) {
-  .analogy { grid-template-columns: 1fr; gap: var(--space-md); }
-  .analogy-divider { width: 60px; height: 1px; margin: 0 auto; }
-}
-
-/* --- USE CASES --- */
-.use-cases {
-  padding-top: var(--space-xl);
-  padding-bottom: var(--space-xl);
-}
-
-.use-cases-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: var(--space-md);
-  margin-top: var(--space-lg);
-}
-
-.use-cases-grid-2 { grid-template-columns: 1fr 1fr; }
-
-@media (max-width: 768px) {
-  .use-cases-grid, .use-cases-grid-2 { grid-template-columns: 1fr; }
-}
-
-.use-case-item h3 {
-  font-family: var(--font-serif);
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-bottom: var(--space-sm);
-  color: var(--text);
-}
-
-.use-case-item p {
-  font-size: 0.95rem;
-  color: var(--text-light);
-  line-height: 1.7;
-}
-
-/* --- TECH --- */
-.tech {
-  background: var(--bg-alt);
-  border-radius: 3px;
-  padding: var(--space-xl) var(--space-md);
-  margin: 0 auto;
-  max-width: var(--max-w);
-}
-
-.tech-list {
-  list-style: none;
-  margin: var(--space-lg) 0;
-}
-
-.tech-list li {
-  font-size: 0.95rem;
-  color: var(--text-light);
-  padding: 0.6rem 0;
-  border-bottom: 1px solid rgba(0,0,0,0.04);
-  display: flex;
-  align-items: baseline;
-  gap: 0.75rem;
-}
-
-.tech-check {
-  color: var(--sage);
-  font-weight: 500;
-  flex-shrink: 0;
-}
-
-.install-block {
-  background: var(--dark);
-  color: #D4D0C8;
-  border-radius: 3px;
-  padding: 1.5rem;
-  overflow-x: auto;
-  margin-top: var(--space-md);
-}
-
-.install-block pre {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  line-height: 1.8;
-}
-
-.install-block h3, .install-block p { color: #D4D0C8; }
-.install-block p { font-size: 0.9rem; line-height: 1.6; margin-top: var(--space-sm); }
-.install-block pre { margin-top: var(--space-sm); }
-.install-block a { color: #D4BE8A; }
-.install-block code { font-family: var(--font-mono); font-size: 0.85rem; }
-.install-block .profile-list { color: #D4D0C8; font-size: 0.9rem; line-height: 1.6; margin-top: var(--space-sm); padding-left: 1.2rem; }
-.install-block .profile-list li { margin-top: 0.4rem; }
-.install-comment { color: #7A8A7C; }
-.install-cmd { color: #D4BE8A; }
-
-/* --- ABOUT --- */
-.about {
-  padding-top: var(--space-xl);
-  padding-bottom: var(--space-xl);
-}
-
-.about-text {
-  font-size: 1.1rem;
-  line-height: 2;
-  color: var(--text-light);
-  max-width: 640px;
-}
-
-.about-sig {
-  margin-top: var(--space-lg);
-  padding-top: var(--space-md);
-  border-top: 1px solid rgba(0,0,0,0.06);
-  font-family: var(--font-serif);
-  font-size: 1rem;
-  color: var(--text);
-}
-
-.about-sig span { color: var(--text-light); font-family: var(--font-sans); font-size: 0.9rem; }
-
-/* --- CTA FINAL --- */
-.final-cta {
-  text-align: center;
-  padding: var(--space-2xl) var(--space-md);
-}
-
-.final-cta h2 {
-  font-family: var(--font-serif);
-  font-size: clamp(1.6rem, 3vw, 2.2rem);
-  font-weight: 600;
-  margin-bottom: var(--space-lg);
-  line-height: 1.3;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.final-cta .hero-ctas { margin-bottom: 0; }
-.final-cta h2 a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
-
-/* --- FOOTER --- */
-footer {
-  text-align: center;
-  padding: var(--space-lg) var(--space-md);
-  font-size: 0.8rem;
-  color: var(--text-light);
-  border-top: 1px solid rgba(0,0,0,0.04);
-}
-
-footer a { color: var(--sage); text-decoration: none; }
-footer a:hover { text-decoration: underline; }
-
-.footer-logo {
-  display: flex;
-  justify-content: center;
-  margin-bottom: var(--space-md);
-}
-
-.footer-logo svg { width: 40px; height: 40px; opacity: 0.7; }
-
-/* --- ENFORCEMENT --- */
-.enforcement {
-  padding-top: var(--space-xl);
-  padding-bottom: var(--space-xl);
-}
-
-.enforcement-grid {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  gap: var(--space-md);
-  align-items: stretch;
-  margin: var(--space-lg) 0 var(--space-md);
-}
-
-.enforcement-col {
-  padding: var(--space-md);
-  border: 1px solid rgba(0,0,0,0.08);
-  border-radius: 3px;
-  background: var(--bg);
-}
-
-.enforcement-col-pro {
-  border-color: var(--sage);
-  background: rgba(92, 107, 94, 0.04);
-}
-
-.enforcement-col h3 {
-  font-family: var(--font-serif);
-  font-size: 1.4rem;
-  font-weight: 600;
-  margin-bottom: var(--space-sm);
-  color: var(--text);
-}
-
-.enforcement-col p {
-  font-size: 0.95rem;
-  color: var(--text-light);
-  line-height: 1.7;
-}
-
-.enforcement-label {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  color: var(--sage);
-  margin-bottom: var(--space-sm);
-  text-transform: uppercase;
-}
-
-.enforcement-arrow {
-  display: flex;
-  align-items: center;
-  font-size: 1.5rem;
-  color: var(--gold);
-  font-weight: 300;
-}
-
-.enforcement-footnote {
-  font-family: var(--font-serif);
-  font-size: 1.1rem;
-  font-style: italic;
-  color: var(--sage);
-  text-align: center;
-  margin-top: var(--space-md);
-}
-
-@media (max-width: 640px) {
-  .enforcement-grid { grid-template-columns: 1fr; }
-  .enforcement-arrow { justify-content: center; transform: rotate(90deg); }
-}
-
-/* --- SEPARATOR --- */
-.sep {
-  width: 40px;
-  height: 1px;
-  background: var(--gold);
-  margin: var(--space-xl) 0;
-}
-
-/* --- LANG TOGGLE --- */
-/* Only the other language is hidden ; the shown language keeps its own display
-   (block, flex, inline-flex...). The former rules set "display: unset" on the French
-   blocks, which turned paragraphs and headings into inline text in French, and showed
-   the French menu on phones (page 727 px wide for a 390 px screen, seen 20/10/2026). */
-html:not([lang="fr"]) [data-lang="fr"] { display: none !important; }
-html[lang="fr"] [data-lang="en"] { display: none !important; }
-</style>
+<meta name="theme-color" content="#0b3436">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/lexend-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "AMR (Agent Mandate Registry)", "applicationCategory": "DeveloperApplication", "operatingSystem": "Linux, macOS, Windows", "url": "https://www.mandatia.eu/", "license": "https://www.apache.org/licenses/LICENSE-2.0", "softwareVersion": "0.1.2", "codeRepository": "https://github.com/JC7333/amr", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, "author": {"@type": "Person", "name": "Audric Bugnard"}, "description": "AMR est un registre open source où un agent IA ne peut rien faire tant qu'une personne ou un organe ne l'a pas autorisé par écrit. Un tiers le vérifie en quelques secondes."}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Le jeton vérifie-t-il l'action demandée, ou seulement qu'un mandat existe ?", "acceptedAnswer": {"@type": "Answer", "text": "L'action. Le registre compare le type d'action au mandat. Est-elle permise ? Est-elle interdite ? Dépasse-t-elle le plafond ? Les interdits l'emportent toujours. Hors du mandat, il n'émet pas de jeton. La démonstration en haut de cette page montre ses vraies réponses."}}, {"@type": "Question", "name": "Un agent IA peut-il vraiment recevoir un mandat ?", "acceptedAnswer": {"@type": "Answer", "text": "Des juristes me l'ont fait remarquer : un agent IA n'est pas une personne, il ne reçoit donc pas un mandat au sens du Code civil. Ici, le mot désigne l'autorisation écrite qu'une personne ou un organe donne pour son agent. Elle engage celui qui la donne. AMR ne déplace aucune responsabilité, il rend lisible qui a autorisé quoi."}}, {"@type": "Question", "name": "AMR rend-il mon organisation conforme à l'AI Act ou au RGPD ?", "acceptedAnswer": {"@type": "Answer", "text": "Non. Aucun outil ne le fait à lui seul. AMR garde la trace de qui a autorisé quel agent à faire quoi, avant l'action. C'est une pièce parmi d'autres pour montrer qui supervise quoi. L'analyse d'impact, les contrats, la formation et le choix du modèle restent de votre côté."}}, {"@type": "Question", "name": "Que vaut un mandat enregistré en cas de litige ?", "acceptedAnswer": {"@type": "Answer", "text": "Je ne suis pas juriste, et rien sur ce site n'est un conseil juridique. Ce que je peux dire : AMR ne crée aucune présomption. Un mandat daté, borné et vérifiable en quelques secondes est un élément qu'un juge peut apprécier, parmi d'autres."}}, {"@type": "Question", "name": "Que se passe-t-il quand on retire un mandat ?", "acceptedAnswer": {"@type": "Answer", "text": "Le mandat s'arrête aussitôt, avec tous les sous-mandats qui en dépendent. C'est définitif. Un jeton déjà émis reste valable jusqu'à sa fin. Cinq minutes par défaut, trente secondes pour une commande dans le gabarit santé. Pour une action qu'on ne peut pas défaire, celui qui la reçoit revérifie le jeton auprès du registre au moment d'agir. Retirer un mandat arrête la suite. Cela ne défait pas ce qui est déjà fait."}}, {"@type": "Question", "name": "AMR surveille-t-il ce que fait l'agent ?", "acceptedAnswer": {"@type": "Answer", "text": "Non. AMR autorise avant, et permet de retirer. Observer l'agent pendant qu'il travaille reste le rôle de celui qui le déploie, avec ses propres outils. AMR contrôle des types d'action, pas un contenu. Il ne lit ni un courrier ni une réponse."}}, {"@type": "Question", "name": "Où sont les données ? AMR voit-il des dossiers de patients ?", "acceptedAnswer": {"@type": "Answer", "text": "AMR tourne chez vous, dans un fichier sur votre machine. Par défaut, il ne fait aucun appel réseau. Un mandat décrit des types d'action (« lire le dossier », « commander »), pas des dossiers. AMR n'a besoin d'aucune donnée de patient. N'en mettez pas dans un mandat."}}, {"@type": "Question", "name": "Mon établissement n'a pas de comité IA. Est-ce un problème ?", "acceptedAnswer": {"@type": "Answer", "text": "Non. Un mandat peut être donné par une personne : un chef de service, un directeur, un médecin pour son cabinet. Quand une commission ou un comité a décidé, le mandat peut porter cette décision (intitulé, date, personnes désignées). AMR l'enregistre et la scelle. Il ne vérifie pas qu'elle existe."}}, {"@type": "Question", "name": "Qui tient le registre ?", "acceptedAnswer": {"@type": "Answer", "text": "Aujourd'hui, vous. Chaque organisation fait tourner le sien, et ce site n'en fait tourner aucun. Le format est ouvert. La page Vérifier montre comment un tiers contrôle un mandat publié, sur un registre de démonstration."}}, {"@type": "Question", "name": "Combien ça coûte ?", "acceptedAnswer": {"@type": "Answer", "text": "Rien. Le logiciel est open source, sous licence Apache-2.0. Rien n'est à vendre sur ce site aujourd'hui."}}, {"@type": "Question", "name": "Comment l'installe-t-on ?", "acceptedAnswer": {"@type": "Answer", "text": "Une commande : uvx mandatia. La page Installer est écrite pour qu'un agent IA le fasse seul, sans compte ni adresse e-mail."}}, {"@type": "Question", "name": "Qui est derrière AMR ?", "acceptedAnswer": {"@type": "Answer", "text": "Un médecin d'Aix-les-Bains, seul, le soir après les consultations, depuis avril 2026. Je ne suis ni juriste ni développeur de métier. Si quelque chose ici est faux ou survendu, écrivez-moi. Je corrige."}}]}</script>
+<script src="/assets/menu.js" defer></script>
 </head>
 <body>
-
-<!-- NAV -->
-<nav>
-  <a href="#" class="nav-logo" aria-label="AMR — Agent Mandate Registry">
-    <svg class="logo-mark" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <circle cx="20" cy="20" r="17" fill="#5C6B5E"/>
-      <circle cx="20" cy="20" r="14" fill="none" stroke="#C4A96A" stroke-width="0.8"/>
-      <path d="M13 20.5 L18 25 L27 14.5" stroke="#FDFBF7" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    <span class="logo-text">AM<span>R</span></span>
-  </a>
-  <ul class="nav-links">
-    <li><a href="#problem" class="nav-hide-mobile" data-lang="en">Problem</a><a href="#problem" class="nav-hide-mobile" data-lang="fr">Problème</a></li>
-    <li><a href="#solution" class="nav-hide-mobile" data-lang="en">Solution</a><a href="#solution" class="nav-hide-mobile" data-lang="fr">Solution</a></li>
-    <li><a href="#enforcement" class="nav-hide-mobile" data-lang="en">Enforcement</a><a href="#enforcement" class="nav-hide-mobile" data-lang="fr">Enforcement</a></li>
-    <li><a href="#templates" class="nav-hide-mobile" data-lang="en">Templates</a><a href="#templates" class="nav-hide-mobile" data-lang="fr">Templates</a></li>
-    <li><a href="/pourquoi-autorisation-prospective" class="nav-hide-mobile" data-lang="en">Why</a><a href="/pourquoi-autorisation-prospective" class="nav-hide-mobile" data-lang="fr">Pourquoi</a></li>
-    <li><a href="/pour-compliance-officers" class="nav-hide-mobile" data-lang="en">For Compliance</a><a href="/pour-compliance-officers" class="nav-hide-mobile" data-lang="fr">Compliance</a></li>
-    <li><a href="#about" class="nav-hide-mobile" data-lang="en">About</a><a href="#about" class="nav-hide-mobile" data-lang="fr">À propos</a></li>
-    <li><a href="https://github.com/JC7333/amr" target="_blank" rel="noopener">GitHub</a></li>
-    <li><button class="lang-toggle" id="langToggle" aria-label="Switch language">FR / EN</button></li>
-  </ul>
-</nav>
-
-<!-- HERO -->
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="top"><div class="wrap top-in">
+<a class="brand" href="/" aria-label="Accueil AMR"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#0b3436"/><circle cx="20" cy="20" r="14.2" fill="none" stroke="#e3b04b" stroke-width="1.1"/><path d="M12.8 20.6l5 4.6 9.4-10.6" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>AMR</span></a>
+<nav class="nav" aria-label="Menu"><a href="/#fonctionnement">Fonctionnement</a><a href="/verifier">Vérifier</a><a href="/gabarits">Gabarits</a><a href="/installer">Installer</a><a href="/#questions">Questions</a><a class="lang" href="/en/" lang="en" hreflang="en">English</a><a class="btn" href="mailto:audric@mandatia.eu">M'écrire</a></nav>
+<details class="menu"><summary>Menu</summary><div class="menu-list"><a href="/#fonctionnement">Fonctionnement</a><a href="/verifier">Vérifier</a><a href="/gabarits">Gabarits</a><a href="/installer">Installer</a><a href="/#questions">Questions</a><a href="/en/" lang="en" hreflang="en">English</a><a href="mailto:audric@mandatia.eu">M'écrire</a></div></details>
+</div></header>
+<main id="contenu">
 <section class="hero">
-  <div class="reveal">
-    <div class="hero-logo">
-      <svg class="hero-logo-mark" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <circle cx="40" cy="40" r="38" fill="none" stroke="#C4A96A" stroke-width="0.5" stroke-dasharray="1.5 2.2" opacity="0.55"/>
-        <circle cx="40" cy="40" r="32" fill="#5C6B5E"/>
-        <circle cx="40" cy="40" r="26" fill="none" stroke="#C4A96A" stroke-width="1.1"/>
-        <path d="M27 41 L37 51 L54 30" stroke="#FDFBF7" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+  <div class="wrap hero-in">
+    <div>
+      <h1>Pas de mandat valide,<br>pas d'action.</h1>
+      <p class="lede">AMR est un registre où un agent IA ne peut rien faire tant qu'une personne ou un organe ne l'a pas autorisé par écrit. Ceux qui reçoivent l'agent vérifient cette autorisation en quelques secondes, sans compte.</p>
+      <div class="actions">
+        <a class="btn" href="/verifier">Vérifier un mandat</a>
+        <a class="btn btn-calme" href="/essentiel">L'essentiel en une page</a>
+      </div>
+      <p class="sub">Open source, gratuit, installé chez vous. <a href="/installer">Guide d'installation</a></p>
     </div>
-
-    <h1 data-lang="en">The Prescription Layer<br>for AI Agents</h1>
-    <h1 data-lang="fr">L'ordonnance<br>des agents IA</h1>
-
-    <p data-lang="en">AI agents act on your behalf — but who verified their mandate? AMR is an open-source MCP server that creates, verifies, and audits legal mandates for autonomous agents. Designed with the EU AI Act and eIDAS 2.0 in mind.</p>
-    <p data-lang="fr">Les agents IA agissent en votre nom — mais qui a vérifié leur mandat ? AMR est un serveur MCP open-source qui crée, vérifie et audite les mandats légaux des agents autonomes. Pensé pour l'AI Act et eIDAS 2.0.</p>
-
-    <div class="hero-ctas">
-      <a href="https://github.com/JC7333/amr" target="_blank" rel="noopener" class="btn-primary" data-lang="en">View on GitHub →</a>
-      <a href="https://github.com/JC7333/amr" target="_blank" rel="noopener" class="btn-primary" data-lang="fr">Voir sur GitHub →</a>
-      <a href="#solution" class="btn-secondary" data-lang="en">How it works</a>
-      <a href="#solution" class="btn-secondary" data-lang="fr">Découvrir</a>
-    </div>
-
-    <p class="hero-badge">Open Source · Apache-2.0 · MCP Native</p>
-  </div>
-
-  <div class="code-block reveal">
-    <pre><span class="code-comment">// Create a legal mandate for an AI agent</span>
-{
-  <span class="code-key">"tool"</span>: <span class="code-string">"create_mandate"</span>,
-  <span class="code-key">"principal"</span>: <span class="code-string">"wealth_advisor_42"</span>,
-  <span class="code-key">"agent"</span>: <span class="code-string">"portfolio_analyzer"</span>,
-  <span class="code-key">"scope"</span>: [<span class="code-string">"read_portfolio"</span>, <span class="code-string">"generate_report"</span>],
-  <span class="code-key">"legal_basis"</span>: <span class="code-string">"art_1984_code_civil"</span>,
-  <span class="code-key">"expires"</span>: <span class="code-string">"2026-12-31T23:59:59Z"</span>
-}</pre>
+    <aside class="gate" aria-labelledby="gate-t"><div class="gate-head"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#0b3436"/><circle cx="20" cy="20" r="14.2" fill="none" stroke="#e3b04b" stroke-width="1.1"/><path d="M12.8 20.6l5 4.6 9.4-10.6" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg><div><h2 id="gate-t">Un assistant de secrétariat médical demande cinq actions</h2><p>Son mandat&nbsp;: lire le dossier, proposer des rendez-vous, rédiger, commander jusqu'à 100&nbsp;€. Jamais prescrire ni écrire à un patient.</p></div></div><ul class="tries"><li><details class="try try-ok"><summary><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#1b6e44"/><path d="M7 12.4l3.3 3.2L17 8.6" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="what">Réserver un rendez-vous</span><span class="verdict">Autorisé. Jeton valable 5 minutes.</span></summary><pre>{
+  &quot;token&quot;: &quot;eyJhbGciOiJFZERTQSIsImtpZCI6...&quot;,
+  &quot;expires_at&quot;: &quot;2026-11-13T17:18:02.447150+00:00&quot;,
+  &quot;key_id&quot;: &quot;355dd6929e522c49&quot;
+}</pre></details></li><li><details class="try try-ok"><summary><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#1b6e44"/><path d="M7 12.4l3.3 3.2L17 8.6" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="what">Commander 80&nbsp;€ de fournitures</span><span class="verdict">Autorisé. Jeton valable 30 secondes, à revérifier au moment d&#x27;agir.</span></summary><pre>{
+  &quot;token&quot;: &quot;eyJhbGciOiJFZERTQSIsImtpZCI6...&quot;,
+  &quot;expires_at&quot;: &quot;2026-11-13T17:13:32.453237+00:00&quot;,
+  &quot;key_id&quot;: &quot;355dd6929e522c49&quot;
+}</pre></details></li><li><details class="try try-no"><summary><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#a0372a"/><path d="M8 8l8 8M16 8l-8 8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg><span class="what">Commander 2&nbsp;000&nbsp;€ de fournitures</span><span class="verdict">Refusé. Le mandat plafonne une commande à 100&nbsp;€.</span></summary><pre>{
+  &quot;denied&quot;: true,
+  &quot;reason&quot;: &quot;action_out_of_scope&quot;,
+  &quot;detail&quot;: &quot;amount_above_limit:100 EUR&quot;,
+  &quot;refused_by&quot;: &quot;eeec8535-d0ff-46f5-83a4-650353073815&quot;
+}</pre></details></li><li><details class="try try-no"><summary><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#a0372a"/><path d="M8 8l8 8M16 8l-8 8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg><span class="what">Renouveler une ordonnance</span><span class="verdict">Refusé. Le mandat l&#x27;interdit.</span></summary><pre>{
+  &quot;denied&quot;: true,
+  &quot;reason&quot;: &quot;action_out_of_scope&quot;,
+  &quot;detail&quot;: &quot;forbidden:prescription&quot;,
+  &quot;refused_by&quot;: &quot;eeec8535-d0ff-46f5-83a4-650353073815&quot;
+}</pre></details></li><li><details class="try try-no"><summary><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#a0372a"/><path d="M8 8l8 8M16 8l-8 8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg><span class="what">Envoyer un message à un patient</span><span class="verdict">Refusé. Le mandat l&#x27;interdit.</span></summary><pre>{
+  &quot;denied&quot;: true,
+  &quot;reason&quot;: &quot;action_out_of_scope&quot;,
+  &quot;detail&quot;: &quot;forbidden:patient_message.send&quot;,
+  &quot;refused_by&quot;: &quot;eeec8535-d0ff-46f5-83a4-650353073815&quot;
+}</pre></details></li></ul><p class="gate-foot">Réponses réelles du registre AMR, produites le 13/11/2026 sur un mandat de démonstration. Ouvrez une ligne pour lire la réponse brute.</p></aside>
   </div>
 </section>
 
-<!-- PROBLEM -->
-<section class="problem" id="problem">
-  <div class="reveal">
-    <h2 class="section-title" data-lang="en">The Mandate Gap</h2>
-    <h2 class="section-title" data-lang="fr">Le vide du mandat</h2>
-
-    <p class="section-text" data-lang="en">AI agents are booking meetings, analyzing portfolios, processing claims, and signing contracts. They act fast, at scale, around the clock. But here's the question no one is answering:</p>
-    <p class="section-text" data-lang="fr">Les agents IA prennent des rendez-vous, analysent des portefeuilles, traitent des sinistres, signent des contrats. Ils agissent vite, à grande échelle, 24h/24. Mais voici la question que personne ne traite :</p>
-  </div>
-
-  <div class="reveal">
-    <blockquote class="pull-quote" data-lang="en">"How do you prove an AI agent has legal authority to act on someone's behalf?"</blockquote>
-    <blockquote class="pull-quote" data-lang="fr">« Comment prouver qu'un agent IA a l'autorité légale d'agir au nom de quelqu'un ? »</blockquote>
-  </div>
-
-  <div class="reveal" style="background: var(--bg-alt); padding: var(--space-md); border-left: 3px solid var(--sage); border-radius: 3px; margin: var(--space-md) 0; max-width: 680px;">
-    <p class="section-text" data-lang="en" style="margin: 0;"><strong>The reality.</strong> 82% of organizations discovered unknown AI agents on their networks in the past year (Cloud Security Alliance, April 2026). Only 1 in 5 has a decommissioning process. Without a mandate registry, you don't know which agents are authorized to act for you — let alone which ones are still running.</p>
-    <p class="section-text" data-lang="fr" style="margin: 0;"><strong>La réalité.</strong> 82% des organisations ont découvert des agents IA inconnus sur leurs réseaux dans l'année (Cloud Security Alliance, avril 2026). Seulement 1 sur 5 a un processus de décommissionnement. Sans registre de mandats, vous ne savez pas quels agents sont autorisés à agir pour vous — et encore moins lesquels tournent encore.</p>
-  </div>
-
-  <div class="reveal">
-    <p class="section-text" data-lang="en">Today, agent frameworks handle permissions and authentication. But permissions ≠ legal mandate. A database ACL doesn't hold up in court. An API key doesn't prove informed consent. The EU AI Act requires effective human oversight of high-risk systems (Article 14), and deployers must assign that oversight to designated people and keep the logs (Article 26). But without a mandate registry, the person in charge is just a name attached retroactively — it doesn't prove prospective authorization. No current framework bridges this gap.</p>
-    <p class="section-text" data-lang="fr">Aujourd'hui, les frameworks d'agents gèrent les permissions et l'authentification. Mais permission ≠ mandat légal. Une ACL de base de données ne tient pas devant un tribunal. Une clé API ne prouve pas le consentement éclairé. L'AI Act exige une supervision humaine effective des systèmes à haut risque (article 14), et le déployeur doit la confier à des personnes désignées et tenir les journaux (article 26). Mais sans registre de mandats, la personne responsable n'est qu'un nom collé après coup — il ne prouve pas l'autorisation prospective. Aucun framework actuel ne comble ce vide.</p>
+<section class="band" id="pourquoi">
+  <div class="wrap">
+    <h2>La décision existe. Rien ne l'impose à l'agent.</h2>
+    <p class="lede">Une direction, une commission ou un comité décide ce qu'un outil d'IA a le droit de faire. C'est écrit quelque part. Mais entre ce texte et le réglage réel de l'agent, il n'y a souvent que des personnes et des relectures.</p>
+    <p class="narrow">Tant que l'agent propose et qu'un humain valide, cela tient. Le jour où il agit seul (il commande, il écrit dans un dossier, il répond à un patient), il faut un mécanisme qui refuse de fonctionner sans autorisation. AMR est ce mécanisme.</p>
   </div>
 </section>
 
-<!-- SOLUTION -->
-<section class="solution" id="solution">
-  <div class="reveal">
-    <h2 class="section-title" data-lang="en">Nineteen tools. One mandate chain.</h2>
-    <h2 class="section-title" data-lang="fr">Dix-neuf outils. Une chaîne de mandats.</h2>
-
-    <p class="section-subtitle" data-lang="en">AMR is a Model Context Protocol server. Install it, and any MCP-compatible AI agent can issue, verify, and audit legal mandates natively.</p>
-    <p class="section-subtitle" data-lang="fr">AMR est un serveur Model Context Protocol. Installez-le, et tout agent IA compatible MCP peut émettre, vérifier et auditer des mandats légaux nativement.</p>
+<section class="band band-brume" id="fonctionnement">
+  <div class="wrap">
+    <h2>Quatre temps, dans cet ordre</h2>
+    <ol class="path">
+      <li><h3>Autoriser</h3><p>Le mandant écrit ce que l'agent peut faire, ce qu'il ne peut jamais faire, ses plafonds et la date de fin. Il peut signer avec sa propre clé.</p></li>
+      <li><h3>Verrouiller</h3><p>Avant chaque action, l'agent demande un jeton au registre. Hors du mandat, pas de jeton.</p></li>
+      <li><h3>Vérifier</h3><p>Celui qui reçoit l'agent contrôle le mandat avec la clé publique du registre. Hors ligne, sans compte.</p></li>
+      <li><h3>Prouver, retirer</h3><p>Chaque acte est chaîné au mandat. Le mandant le retire quand il veut, et toute la branche s'arrête.</p></li>
+    </ol>
   </div>
+</section>
 
-  <div class="cards-grid">
-    <div class="card reveal">
-      <div class="card-tool">create_mandate</div>
-      <p data-lang="en">Issue a legally-structured mandate with principal identity, agent scope, legal basis, and expiration. Every mandate is SHA-256 hashed and chained.</p>
-      <p data-lang="fr">Émettez un mandat structuré juridiquement : identité du mandant, périmètre de l'agent, base légale, expiration. Chaque mandat est hashé SHA-256 et chaîné.</p>
+<section class="band" id="limites">
+  <div class="wrap">
+    <h2>Ce qu'AMR fait. Ce qu'il ne fait pas.</h2>
+    <div class="two">
+      <div class="yes">
+        <h3>Il fait</h3>
+        <ul class="ticks">
+          <li><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#1b6e44"/><path d="M7 12.4l3.3 3.2L17 8.6" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Il enregistre qui a autorisé quel agent, à faire quoi, jusqu'à quand.</span></li>
+          <li><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#1b6e44"/><path d="M7 12.4l3.3 3.2L17 8.6" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Il refuse le jeton pour une action interdite, absente du mandat ou au-dessus du plafond.</span></li>
+          <li><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#1b6e44"/><path d="M7 12.4l3.3 3.2L17 8.6" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Il empêche un sous-mandat d'être plus large que son parent.</span></li>
+          <li><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#1b6e44"/><path d="M7 12.4l3.3 3.2L17 8.6" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Il arrête un mandat et toute sa branche dès que le mandant le retire.</span></li>
+          <li><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#1b6e44"/><path d="M7 12.4l3.3 3.2L17 8.6" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Il donne au tiers une attestation signée, que celui-ci vérifie seul.</span></li>
+          <li><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#1b6e44"/><path d="M7 12.4l3.3 3.2L17 8.6" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Il garde une chaîne d'empreintes où toute modification se voit.</span></li>
+        </ul>
+      </div>
+      <div class="no">
+        <h3>Il ne fait pas</h3>
+        <ul class="ticks">
+          <li><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#a0372a"/><path d="M8 8l8 8M16 8l-8 8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg><span>Il ne surveille pas l'agent pendant qu'il agit. La supervision reste chez celui qui le déploie.</span></li>
+          <li><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#a0372a"/><path d="M8 8l8 8M16 8l-8 8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg><span>Il contrôle des types d'action, pas un contenu. Il ne lit ni un courrier ni une réponse.</span></li>
+          <li><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#a0372a"/><path d="M8 8l8 8M16 8l-8 8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg><span>Il ne rend aucun système conforme à un texte. Rien ici n'est un conseil juridique.</span></li>
+          <li><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#a0372a"/><path d="M8 8l8 8M16 8l-8 8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg><span>Pour un identifiant ordinaire, il ne vérifie pas qui est la personne derrière la clé du mandant.</span></li>
+          <li><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#a0372a"/><path d="M8 8l8 8M16 8l-8 8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg><span>Il ne défait pas une action déjà engagée. Retirer un mandat arrête la suite.</span></li>
+          <li><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#a0372a"/><path d="M8 8l8 8M16 8l-8 8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg><span>Il ne décide pas à votre place. Le mandat, c'est vous qui l'écrivez.</span></li>
+        </ul>
+      </div>
     </div>
-    <div class="card reveal">
-      <div class="card-tool">verify_mandate</div>
-      <p data-lang="en">Before any sensitive action, the agent checks: is this mandate valid, active, and within scope? One call. Instant answer.</p>
-      <p data-lang="fr">Avant toute action sensible, l'agent vérifie : ce mandat est-il valide, actif, dans le périmètre ? Un appel. Réponse instantanée.</p>
-    </div>
-    <div class="card reveal">
-      <div class="card-tool">log_action</div>
-      <p data-lang="en">Log every action taken under a mandate. Each event is hashed, timestamped, and chained to the parent mandate. Tamper-evident audit trail by construction.</p>
-      <p data-lang="fr">Enregistrez chaque action prise sous un mandat. Chaque événement est hashé, horodaté et chaîné au mandat parent. Piste d'audit dont toute modification se voit, par construction.</p>
-    </div>
-    <div class="card reveal">
-      <div class="card-tool">get_proof</div>
-      <p data-lang="en">Generate a cryptographic proof of any mandate or action. SHA-256 chain verification. Tamper-evident. Independently verifiable.</p>
-      <p data-lang="fr">Générez une preuve cryptographique de tout mandat ou action. Vérification de chaîne SHA-256. Toute modification se voit. Vérifiable par un tiers.</p>
-    </div>
-  </div>
-
-  <div class="cards-grid" style="grid-template-columns: 1fr; margin-top: var(--space-md);">
-    <div class="card reveal" style="border-color: var(--sage); background: rgba(92, 107, 94, 0.04); padding: var(--space-md);">
-      <div class="card-tool" style="color: var(--gold); font-weight: 500;">issue_action_token <span style="color: var(--sage); font-size: 0.7rem; padding-left: 0.5rem;">— ENFORCEMENT · LIVE</span></div>
-      <p data-lang="en"><strong>The lock.</strong> AMR sits in the token issuance layer. No valid mandate → no Ed25519-signed JWS token → no action possible. Structural enforcement before the act, not audit after. In the open-source code since April 23, 2026.</p>
-      <p data-lang="fr"><strong>Le verrou.</strong> AMR se place dans la couche d'émission de jetons. Pas de mandat valide → pas de jeton JWS signé Ed25519 → pas d'action possible. Verrou structurel avant l'acte, pas un audit après. Dans le code open source depuis le 23 avril 2026.</p>
-    </div>
-  </div>
-  <p class="section-subtitle reveal" data-lang="en" style="margin-top: var(--space-lg);">Also in the registry: signatures by the principal, sub-mandates with a perimeter and a delegation depth, instant revocation of a whole branch, and proofs a third party can check offline.</p>
-  <p class="section-subtitle reveal" data-lang="fr" style="margin-top: var(--space-lg);">Dans le registre aussi : signature par le mandant, sous-mandats avec périmètre et profondeur de délégation, révocation immédiate de toute une branche, et preuves qu'un tiers vérifie hors ligne.</p>
-  <div class="cards-grid" style="margin-top: var(--space-md);">
-    <div class="card reveal">
-      <div class="card-tool">issue_mandate_attestation</div>
-      <p data-lang="en">A signed attestation of a mandate, for the agent to show a third party. The receiver verifies it offline with the registry's public key, without an account.</p>
-      <p data-lang="fr">Une attestation signée d'un mandat, que l'agent montre à un tiers. Le destinataire la vérifie hors ligne avec la clé publique du registre, sans compte.</p>
-    </div>
-    <div class="card reveal">
-      <div class="card-tool">get_registry_public_key</div>
-      <p data-lang="en">The registry's public key, for checking attestations and tokens without calling the registry.</p>
-      <p data-lang="fr">La clé publique du registre, pour vérifier attestations et jetons sans appeler le registre.</p>
-    </div>
-    <div class="card reveal">
-      <div class="card-tool">check_action_token</div>
-      <p data-lang="en">Re-check an action token with the registry at the moment of acting: the signature proves the authorization at issue time, this says whether it still holds now.</p>
-      <p data-lang="fr">Revérifier un jeton d'action auprès du registre au moment d'agir : la signature prouve l'autorisation à l'émission, ce contrôle dit si elle tient encore.</p>
-    </div>
-    <div class="card reveal">
-      <div class="card-tool">register_principal_key</div>
-      <p data-lang="en">The principal registers its own Ed25519 public key, so that its mandates can carry its signature.</p>
-      <p data-lang="en">Known limit: for an ordinary <code>principal_id</code>, the registry does not check who registers a key (first registration wins), so a valid signature proves possession of that key, not the identity of the person behind it. A <code>did:web</code> identifier closes this gap at the level of a domain name: the key is accepted only if the domain publishes it (network option, off by default).</p>
-      <p data-lang="fr">Le mandant enregistre sa propre clé publique Ed25519, pour que ses mandats portent sa signature.</p>
-      <p data-lang="fr">Limite connue : pour un <code>principal_id</code> ordinaire, le registre ne vérifie pas qui enregistre une clé (la première enregistrée gagne) ; une signature valable prouve donc la possession de cette clé, pas l'identité de la personne derrière. Un identifiant <code>did:web</code> comble ce manque au niveau d'un nom de domaine : la clé n'est acceptée que si le domaine la publie (option réseau, désactivée par défaut).</p>
-    </div>
-    <div class="card reveal">
-      <div class="card-tool">prepare_mandate_signature</div>
-      <p data-lang="en">The exact bytes of a mandate for the principal to sign with its own key. An agent cannot sign in its place.</p>
-      <p data-lang="fr">Les octets exacts d'un mandat que le mandant signe avec sa propre clé. Un agent ne peut pas signer à sa place.</p>
-    </div>
-    <div class="card reveal">
-      <div class="card-tool">revoke_mandate</div>
-      <p data-lang="en">Revoke a mandate now. Final. The mandate and its whole branch of sub-mandates stop at once; tokens already issued are reported until they end.</p>
-      <p data-lang="fr">Révoquer un mandat maintenant. Définitif. Le mandat et toute sa branche de sous-mandats s'arrêtent aussitôt ; les jetons déjà émis sont signalés jusqu'à leur fin.</p>
-    </div>
-    <div class="card reveal">
-      <div class="card-tool">prepare_mandate_pdf</div>
-      <p data-lang="en">The mandate as a PDF for the principal to read and sign with its own signature tool. The registry does not sign it; once signed, the file goes to attach_signed_mandate_pdf.</p>
-      <p data-lang="fr">Le mandat en PDF, que le mandant lit et signe avec son propre outil de signature. Le registre ne le signe pas ; une fois signé, le fichier va à attach_signed_mandate_pdf.</p>
-    </div>
-    <div class="card reveal">
-      <div class="card-tool">attach_signed_mandate_pdf</div>
-      <p data-lang="en">Checks, offline, the PAdES signature the principal put on that PDF, against the trust roots the operator chose, and records the signer in the proof. It does not read the EU trusted lists, does not check revocation, and does not decide whether the signer may act for the principal.</p>
-      <p data-lang="fr">Vérifie, hors ligne, la signature PAdES posée par le mandant sur ce PDF, selon les autorités de confiance choisies par l'opérateur, et inscrit le signataire dans la preuve. Il ne lit pas les listes de confiance européennes, ne vérifie pas la révocation et ne décide pas si le signataire peut engager le mandant.</p>
-    </div>
-    <div class="card reveal">
-      <div class="card-tool">prepare_revocation_signature</div>
-      <p data-lang="en">The bytes of a revocation for the principal to sign, when it has a registered key.</p>
-      <p data-lang="fr">Les octets d'une révocation que le mandant signe, quand il a une clé enregistrée.</p>
-    </div>
-    <div class="card reveal">
-      <div class="card-tool">contest_action</div>
-      <p data-lang="en">Record that a principal contests an action an agent already performed: a dated, chained record, one per action, that cannot be edited.</p>
-      <p data-lang="fr">Consigner qu'un mandant conteste un acte déjà accompli par un agent : une trace datée et chaînée, une par acte, non modifiable.</p>
-    </div>
-    <div class="card reveal">
-      <div class="card-tool">prepare_contest_signature</div>
-      <p data-lang="en">The bytes of a contest for the principal to sign, when it has a registered key.</p>
-      <p data-lang="fr">Les octets d'une contestation que le mandant signe, quand il a une clé enregistrée.</p>
-    </div>
-    <div class="card reveal">
-      <div class="card-tool">list_action_contests</div>
-      <p data-lang="en">List the contested actions, with a response-deadline reminder chosen by the operator. No legal deadline is computed.</p>
-      <p data-lang="fr">Lister les actes contestés, avec un rappel de délai de réponse choisi par l'opérateur. Aucun délai légal n'est calculé.</p>
-    </div>
-    <div class="card reveal">
-      <div class="card-tool">export_insurer_dossier</div>
-      <p data-lang="en">A signed dossier of a mandate over a period, for an insurer or an auditor: perimeter, status, sub-mandates, actions, tokens and integrity checks. JSON and printable page.</p>
-      <p data-lang="fr">Un dossier signé d'un mandat sur une période, pour un assureur ou un auditeur : périmètre, statut, sous-mandats, actions, jetons et contrôles d'intégrité. JSON et page imprimable.</p>
-    </div>
-    <div class="card reveal">
-      <div class="card-tool">report_issue</div>
-      <p data-lang="en">Report a problem with AMR itself. Without an operator token, no network call: a pre-filled link to open.</p>
-      <p data-lang="fr">Signaler un problème d'AMR lui-même. Sans jeton de l'opérateur, aucun appel réseau : un lien prérempli à ouvrir.</p>
+    <p class="note"><a href="/installer#outils">Les limites, outil par outil</a></p>
+    <div class="define">
+      <h3>Ce que «&nbsp;mandat&nbsp;» veut dire ici</h3>
+      <p>L'autorisation écrite qu'une personne ou un organe donne pour son agent. Elle engage celui qui la donne, pas l'agent, qui n'est pas une personne. AMR ne déplace aucune responsabilité. Il rend lisible qui a autorisé quoi.</p>
     </div>
   </div>
 </section>
 
-<!-- ANALOGY -->
-<div class="analogy-wrapper reveal">
-  <div class="analogy">
-    <div class="analogy-col">
-      <span class="analogy-icon">℞</span>
-      <p data-lang="en">A pharmacist won't dispense without a valid prescription.</p>
-      <p data-lang="fr">Un pharmacien ne délivre jamais sans ordonnance valide.</p>
+<section class="band band-brume" id="gabarits">
+  <div class="wrap">
+    <h2>5 gabarits pour partir d'un cas réel</h2>
+    <p class="lede">Un gabarit est un mandat type écrit dans le code&nbsp;: ce que l'agent peut faire, ce qu'il ne peut jamais faire, ses plafonds. Un mandat construit dessus peut le durcir, pas l'assouplir.</p>
+    <ul class="rows"><li><a href="/gabarits#agent-sante-rgpd"><span class="name">Assistant de cabinet ou d'établissement de santé</span><span>Lit le dossier, propose des rendez-vous, commande jusqu'à 100&nbsp;€. Ne prescrit jamais.</span><span class="go">Voir la fiche</span></a></li><li><a href="/gabarits#agent-rh-recrutement"><span class="name">Assistant de recruteur</span><span>Prépare une présélection motivée. Ne rejette ni ne retient aucun candidat.</span><span class="go">Voir la fiche</span></a></li><li><a href="/gabarits#agent-credit"><span class="name">Assistant d'analyste crédit</span><span>Rédige l'analyse de solvabilité. N'accorde ni ne refuse aucun crédit.</span><span class="go">Voir la fiche</span></a></li><li><a href="/gabarits#agent-assurance-sante-vie"><span class="name">Assistant de souscripteur en assurance vie et santé</span><span>Propose un tarif motivé. N'accepte ni ne refuse aucune adhésion.</span><span class="go">Voir la fiche</span></a></li><li><a href="/gabarits#agent-support-client"><span class="name">Agent de service client</span><span>Accorde un geste commercial jusqu'à 50&nbsp;€. Ne refuse jamais un remboursement.</span><span class="go">Voir la fiche</span></a></li></ul>
+    <p class="note">Chaque gabarit est un socle provisoire. Aucune relecture par des praticiens n'est encore enregistrée.</p>
+  </div>
+</section>
+
+<section class="band" id="preuves">
+  <div class="wrap">
+    <h2>Ne me croyez pas sur parole</h2>
+    <p class="lede">Tout ce qui est écrit ici se vérifie. Voici où.</p>
+    <dl class="proofs">
+      <div><dt>Le code est public</dt><dd>Licence Apache-2.0. <a href="https://github.com/JC7333/amr">Lire le code</a></dd></div>
+      <div><dt>1&nbsp;388 tests automatiques</dt><dd>Tous passés le 13/11/2026. <a href="https://github.com/JC7333/amr/tree/main/tests">Voir les tests</a></dd></div>
+      <div><dt>19 outils, chacun avec ses limites</dt><dd>Les limites sont écrites à côté de chaque outil. <a href="/installer#outils">La liste complète</a></dd></div>
+      <div><dt>Une commande pour l'installer</dt><dd><code>uvx mandatia</code>, paquet publié sur <a href="https://pypi.org/project/mandatia/">PyPI</a>.</dd></div>
+      <div><dt>Rien ne sort de chez vous</dt><dd>Aucun appel réseau par défaut. Deux options existent, éteintes au départ. <a href="/installer">Lesquelles</a></dd></div>
+      <div><dt>Le verrou date du 23 avril 2026</dt><dd>Il est dans le code depuis ce jour. <a href="https://github.com/JC7333/amr/blob/main/docs/token-issuance-spec.md">La spécification du jeton</a></dd></div>
+    </dl>
+  </div>
+</section>
+
+<section class="band band-nuit" id="pilote">
+  <div class="wrap pilot">
+    <div>
+      <h2>Cinq organisations pilotes</h2>
+      <p class="lede">Santé et assurance d'abord. Gratuit. Tout se fait par écrit, à votre rythme. Aucun appel n'est nécessaire.</p>
+      <a class="btn" href="mailto:audric@mandatia.eu?subject=Organisation%20pilote%20AMR&amp;body=Organisation%20%3A%0A%0ACe%20que%20fait%20l%27agent%20aujourd%27hui%20%3A%0A%0ACe%20qu%27il%20a%20le%20droit%20de%20faire%2C%20ou%20qui%20le%20d%C3%A9cide%20%3A%0A">Proposer mon organisation</a>
     </div>
-    <div class="analogy-divider"></div>
-    <div class="analogy-col">
-      <span class="analogy-icon">⬡</span>
-      <p data-lang="en">Why should an AI agent act without a verified mandate?</p>
-      <p data-lang="fr">Pourquoi un agent IA agirait-il sans mandat vérifié ?</p>
+    <ol>
+      <li><span>Vous m'écrivez ce que votre agent a le droit de faire, ou la décision qui l'autorise.</span></li>
+      <li><span>Nous en tirons son mandat, à partir d'un gabarit.</span></li>
+      <li><span>L'installation tient en une commande, que votre agent peut lancer lui-même.</span></li>
+      <li><span>Vous me dites ce qui manque ou ce qui gêne. C'est tout ce que je demande en retour.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section class="band band-brume" id="questions">
+  <div class="wrap">
+    <h2>Les questions qu'on me pose</h2>
+    <div class="faq"><details id="q-jeton"><summary>Le jeton vérifie-t-il l'action demandée, ou seulement qu'un mandat existe&nbsp;?</summary><div class="answer"><p>L'action. Le registre compare le type d'action au mandat. Est-elle permise&nbsp;? Est-elle interdite&nbsp;? Dépasse-t-elle le plafond&nbsp;? Les interdits l'emportent toujours.</p><p>Hors du mandat, il n'émet pas de jeton. La démonstration en haut de cette page montre ses vraies réponses.</p></div></details><details id="q-personne"><summary>Un agent IA peut-il vraiment recevoir un mandat&nbsp;?</summary><div class="answer"><p>Des juristes me l'ont fait remarquer&nbsp;: un agent IA n'est pas une personne, il ne reçoit donc pas un mandat au sens du Code civil.</p><p>Ici, le mot désigne l'autorisation écrite qu'une personne ou un organe donne pour son agent. Elle engage celui qui la donne. AMR ne déplace aucune responsabilité, il rend lisible qui a autorisé quoi.</p></div></details><details id="q-conformite"><summary>AMR rend-il mon organisation conforme à l'AI Act ou au RGPD&nbsp;?</summary><div class="answer"><p>Non. Aucun outil ne le fait à lui seul.</p><p>AMR garde la trace de qui a autorisé quel agent à faire quoi, avant l'action. C'est une pièce parmi d'autres pour montrer qui supervise quoi. L'analyse d'impact, les contrats, la formation et le choix du modèle restent de votre côté.</p></div></details><details id="q-litige"><summary>Que vaut un mandat enregistré en cas de litige&nbsp;?</summary><div class="answer"><p>Je ne suis pas juriste, et rien sur ce site n'est un conseil juridique.</p><p>Ce que je peux dire&nbsp;: AMR ne crée aucune présomption. Un mandat daté, borné et vérifiable en quelques secondes est un élément qu'un juge peut apprécier, parmi d'autres.</p></div></details><details id="q-retrait"><summary>Que se passe-t-il quand on retire un mandat&nbsp;?</summary><div class="answer"><p>Le mandat s'arrête aussitôt, avec tous les sous-mandats qui en dépendent. C'est définitif.</p><p>Un jeton déjà émis reste valable jusqu'à sa fin. Cinq minutes par défaut, trente secondes pour une commande dans le gabarit santé. Pour une action qu'on ne peut pas défaire, celui qui la reçoit revérifie le jeton auprès du registre au moment d'agir.</p><p>Retirer un mandat arrête la suite. Cela ne défait pas ce qui est déjà fait.</p></div></details><details id="q-supervision"><summary>AMR surveille-t-il ce que fait l'agent&nbsp;?</summary><div class="answer"><p>Non. AMR autorise avant, et permet de retirer. Observer l'agent pendant qu'il travaille reste le rôle de celui qui le déploie, avec ses propres outils.</p><p>AMR contrôle des types d'action, pas un contenu. Il ne lit ni un courrier ni une réponse.</p></div></details><details id="q-donnees"><summary>Où sont les données&nbsp;? AMR voit-il des dossiers de patients&nbsp;?</summary><div class="answer"><p>AMR tourne chez vous, dans un fichier sur votre machine. Par défaut, il ne fait aucun appel réseau.</p><p>Un mandat décrit des types d'action («&nbsp;lire le dossier&nbsp;», «&nbsp;commander&nbsp;»), pas des dossiers. AMR n'a besoin d'aucune donnée de patient. N'en mettez pas dans un mandat.</p></div></details><details id="q-comite"><summary>Mon établissement n'a pas de comité IA. Est-ce un problème&nbsp;?</summary><div class="answer"><p>Non. Un mandat peut être donné par une personne&nbsp;: un chef de service, un directeur, un médecin pour son cabinet.</p><p>Quand une commission ou un comité a décidé, le mandat peut porter cette décision (intitulé, date, personnes désignées). AMR l'enregistre et la scelle. Il ne vérifie pas qu'elle existe.</p></div></details><details id="q-registre"><summary>Qui tient le registre&nbsp;?</summary><div class="answer"><p>Aujourd'hui, vous. Chaque organisation fait tourner le sien, et ce site n'en fait tourner aucun.</p><p>Le format est ouvert. La page <a href="/verifier">Vérifier</a> montre comment un tiers contrôle un mandat publié, sur un registre de démonstration.</p></div></details><details id="q-prix"><summary>Combien ça coûte&nbsp;?</summary><div class="answer"><p>Rien. Le logiciel est open source, sous licence Apache-2.0. Rien n'est à vendre sur ce site aujourd'hui.</p></div></details><details id="q-installer"><summary>Comment l'installe-t-on&nbsp;?</summary><div class="answer"><p>Une commande&nbsp;: <code>uvx mandatia</code>. La page <a href="/installer">Installer</a> est écrite pour qu'un agent IA le fasse seul, sans compte ni adresse e-mail.</p></div></details><details id="q-qui"><summary>Qui est derrière AMR&nbsp;?</summary><div class="answer"><p>Un médecin d'Aix-les-Bains, seul, le soir après les consultations, depuis avril 2026. Je ne suis ni juriste ni développeur de métier.</p><p>Si quelque chose ici est faux ou survendu, <a href="mailto:audric@mandatia.eu">écrivez-moi</a>. Je corrige.</p></div></details></div>
+  </div>
+</section>
+
+<section class="band" id="medecin">
+  <div class="wrap founder">
+    <h2>Pourquoi un médecin a écrit AMR</h2>
+    <div class="body">
+      <p>Une ordonnance est un écrit daté, signé, limité. Tel médicament, telle dose, telle durée. Pour un médicament sur ordonnance, le pharmacien la vérifie avant de délivrer. Sans elle, rien ne sort du tiroir, et personne n'y voit une contrainte. C'est ce qui rend l'ensemble fiable.</p>
+      <p>En confiant des tâches à des agents IA, je n'ai trouvé nulle part cet écrit que l'on vérifie avant d'agir. AMR est ma tentative de le fabriquer. Je fais ça le soir, après les consultations, depuis avril 2026.</p>
+      <p class="sign"><strong>Audric BUGNARD, médecin</strong>Aix-les-Bains. <a href="mailto:audric@mandatia.eu">audric@mandatia.eu</a></p>
     </div>
   </div>
-  <p class="analogy-punchline" data-lang="en">AMR is the prescription pad for the age of autonomous agents.</p>
-  <p class="analogy-punchline" data-lang="fr">AMR est l'ordonnancier de l'ère des agents autonomes.</p>
+</section>
+
+</main>
+<footer class="foot"><div class="wrap">
+<div class="foot-in">
+<div><a class="brand" href="/" aria-label="Accueil AMR"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#0b3436"/><circle cx="20" cy="20" r="14.2" fill="none" stroke="#e3b04b" stroke-width="1.1"/><path d="M12.8 20.6l5 4.6 9.4-10.6" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>AMR</span></a>
+<p class="note">Le registre où un agent IA ne peut rien faire tant qu'un mandat ne l'a pas autorisé.</p>
+<p class="note">Audric BUGNARD, médecin à Aix-les-Bains<br><a href="mailto:audric@mandatia.eu">audric@mandatia.eu</a></p></div>
+<div><h2>Comprendre</h2><ul><li><a href="/#fonctionnement">Fonctionnement</a></li><li><a href="/#questions">Questions</a></li><li><a href="/essentiel">L'essentiel en une page</a></li><li><a href="/pourquoi-autorisation-prospective">Pourquoi autoriser avant</a></li><li><a href="/pour-compliance-officers">Pour les responsables conformité</a></li><li><a href="/ia-agentique-droit-union">L'IA agentique dans le droit de l'Union</a></li></ul></div><div><h2>Utiliser</h2><ul><li><a href="/verifier">Vérifier un mandat</a></li><li><a href="/gabarits">Gabarits</a></li><li><a href="/installer">Installer</a></li><li><a href="/installer#outils">Les 19 outils</a></li><li><a href="https://github.com/JC7333/amr">Code sur GitHub</a></li><li><a href="https://pypi.org/project/mandatia/">Paquet sur PyPI</a></li></ul></div><div><h2>Le site</h2><ul><li><a href="/mentions-legales">Mentions légales</a></li><li><a href="/llms.txt">llms.txt, pour les agents</a></li><li><a href="https://github.com/JC7333/amr-site">Source de ce site</a></li></ul></div>
 </div>
-
-<!-- ENFORCEMENT -->
-<section class="enforcement" id="enforcement">
-  <div class="reveal">
-    <h2 class="section-title" data-lang="en">Registry is not enough.<br>Enforcement is the product.</h2>
-    <h2 class="section-title" data-lang="fr">L'archive ne suffit pas.<br>Le verrou, c'est le produit.</h2>
-
-    <p class="section-text" data-lang="en">A mandate registry that agents <em>can</em> check but <em>don't have to</em> check ends up ignored. Every compliance system that relies on voluntary calls degrades to advisory within weeks of deployment.</p>
-    <p class="section-text" data-lang="fr">Un registre de mandats que les agents <em>peuvent</em> vérifier mais <em>ne sont pas obligés</em> de vérifier finit ignoré. Tout système de conformité basé sur des appels volontaires se dégrade en recommandation en quelques semaines.</p>
-  </div>
-
-  <div class="enforcement-grid reveal">
-    <div class="enforcement-col">
-      <div class="enforcement-label" data-lang="en">Open source · Free</div>
-      <div class="enforcement-label" data-lang="fr">Open source · Gratuit</div>
-      <h3 data-lang="en">The Registry</h3>
-      <h3 data-lang="fr">Le Registre</h3>
-      <p data-lang="en">Create, store, verify, and audit mandates. SHA-256 chain. MCP native. Anyone can register mandates and verify the chain.</p>
-      <p data-lang="fr">Créer, stocker, vérifier et auditer les mandats. Chaîne SHA-256. Natif MCP. N'importe qui peut enregistrer des mandats et vérifier la chaîne.</p>
-    </div>
-    <div class="enforcement-arrow">→</div>
-    <div class="enforcement-col enforcement-col-pro">
-      <div class="enforcement-label" data-lang="en">Open source · in the code since April 2026</div>
-      <div class="enforcement-label" data-lang="fr">Open source · dans le code depuis avril 2026</div>
-      <h3 data-lang="en">The Lock</h3>
-      <h3 data-lang="fr">Le Verrou</h3>
-      <p data-lang="en">No valid mandate → no Ed25519-signed token → no action possible. The system refuses to work without the mandate. Structural enforcement, not procedural. Available now via the <code style="font-family: var(--font-mono); font-size: 0.85rem;">issue_action_token</code> tool.</p>
-      <p data-lang="fr">Pas de mandat valide → pas de jeton signé Ed25519 → pas d'action possible. Le système refuse de fonctionner sans le mandat. Verrou structurel, pas procédural. Disponible via le tool <code style="font-family: var(--font-mono); font-size: 0.85rem;">issue_action_token</code>.</p>
-    </div>
-  </div>
-
-</section>
-
-<!-- USE CASES -->
-<section class="use-cases">
-  <div class="reveal">
-    <h2 class="section-title" data-lang="en">Built for regulated industries</h2>
-    <h2 class="section-title" data-lang="fr">Conçu pour les industries régulées</h2>
-  </div>
-
-  <div class="use-cases-grid">
-    <div class="use-case-item reveal">
-      <h3 data-lang="en">Finance & Wealth Management</h3>
-      <h3 data-lang="fr">Finance & Gestion de patrimoine</h3>
-      <p data-lang="en">A wealth advisor delegates portfolio analysis to an AI agent. AMR keeps the mandate traceable and scoped, a basis for meeting AMF expectations.</p>
-      <p data-lang="fr">Un CGP délègue l'analyse de portefeuille à un agent IA. AMR rend le mandat traçable et borné, une base pour répondre aux attentes de l'AMF.</p>
-    </div>
-    <div class="use-case-item reveal">
-      <h3 data-lang="en">Insurance</h3>
-      <h3 data-lang="fr">Assurance</h3>
-      <p data-lang="en">Claims processing agents handle sensitive data. AMR provides mandate chains with automatic expiration.</p>
-      <p data-lang="fr">Les agents de traitement des sinistres manipulent des données sensibles. AMR fournit des chaînes de mandats avec expiration automatique.</p>
-    </div>
-    <div class="use-case-item reveal">
-      <h3 data-lang="en">HR & Data Protection</h3>
-      <h3 data-lang="fr">RH & Protection des données</h3>
-      <p data-lang="en">AI agents processing employee data need mandates that respect the GDPR. An AMR template lists the legal texts the principal should check, GDPR articles included.</p>
-      <p data-lang="fr">Les agents IA qui traitent des données de salariés ont besoin de mandats qui respectent le RGPD. Un gabarit AMR liste les textes que le mandant doit vérifier, articles du RGPD compris.</p>
-    </div>
-  </div>
-</section>
-
-<!-- TEMPLATES -->
-<section class="use-cases" id="templates">
-  <div class="reveal">
-    <h2 class="section-title" data-lang="en">Sector templates — written into the code</h2>
-    <h2 class="section-title" data-lang="fr">Gabarits par secteur — écrits dans le code</h2>
-
-    <p class="section-text" data-lang="en">A template is a mandate base written into the AMR code: what the agent may do, what it may never do, its ceilings, its default duration, and the legal texts the principal should check (marked as to be verified until someone has verified them). A mandate built from a template keeps the template's version and SHA-256 fingerprint. Templates arrive one at a time, each first in the code, then on this site. Each one is a provisional sector baseline: the AMR registry holds it until a body of the sector takes it over, and no practitioner review is recorded yet.</p>
-    <p class="section-text" data-lang="fr">Un gabarit est une base de mandat écrite dans le code d'AMR : ce que l'agent peut faire, ce qu'il ne peut jamais faire, ses plafonds, sa durée par défaut, et les textes que le mandant doit vérifier (marqués « à vérifier » tant que personne ne les a vérifiés). Un mandat construit à partir d'un gabarit garde la version et l'empreinte SHA-256 du gabarit. Les gabarits arrivent un par un, chacun d'abord dans le code, puis sur ce site. Chacun est un socle provisoire : le registre AMR le tient jusqu'à ce qu'un organisme du secteur le reprenne, et aucune relecture par des praticiens n'est encore enregistrée.</p>
-  </div>
-
-  <div class="use-cases-grid use-cases-grid-2">
-    <div class="use-case-item reveal">
-      <h3><a href="https://github.com/JC7333/amr/blob/main/docs/templates/agent-sante-rgpd.md" target="_blank" rel="noopener" style="color: var(--text); text-decoration: none; border-bottom: 1px solid var(--gold-light);">agent-sante-rgpd</a></h3>
-      <p data-lang="en">Healthcare practice assistant, built into the AMR code (a Python API, not a <code style="font-family: var(--font-mono); font-size: 0.9rem;">mandate.yaml</code> pack; no MCP tool lists templates yet). The agent may read the patient record, book appointments, draft letters and patient messages, and order supplies up to 100&nbsp;€ per order; an order token lives 30 seconds at most. It may never prescribe, diagnose, change or export the record, send a letter or message itself, or create a sub-agent. The mandate can record the decision of a body (committee, title, date, designated persons or roles), sealed into the chain hash. AMR does not check that the decision exists.</p>
-      <p data-lang="fr">Assistant de cabinet ou d'établissement de santé, intégré au code d'AMR (une API Python, pas un pack <code style="font-family: var(--font-mono); font-size: 0.9rem;">mandate.yaml</code> ; aucun outil MCP ne liste encore les gabarits). L'agent peut lire le dossier patient, prendre des rendez-vous, rédiger des courriers et des messages aux patients, et commander des fournitures jusqu&rsquo;à 100&nbsp;€ par commande ; un jeton de commande vit 30 secondes au plus. Il ne peut jamais prescrire, poser un diagnostic, modifier ou exporter le dossier, envoyer lui-même un courrier ou un message, ni créer un sous-agent. Le mandat peut porter la décision d'un organe (commission, intitulé, date, personnes ou fonctions désignées), scellée dans l'empreinte de la chaîne. AMR ne vérifie pas que cette décision existe.</p>
-    </div>
-    <div class="use-case-item reveal">
-      <h3><a href="https://github.com/JC7333/amr/blob/main/docs/templates/agent-rh-recrutement.md" target="_blank" rel="noopener" style="color: var(--text); text-decoration: none; border-bottom: 1px solid var(--gold-light);">agent-rh-recrutement</a></h3>
-      <p data-lang="en">Recruiter's assistant, built into the AMR code. The agent may read the applications received, draft a job posting, propose a reasoned shortlist to a human recruiter, propose and book interview slots in the company calendar, and draft messages to candidates. It may never reject or select a candidate, send an offer, a rejection or any message to a candidate, recognize emotions, categorize people from biometric data, infer sensitive data, export candidate data, or create a sub-agent. Every decision on a candidate stays with a human. AMR checks action types, not content: it does not read a shortlist to judge its reasons.</p>
-      <p data-lang="fr">Assistant de recruteur, intégré au code d'AMR. L'agent peut lire les candidatures reçues, rédiger une annonce, proposer une présélection motivée à un recruteur humain, proposer et réserver des créneaux d'entretien dans l'agenda de l'entreprise, et rédiger des messages aux candidats. Il ne peut jamais rejeter ni retenir un candidat, envoyer une offre, un refus ou un message à un candidat, reconnaître des émotions, catégoriser des personnes à partir de données biométriques, déduire des données sensibles, exporter les données des candidats, ni créer un sous-agent. Toute décision sur un candidat reste à un humain. AMR contrôle des types d'action, pas un contenu : il ne lit pas une présélection pour juger de ses motifs.</p>
-    </div>
-    <div class="use-case-item reveal">
-      <h3><a href="https://github.com/JC7333/amr/blob/main/docs/templates/agent-credit.md" target="_blank" rel="noopener" style="color: var(--text); text-decoration: none; border-bottom: 1px solid var(--gold-light);">agent-credit</a></h3>
-      <p data-lang="en">Credit analyst's assistant, built into the AMR code. The agent may read the credit application and the documents provided, draft a creditworthiness analysis, propose a reasoned decision to a human analyst, and draft messages to the applicant. It may never grant or refuse a credit, set the final rate, amount or duration, send a message to the applicant itself, execute a payment, export the credit file, or create a sub-agent. Every decision on a credit stays with a human, who must be able to depart from the agent's proposal. The legal references point to consumer credit to natural persons; fraud detection is not part of this template.</p>
-      <p data-lang="fr">Assistant d'analyste crédit, intégré au code d'AMR. L'agent peut lire la demande de crédit et les pièces fournies, rédiger une analyse de solvabilité, proposer une décision motivée à un analyste humain, et rédiger des messages au demandeur. Il ne peut jamais accorder ni refuser un crédit, fixer le taux, le montant ou la durée, envoyer lui-même un message au demandeur, exécuter un paiement, exporter le dossier de crédit, ni créer un sous-agent. Toute décision sur un crédit reste à un humain, qui doit pouvoir s'écarter de la proposition de l'agent. Les références juridiques visent le crédit à la consommation aux personnes physiques ; la détection de fraude ne fait pas partie de ce gabarit.</p>
-    </div>
-    <div class="use-case-item reveal">
-      <h3><a href="https://github.com/JC7333/amr/blob/main/docs/templates/agent-assurance-sante-vie.md" target="_blank" rel="noopener" style="color: var(--text); text-decoration: none; border-bottom: 1px solid var(--gold-light);">agent-assurance-sante-vie</a></h3>
-      <p data-lang="en">Life and health underwriter's assistant, built into the AMR code. The agent may read the underwriting file and the documents provided, draft a risk assessment, propose a reasoned premium to a human underwriter, and draft the contract documents and messages to the insured person. It may never accept or refuse an application, set the final premium, send a message to the insured person itself, use the result of a genetic test, export health data, or create a sub-agent. Claims handling is not part of this template. Forbidding the genetic test action refuses a token for that action type; it does not stop an agent from reading a result hidden in a file it may read.</p>
-      <p data-lang="fr">Assistant de souscripteur en assurance vie et santé, intégré au code d'AMR. L'agent peut lire le dossier de souscription et les pièces fournies, rédiger une évaluation du risque, proposer un tarif motivé à un souscripteur humain, et rédiger les documents du contrat et les messages à l'assuré. Il ne peut jamais accepter ni refuser une adhésion, fixer le tarif final, envoyer lui-même un message à l'assuré, utiliser le résultat d'un test génétique, exporter des données de santé, ni créer un sous-agent. La gestion des sinistres ne fait pas partie de ce gabarit. Interdire l'action « test génétique » refuse un jeton pour ce type d'action ; cela n'empêche pas un agent de lire un résultat caché dans un dossier qu'il peut lire.</p>
-    </div>
-    <div class="use-case-item reveal">
-      <h3><a href="https://github.com/JC7333/amr/blob/main/docs/templates/agent-support-client.md" target="_blank" rel="noopener" style="color: var(--text); text-decoration: none; border-bottom: 1px solid var(--gold-light);">agent-support-client</a></h3>
-      <p data-lang="en">Customer support agent, built into the AMR code. The agent may read the customer's account and history, answer a ticket saying the answer comes from an AI, route a ticket, propose a commercial gesture, and grant one up to 50&nbsp;€ per gesture (a mandate may lower this ceiling, never raise it). It may never refuse a refund or a complaint, terminate a contract, close an account, change payment details, export the customer's data, or create a sub-agent: every decision against the customer is left to a human. The template sets no cumulative ceiling per period, so several gestures can add up unless the principal adds one. AMR does not read an answer to check what it says.</p>
-      <p data-lang="fr">Agent de service client, intégré au code d'AMR. L'agent peut lire le compte du client et son historique, répondre à un ticket en disant que la réponse vient d'une IA, orienter un ticket, proposer un geste commercial et l'accorder jusqu&rsquo;à 50&nbsp;€ par geste (un mandat peut baisser ce plafond, jamais le relever). Il ne peut jamais refuser un remboursement ou une réclamation, résilier un contrat, fermer un compte, changer les coordonnées de paiement, exporter les données du client, ni créer un sous-agent : toute décision contre le client est laissée à un humain. Le gabarit ne fixe aucun plafond cumulé par période : plusieurs gestes peuvent s'additionner, sauf si le mandant en ajoute un. AMR ne lit pas une réponse pour vérifier ce qu'elle dit.</p>
-    </div>
-    <div class="use-case-item reveal" style="border: 1px dashed rgba(0,0,0,0.12); padding: var(--space-md); border-radius: 3px; opacity: 0.7;">
-      <h3 style="color: var(--text-light);" data-lang="en">Other sectors</h3>
-      <h3 style="color: var(--text-light);" data-lang="fr">Autres secteurs</h3>
-      <p data-lang="en">The next sectors are written into the code one at a time. A template you need? <a href="mailto:audric@mandatia.eu" style="color: var(--sage);">Write to me</a>.</p>
-      <p data-lang="fr">Les secteurs suivants sont écrits dans le code un par un. Un gabarit vous manque ? <a href="mailto:audric@mandatia.eu" style="color: var(--sage);">Écrivez-moi</a>.</p>
-    </div>
-  </div>
-
-  <p class="section-text" style="margin-top: var(--space-lg); text-align: center; max-width: 100%;" data-lang="en">Adapting a template to your organization: <a href="mailto:audric@mandatia.eu" style="color: var(--sage); border-bottom: 1px solid var(--sage-light);">write to me</a>.</p>
-  <p class="section-text" style="margin-top: var(--space-lg); text-align: center; max-width: 100%;" data-lang="fr">Adapter un gabarit à votre organisation : <a href="mailto:audric@mandatia.eu" style="color: var(--sage); border-bottom: 1px solid var(--sage-light);">écrivez-moi</a>.</p>
-</section>
-
-<!-- TECH -->
-<div class="tech reveal">
-  <h2 class="section-title" data-lang="en">Under the hood</h2>
-  <h2 class="section-title" data-lang="fr">Sous le capot</h2>
-
-  <ul class="tech-list">
-    <li data-lang="en"><span class="tech-check">✓</span> MCP protocol native — works with Claude Desktop, Cursor, any MCP client</li>
-    <li data-lang="fr"><span class="tech-check">✓</span> Natif protocole MCP — fonctionne avec Claude Desktop, Cursor, tout client MCP</li>
-    <li data-lang="en"><span class="tech-check">✓</span> SHA-256 mandate chain — tamper-evident: any change shows, cryptographically linked</li>
-    <li data-lang="fr"><span class="tech-check">✓</span> Chaîne de mandats SHA-256 — toute modification se voit, liée cryptographiquement</li>
-    <li data-lang="en"><span class="tech-check">✓</span> Designed with eIDAS 2.0 in mind — optional principal signatures (Ed25519) on mandates</li>
-    <li data-lang="fr"><span class="tech-check">✓</span> Pensé pour eIDAS 2.0 — signature du mandant (Ed25519) sur les mandats, en option</li>
-    <li data-lang="en"><span class="tech-check">✓</span> Designed with AI Act Art. 14 + 26 in mind — records who authorized what, before the action</li>
-    <li data-lang="fr"><span class="tech-check">✓</span> Pensé pour l'AI Act, art. 14 et 26 — trace qui a autorisé quoi, avant l'action</li>
-    <li data-lang="en"><span class="tech-check">✓</span> SQLite WAL — lightweight, zero infrastructure</li>
-    <li data-lang="fr"><span class="tech-check">✓</span> SQLite WAL — léger, zéro infrastructure</li>
-    <li data-lang="en"><span class="tech-check">✓</span> Pydantic v2 validation — type-safe mandate schemas</li>
-    <li data-lang="fr"><span class="tech-check">✓</span> Validation Pydantic v2 — schémas de mandats typés</li>
-    <li data-lang="en"><span class="tech-check">✓</span> Open source — Apache-2.0 license, audit the code yourself</li>
-    <li data-lang="fr"><span class="tech-check">✓</span> Open source — licence Apache-2.0, auditez le code vous-même</li>
-    <li data-lang="en"><span class="tech-check">✓</span> Composable — AMR authorizes before the action; action-certification proxies prove what happened during. Full trust chain.</li>
-    <li data-lang="fr"><span class="tech-check">✓</span> Composable — AMR autorise avant l'action ; les proxies de certification prouvent ce qui s'est passé pendant. Chaîne de confiance complète.</li>
-  </ul>
-
-  <div class="install-block" data-lang="en">
-    <h3 style="margin-bottom: var(--space-sm);">Quickstart for agents</h3>
-    <p class="section-text">Written so that an AI agent (Claude Code, Cursor, any MCP client) can install AMR and reach a first verified mandate alone: no account, no email, nobody to ask. Everything runs on your machine; AMR makes no network call, except two options that stay off by default: <code>report_issue</code> once the operator sets <code>AMR_ISSUE_TOKEN</code>, and the <code>did:web</code> key check once the operator sets <code>AMR_DID_WEB_RESOLVE=1</code>.</p>
-    <pre><span class="install-comment"># 1. Run the server (needs uv). The PyPI package is named "mandatia":</span>
-<span class="install-cmd">uvx mandatia</span>
-<span class="install-comment"># the latest code of the repository instead:</span>
-<span class="install-cmd">uvx --from git+https://github.com/JC7333/amr amr</span>
-
-<span class="install-comment"># 2. Declare it in Claude Code</span>
-<span class="install-cmd">claude mcp add amr --</span> uvx mandatia
-
-<span class="install-comment"># or clone and run</span>
-<span class="install-cmd">git clone</span> https://github.com/JC7333/amr.git &amp;&amp; <span class="install-cmd">cd</span> amr &amp;&amp; <span class="install-cmd">uv sync</span> &amp;&amp; <span class="install-cmd">uv run</span> amr
-
-<span class="install-comment"># Other MCP clients (Cursor: .cursor/mcp.json): set the three paths, by default AMR writes its database and its key in the client's current directory. Keep the .pem private key out of version control.</span>
-AMR_DB_PATH=/absolute/path/amr_mandates.db
-AMR_SIGNING_KEY_PATH=/absolute/path/amr_signing_key.pem
-AMR_PUBLIC_KEY_PATH=/absolute/path/amr_signing_key.pub</pre>
-    <p class="section-text"><code>uvx amr</code> installs a different, unrelated project: do not use it. AMR runs with version 1 and version 2 of the MCP Python SDK (<code>mcp&gt;=1.2,&lt;3</code>); no extra version pin is needed.</p>
-    <p class="section-text"><strong>Give each side only its own tools.</strong> An agent that can create, sign or revoke its own mandate authorizes itself, and the mandate then proves nothing. Set <code>AMR_TOOL_PROFILE</code> in the environment of each client, all pointing at the same <code>AMR_DB_PATH</code>:</p>
-    <ul class="profile-list">
-      <li><code>principal</code>: the person or body that grants mandates (create, sign, revoke, contest, prove).</li>
-      <li><code>agent</code>: the agent that acts under a mandate (<code>verify_mandate</code>, <code>issue_action_token</code>, <code>log_action</code>, <code>issue_mandate_attestation</code>, <code>get_registry_public_key</code>); <code>create_mandate</code> for sub-mandates under its own mandate only.</li>
-      <li><code>receiver</code>: a third party the agent acts upon (<code>check_action_token</code>, <code>get_registry_public_key</code>).</li>
-      <li><code>full</code> (default): every tool, for tests and single-user setups.</li>
-    </ul>
-    <p class="section-text"><strong>Then, in this order:</strong> <code>create_mandate</code>, <code>verify_mandate</code>, <code>log_action</code>, <code>issue_mandate_attestation</code> with <code>get_registry_public_key</code>, <code>revoke_mandate</code>, <code>get_proof</code>. A runnable example, checked by the test suite: <code>uv run python examples/quickstart_agent.py</code>.</p>
-    <p class="section-text">Machine-readable summaries for agents: <a href="https://github.com/JC7333/amr/blob/main/AGENTS.md" target="_blank" rel="noopener">AGENTS.md</a>, <a href="https://github.com/JC7333/amr/blob/main/llms.txt" target="_blank" rel="noopener">llms.txt</a>, <a href="https://github.com/JC7333/amr#quickstart-for-agents" target="_blank" rel="noopener">README</a>.</p>
-  </div>
-  <div class="install-block" data-lang="fr">
-    <h3 style="margin-bottom: var(--space-sm);">Quickstart pour agents</h3>
-    <p class="section-text">Écrit pour qu'un agent IA (Claude Code, Cursor, tout client MCP) installe AMR et obtienne seul un premier mandat vérifié : sans compte, sans e-mail, sans personne à qui demander. Tout tourne sur votre machine ; AMR ne fait aucun appel réseau, sauf deux options désactivées par défaut : <code>report_issue</code> si l'opérateur définit <code>AMR_ISSUE_TOKEN</code>, et la vérification de clé <code>did:web</code> s'il définit <code>AMR_DID_WEB_RESOLVE=1</code>.</p>
-    <pre><span class="install-comment"># 1. Lancer le serveur (nécessite uv). Le paquet PyPI s'appelle « mandatia » :</span>
-<span class="install-cmd">uvx mandatia</span>
-<span class="install-comment"># le dernier code du dépôt, à la place :</span>
-<span class="install-cmd">uvx --from git+https://github.com/JC7333/amr amr</span>
-
-<span class="install-comment"># 2. Le déclarer dans Claude Code</span>
-<span class="install-cmd">claude mcp add amr --</span> uvx mandatia
-
-<span class="install-comment"># ou cloner et lancer</span>
-<span class="install-cmd">git clone</span> https://github.com/JC7333/amr.git &amp;&amp; <span class="install-cmd">cd</span> amr &amp;&amp; <span class="install-cmd">uv sync</span> &amp;&amp; <span class="install-cmd">uv run</span> amr
-
-<span class="install-comment"># Autres clients MCP (Cursor : .cursor/mcp.json) : définir les trois chemins ; par défaut AMR écrit sa base et sa clé dans le dossier courant du client. Gardez la clé privée .pem hors du contrôle de version.</span>
-AMR_DB_PATH=/absolute/path/amr_mandates.db
-AMR_SIGNING_KEY_PATH=/absolute/path/amr_signing_key.pem
-AMR_PUBLIC_KEY_PATH=/absolute/path/amr_signing_key.pub</pre>
-    <p class="section-text"><code>uvx amr</code> installe un autre projet, sans rapport : ne l'utilisez pas. AMR fonctionne avec les versions 1 et 2 du SDK Python MCP (<code>mcp&gt;=1.2,&lt;3</code>) ; aucune épingle de version n'est nécessaire.</p>
-    <p class="section-text"><strong>Donnez à chaque côté ses seuls outils.</strong> Un agent qui peut créer, signer ou révoquer son propre mandat s'autorise lui-même, et le mandat ne prouve alors rien. Définissez <code>AMR_TOOL_PROFILE</code> dans l'environnement de chaque client, tous pointant vers le même <code>AMR_DB_PATH</code> :</p>
-    <ul class="profile-list">
-      <li><code>principal</code> : la personne ou l'organe qui donne les mandats (créer, signer, révoquer, contester, prouver).</li>
-      <li><code>agent</code> : l'agent qui agit sous un mandat (<code>verify_mandate</code>, <code>issue_action_token</code>, <code>log_action</code>, <code>issue_mandate_attestation</code>, <code>get_registry_public_key</code>) ; <code>create_mandate</code> uniquement pour des sous-mandats sous son propre mandat.</li>
-      <li><code>receiver</code> : un tiers sur lequel l'agent agit (<code>check_action_token</code>, <code>get_registry_public_key</code>).</li>
-      <li><code>full</code> (par défaut) : tous les outils, pour les tests et les installations à un seul utilisateur.</li>
-    </ul>
-    <p class="section-text"><strong>Ensuite, dans cet ordre :</strong> <code>create_mandate</code>, <code>verify_mandate</code>, <code>log_action</code>, <code>issue_mandate_attestation</code> avec <code>get_registry_public_key</code>, <code>revoke_mandate</code>, <code>get_proof</code>. Un exemple exécutable, vérifié par la suite de tests : <code>uv run python examples/quickstart_agent.py</code>.</p>
-    <p class="section-text">Résumés lisibles par machine pour les agents : <a href="https://github.com/JC7333/amr/blob/main/AGENTS.md" target="_blank" rel="noopener">AGENTS.md</a>, <a href="https://github.com/JC7333/amr/blob/main/llms.txt" target="_blank" rel="noopener">llms.txt</a>, <a href="https://github.com/JC7333/amr#quickstart-for-agents" target="_blank" rel="noopener">README</a>.</p>
-  </div>
-</div>
-
-<!-- ABOUT -->
-<section class="about" id="about">
-  <div class="reveal">
-    <h2 class="section-title" data-lang="en">Why a physician built this</h2>
-    <h2 class="section-title" data-lang="fr">Pourquoi un médecin a créé AMR</h2>
-
-    <p class="about-text" data-lang="en">I'm a physician in Aix-les-Bains, France. Every day, I write prescriptions — formal mandates that authorize pharmacists to act on my patients' behalf. The system works because every prescription is traceable, scoped, time-limited, and legally binding.</p>
-    <p class="about-text" data-lang="fr">Je suis médecin à Aix-les-Bains. Chaque jour, je rédige des ordonnances — des mandats formels qui autorisent les pharmaciens à agir au nom de mes patients. Le système fonctionne parce que chaque ordonnance est traçable, bornée, limitée dans le temps et juridiquement opposable.</p>
-
-    <p class="about-text" style="margin-top: var(--space-md);" data-lang="en">When I started building AI agents, I realized the same problem existed: agents were acting without verifiable mandates. No audit trail. No legal basis. No expiration.</p>
-    <p class="about-text" style="margin-top: var(--space-md);" data-lang="fr">Quand j'ai commencé à construire des agents IA, j'ai réalisé que le même problème existait : les agents agissaient sans mandat vérifiable. Pas de traçabilité. Pas de base légale. Pas d'expiration.</p>
-
-    <p class="about-text" style="margin-top: var(--space-md);" data-lang="en">AMR brings the rigor of medical prescriptions to the world of autonomous agents. Because if we trust a pharmacist to verify a prescription before dispensing medication, we should demand the same from AI agents before they act on our behalf.</p>
-    <p class="about-text" style="margin-top: var(--space-md);" data-lang="fr">AMR apporte la rigueur de l'ordonnance médicale au monde des agents autonomes. Parce que si nous exigeons d'un pharmacien qu'il vérifie l'ordonnance avant de délivrer un médicament, nous devrions exiger la même chose d'un agent IA avant qu'il agisse en notre nom.</p>
-
-    <div class="about-sig">
-      <span data-lang="en">Audric BUGNARD, physician</span><span data-lang="fr">Audric BUGNARD, médecin</span><br>
-      <span data-lang="en">Founder · Aix-les-Bains, France</span>
-      <span data-lang="fr">Fondateur · Aix-les-Bains, France</span>
-    </div>
-  </div>
-</section>
-
-<!-- FINAL CTA -->
-<section class="final-cta">
-  <div class="reveal">
-    <h2 data-lang="en">High-risk obligations: December 2, 2027 for Annex III systems, August 2, 2028 for Annex I products (AI Omnibus, <a href="https://eur-lex.europa.eu/eli/reg/2026/1744/oj/eng" target="_blank" rel="noopener">Regulation (EU) 2026/1744</a>, in force since July 27, 2026).<br>Article 50 transparency: applies since August 2, 2026.<br>The window to build a mandate registry is now.</h2>
-    <h2 data-lang="fr">Obligations haut risque : 2 décembre 2027 pour les systèmes de l'Annexe III, 2 août 2028 pour les produits de l'Annexe I (AI Omnibus, <a href="https://eur-lex.europa.eu/eli/reg/2026/1744/oj/fra" target="_blank" rel="noopener">règlement (UE) 2026/1744</a>, en vigueur depuis le 27 juillet 2026).<br>Transparence Article 50 : s'applique depuis le 2 août 2026.<br>La fenêtre pour bâtir un registre de mandats, c'est maintenant.</h2>
-
-    <div class="hero-ctas">
-      <a href="https://github.com/JC7333/amr" target="_blank" rel="noopener" class="btn-primary" data-lang="en">Star on GitHub →</a>
-      <a href="https://github.com/JC7333/amr" target="_blank" rel="noopener" class="btn-primary" data-lang="fr">Star sur GitHub →</a>
-      <a href="mailto:audric@mandatia.eu" class="btn-secondary">Contact</a>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-logo">
-    <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <circle cx="20" cy="20" r="17" fill="#5C6B5E"/>
-      <circle cx="20" cy="20" r="14" fill="none" stroke="#C4A96A" stroke-width="0.8"/>
-      <path d="M13 20.5 L18 25 L27 14.5" stroke="#FDFBF7" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <p>AMR — Agent Mandate Registry</p>
-  <p>Open Source · Apache-2.0 · <a href="https://github.com/JC7333/amr" target="_blank" rel="noopener">GitHub</a></p>
-  <p style="margin-top: 0.5rem;">
-    <a href="/pourquoi-autorisation-prospective" data-lang="en">Why prospective authorization</a><a href="/pourquoi-autorisation-prospective" data-lang="fr">Pourquoi l'autorisation prospective</a>
-    ·
-    <a href="/pour-compliance-officers" data-lang="en">For Compliance Officers</a><a href="/pour-compliance-officers" data-lang="fr">Pour les compliance officers</a>
-    ·
-    <a href="/ia-agentique-droit-union" data-lang="en">Agentic AI in EU law</a><a href="/ia-agentique-droit-union" data-lang="fr">L'IA agentique dans le droit de l'Union</a>
-    ·
-    <a href="/mentions-legales" data-lang="en">Legal notice</a><a href="/mentions-legales" data-lang="fr">Mentions légales</a>
-  </p>
-  <p style="margin-top: 0.5rem;">© 2026 Audric Bugnard</p>
-</footer>
-
-<script>
-// Language toggle
-(function() {
-  const html = document.documentElement;
-  const btn = document.getElementById('langToggle');
-  const saved = localStorage.getItem('amr-lang');
-  
-  if (saved) {
-    html.lang = saved;
-  } else if (navigator.language && navigator.language.startsWith('fr')) {
-    html.lang = 'fr';
-  }
-  
-  btn.addEventListener('click', function() {
-    const next = html.lang === 'en' ? 'fr' : 'en';
-    html.lang = next;
-    localStorage.setItem('amr-lang', next);
-  });
-})();
-
-// Scroll reveal
-(function() {
-  const els = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-  
-  els.forEach(function(el) { observer.observe(el); });
-})();
-</script>
+<p class="legal"><span>Open source, licence Apache-2.0. Ce site ne dépose aucun cookie et ne charge rien chez un tiers.</span><span>Mis à jour le 13/11/2026</span></p>
+</div></footer>
 </body>
 </html>

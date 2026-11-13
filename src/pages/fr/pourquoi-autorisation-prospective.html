@@ -1,0 +1,79 @@
+<header class="article-header">
+    <div class="article-eyebrow">Pédagogie · 8 minutes de lecture</div>
+    <h1 class="article-title">Pourquoi l'autorisation prospective</h1>
+    <p class="article-subtitle">Petit traité sur la différence entre prouver après et autoriser avant.</p>
+  </header>
+
+  <div class="article-body">
+
+    <p class="lead">Aujourd'hui, les agents IA agissent. Ils prennent des rendez-vous, traitent des dossiers, déclenchent des paiements, génèrent du contenu publié. Et sur chacune de ces actions, on trouve, quelque part, un journal d'audit. Une trace.</p>
+
+    <p>Cette trace dit ce qui s'est passé. Elle dit rarement ce qui était autorisé.</p>
+
+    <p>La distinction paraît subtile. Elle ne l'est pas. En cas d'incident, la trace permet de reconstituer l'histoire d'une décision après coup. Elle ne permet pas de démontrer que la décision était bornée à l'avance par un cadre lisible. Et un cadre qu'on reconstruit après l'incident n'est pas un cadre. C'est un récit.</p>
+
+    <h2>Le glissement classique des systèmes de confiance</h2>
+
+    <p>L'histoire de la confiance numérique a déjà fait ce chemin plusieurs fois. On commence par observer, on finit par contraindre.</p>
+
+    <p>Pour le chiffrement, on n'a pas commencé par interdire HTTP. On a commencé par enregistrer le trafic, par regretter qu'il soit en clair, puis par exiger HTTPS partout. Aujourd'hui un navigateur prévient l'utilisateur quand un site n'est pas chiffré. Le système refuse l'absence de garantie.</p>
+
+    <p>Pour les paiements en ligne, on n'a pas commencé par exiger l'authentification forte. On a commencé par enregistrer les fraudes, par essayer de les détecter, puis par imposer la DSP2 et le 3D Secure. Aujourd'hui, sans authentification forte, le paiement ne passe pas. Le système refuse l'absence de mandat.</p>
+
+    <p>Pour les agents IA, le même chemin s'amorce. On a commencé par enregistrer leurs actions. Les frameworks proposent tous des logs structurés, des chaînes d'événements, parfois des signatures. Mais aucune de ces traces ne dit, avant l'action, ce que l'agent avait le droit de faire.</p>
+
+    <div class="pull-quote">Une trace dit ce qui s'est passé. Un mandat dit ce qui était autorisé. Ce n'est pas la même chose.</div>
+
+    <h2>Ce que change un registre de mandats</h2>
+
+    <p>Un mandat décrit, en amont d'une action, ce qu'un agent a le droit de faire. Pour quel mandant. Avec quel périmètre. Sous quelles limites chiffrées. Pendant quelle durée. Avec quels seuils de supervision humaine. Sur quelle base légale.</p>
+
+    <p>Un registre de mandats stocke ces engagements de manière vérifiable. Chaîne SHA-256, signatures cryptographiques, accès en lecture par des tiers — l'organisation ne contrôle pas seule la preuve qu'elle invoquera plus tard.</p>
+
+    <p>Mais un registre seul ne change rien si les agents peuvent l'ignorer. C'est le piège classique des systèmes optionnels : on les invoque quand ça arrange, on les oublie quand ça gêne. Et au bout de quelques semaines, le registre devient une feuille de papier sans serrure.</p>
+
+    <p>L'autorisation prospective au sens fort intervient à ce moment précis. Elle exige que l'action elle-même soit conditionnée à la vérification du mandat. Pas une recommandation. Une condition technique.</p>
+
+    <p>Concrètement, dans AMR, ça ressemble à ceci. Avant d'agir, l'agent demande un jeton d'action signé. Le système n'émet ce jeton que si un mandat actif autorise précisément l'action demandée, dans son périmètre, dans sa durée, sous ses conditions. Pas de mandat valide, pas de jeton. Pas de jeton, pas d'action.</p>
+
+    <p>Ce n'est pas un panneau d'interdiction. C'est un verrou. La différence est structurelle.</p>
+
+    <h2>L'analogie qui m'a poussé à construire ça</h2>
+
+    <p>Je suis médecin. Quand un patient arrive à la pharmacie pour un médicament soumis à prescription, le pharmacien ne se demande pas s'il faut vérifier l'ordonnance. Il ne peut pas dispenser sans elle. Le système est conçu pour que l'absence d'ordonnance bloque l'acte, pas pour qu'on puisse le reconstituer après.</p>
+
+    <p>Et personne ne trouve ça oppressif. C'est exactement ce qui rend le système fiable, pour le patient comme pour le pharmacien. L'ordonnance protège tout le monde. Y compris l'agent qui exécute.</p>
+
+    <p>L'autorisation prospective, dans le monde des agents IA, joue le même rôle. Elle ne ralentit pas l'agent. Elle le borne. Et quand l'agent tombe sur une action hors périmètre, il ne tombe pas dans le néant : il escalade, il demande, il est arrêté proprement. Sans drame, sans incident.</p>
+
+    <h2>Ce que ça implique en pratique</h2>
+
+    <p>Pour un compliance officer, la conséquence concrète est qu'il ne reconstruit plus une décision après incident. Il vérifie en amont si la décision pouvait être prise, en lisant le mandat. Et l'audit interne devient une lecture du registre, pas une fouille des logs d'exécution.</p>
+
+    <p>Pour un régulateur, la conséquence concrète est qu'il ne demande plus seulement "que s'est-il passé". Il peut demander "qu'aviez-vous autorisé". La preuve change de nature. Elle existe avant l'événement.</p>
+
+    <p>Pour une personne touchée par une décision d'agent — un candidat écarté, un client refusé, un patient mal aiguillé — la conséquence concrète est qu'elle ne dépend plus exclusivement du fournisseur qui détient les logs. Elle peut interroger un registre tiers, vérifier la chaîne, contester un mandat qui n'aurait pas dû couvrir son cas.</p>
+
+    <div class="pull-quote">L'autorisation prospective n'est pas une feature de plus. C'est ce qui fait la différence entre un système qui peut être audité et un système qui peut être contesté.</div>
+
+    <h2>Le timing</h2>
+
+    <p>Le calendrier est maintenant fixé. Le règlement (UE) 2026/1744, dit AI Omnibus, en vigueur depuis le 27 juillet 2026, a repoussé les obligations des systèmes à haut risque de l'Annexe III au 2 décembre 2027, et celles des systèmes intégrés à des produits réglementés au 2 août 2028. Les obligations de transparence, elles, s'appliquent depuis le 2 août 2026.</p>
+
+    <p>Le report donne du temps, il ne change pas le fond. L'obligation de supervision humaine effective de l'article 14 et les obligations du déployeur de l'article 26 restent. La question, pour les organisations qui déploient des agents, est de savoir si elles seront prêtes à démontrer ce qui était autorisé, pas seulement à reconstituer ce qui s'est passé.</p>
+
+    <p>AMR essaye de répondre à cette question. C'est open source, sous licence Apache-2.0, et le verrou existe dans le code depuis le 23 avril 2026.</p>
+
+    <div class="sep"></div>
+
+    <p>Audric Bugnard — médecin à Aix-les-Bains. Je construis mandatia.eu le soir, après les consultations.</p>
+
+  </div>
+
+  <div class="cta-block">
+    <p>Si ce sujet vous parle, le code et la spec d'AMR sont publics.</p>
+    <div class="cta-buttons">
+      <a href="https://github.com/JC7333/amr" target="_blank" rel="noopener" class="btn-primary">Voir AMR sur GitHub →</a>
+      <a href="/" class="btn-secondary">Retour à mandatia.eu</a>
+    </div>
+  </div>

@@ -1,0 +1,58 @@
+<section class="page-head">
+  <div class="wrap">
+    <h1>Install AMR</h1>
+    <p class="lede">Written so that an AI agent (Claude Code, Cursor, any MCP client) can install AMR and reach a first verified mandate alone. No account, no email, nobody to ask.</p>
+  </div>
+</section>
+
+<section class="page-body">
+  <div class="wrap">
+    <div class="prose">
+      <h2>1. Run the server</h2>
+      <p>It needs <a href="https://docs.astral.sh/uv/">uv</a>. The PyPI package is named “mandatia” (version {{f:pypi_version}} on {{f:site_date_en}}).</p>
+<pre><code>uvx mandatia
+
+<span class="c"># the latest code of the repository instead:</span>
+uvx --from git+https://github.com/JC7333/amr amr
+
+<span class="c"># or clone and run:</span>
+git clone https://github.com/JC7333/amr.git &amp;&amp; cd amr &amp;&amp; uv sync &amp;&amp; uv run amr</code></pre>
+      <p><code>uvx amr</code> installs a different, unrelated project: do not use it. AMR runs with version 1 and version 2 of the MCP Python SDK (<code>mcp&gt;=1.2,&lt;3</code>); no extra version pin is needed.</p>
+      <p>Everything runs on your machine. AMR makes no network call, except two options that stay off by default: <code>report_issue</code> once the operator sets <code>AMR_ISSUE_TOKEN</code>, and the <code>did:web</code> key check once the operator sets <code>AMR_DID_WEB_RESOLVE=1</code>.</p>
+
+      <h2>2. Declare it in your MCP client</h2>
+<pre><code><span class="c"># Claude Code</span>
+claude mcp add amr -- uvx mandatia
+
+<span class="c"># Other MCP clients (Cursor: .cursor/mcp.json): set the three paths</span>
+AMR_DB_PATH=/absolute/path/amr_mandates.db
+AMR_SIGNING_KEY_PATH=/absolute/path/amr_signing_key.pem
+AMR_PUBLIC_KEY_PATH=/absolute/path/amr_signing_key.pub</code></pre>
+      <p>By default AMR writes its database and its key in the client's current directory. Keep the <code>.pem</code> private key out of version control.</p>
+
+      <h2>3. Give each side only its own tools</h2>
+      <p>An agent that can create, sign or revoke its own mandate authorizes itself, and the mandate then proves nothing. Set <code>AMR_TOOL_PROFILE</code> in the environment of each client, all pointing at the same <code>AMR_DB_PATH</code>.</p>
+    </div>
+    <div class="scroll">
+      <table>
+        <thead><tr><th scope="col">Profile</th><th scope="col">Who</th><th scope="col">Tools</th></tr></thead>
+        <tbody>
+          <tr><td><code>principal</code></td><td>the person or body that grants mandates</td><td>create, sign, revoke, contest, prove</td></tr>
+          <tr><td><code>agent</code></td><td>the agent that acts under a mandate</td><td><code>verify_mandate</code>, <code>issue_action_token</code>, <code>log_action</code>, <code>issue_mandate_attestation</code>, <code>get_registry_public_key</code>; <code>create_mandate</code> for sub-mandates under its own mandate only</td></tr>
+          <tr><td><code>receiver</code></td><td>a third party the agent acts upon</td><td><code>check_action_token</code>, <code>get_registry_public_key</code></td></tr>
+          <tr><td><code>full</code> (default)</td><td>tests and single-user setups</td><td>every tool</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="prose">
+      <h2>4. The first mandate, in this order</h2>
+      <p><code>create_mandate</code>, <code>verify_mandate</code>, <code>log_action</code>, <code>issue_mandate_attestation</code> with <code>get_registry_public_key</code>, <code>revoke_mandate</code>, <code>get_proof</code>.</p>
+      <p>A runnable example, checked by the test suite: <code>uv run python examples/quickstart_agent.py</code>.</p>
+      <p>Machine-readable summaries: <a href="https://github.com/JC7333/amr/blob/main/AGENTS.md">AGENTS.md</a>, <a href="https://github.com/JC7333/amr/blob/main/llms.txt">the repository's llms.txt</a>, <a href="/llms.txt">this site's llms.txt</a>, <a href="https://github.com/JC7333/amr#quickstart-for-agents">README</a>.</p>
+    </div>
+
+    <h2 id="tools">The {{f:tools_count}} tools</h2>
+    <p class="prose">Grouped by what they are for. Known limits are written next to the tool concerned.</p>
+    {{block:tools}}
+  </div>
+</section>

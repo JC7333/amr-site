@@ -1,0 +1,54 @@
+<section class="page-body">
+  <div class="wrap sheet">
+    <h1>AMR in one page</h1>
+    <p class="lede">A registry where an AI agent can do nothing until a person or a body has authorized it in writing. No valid mandate, no action.</p>
+
+    <h2>The problem</h2>
+    <p>A management board or a committee decides what an AI tool is allowed to do. Nothing imposes that decision on the agent the day it acts alone.</p>
+
+    <h2>What AMR does, in four steps</h2>
+    <ol class="plain">
+      <li><strong>Authorize.</strong> The principal writes what the agent may do, what it may never do, its ceilings, the end date.</li>
+      <li><strong>Lock.</strong> Before each action, the agent asks for a token. Outside the mandate, no token.</li>
+      <li><strong>Verify.</strong> Whoever receives the agent checks the mandate, offline, without an account.</li>
+      <li><strong>Prove, revoke.</strong> Each act is chained to the mandate. The principal revokes it at any time.</li>
+    </ol>
+
+    <h2>An example, with the registry's real answers</h2>
+    <p>A medical front-desk assistant, under a demonstration mandate, on {{f:demo_date_en}}.</p>
+    {{block:lockdemo_list}}
+
+    <h2>What it does, what it does not do</h2>
+    <div class="cells">
+      <div><h4>{{icon:ok}}It does</h4><ul>
+        <li>It records who authorized which agent, to do what, until when.</li>
+        <li>It refuses the token outside the mandate or above the ceiling.</li>
+        <li>It stops a mandate and its whole branch on revocation.</li>
+        <li>It keeps a chain in which any change shows.</li>
+      </ul></div>
+      <div><h4>{{icon:no}}It does not</h4><ul>
+        <li>It does not watch the agent while it acts.</li>
+        <li>It checks action types, not content.</li>
+        <li>It makes no system compliant with any text.</li>
+        <li>It is not legal advice.</li>
+      </ul></div>
+    </div>
+
+    <h2>Good to know first</h2>
+    <ul class="plain">
+      <li>Open source, Apache-2.0 licence, free. It runs on your side and makes no network call by default.</li>
+      <li>{{f:tests_count_en}} automated tests, all passed on {{f:tests_date_en}}. {{f:tools_count}} tools, each with its limits written down.</li>
+      <li>{{f:templates_count}} templates by trade (healthcare, recruitment, credit, life and health insurance, customer support). They are provisional baselines, with no practitioner review so far.</li>
+    </ul>
+
+    <h2>To try it</h2>
+    <ul class="plain">
+      <li>Verify a mandate in your browser: <a href="https://www.mandatia.eu/en/verify">www.mandatia.eu/en/verify</a></li>
+      <li>Install: <code>uvx mandatia</code>, details at <a href="https://www.mandatia.eu/en/install">www.mandatia.eu/en/install</a></li>
+      <li>Pilot organization ({{f:pilot_count}} places, healthcare and insurance first, free, all in writing): <a href="mailto:audric@mandatia.eu">audric@mandatia.eu</a></li>
+    </ul>
+
+    <p class="sheet-meta">Audric BUGNARD, physician in Aix-les-Bains, France. www.mandatia.eu. Page updated {{f:site_date_en}}.</p>
+    <button id="print" class="btn print-btn" type="button" hidden>Print or save as PDF</button>
+  </div>
+</section>

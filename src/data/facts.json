@@ -1,0 +1,22 @@
+{
+ "_lire": "Source unique des chiffres et des dates du site. Modifier ici, puis python tools/build.py. Chaque valeur dit d'où elle vient.",
+ "tests_count": "1 388",
+ "tests_count_en": "1,388",
+ "_tests": "pytest sur JC7333/amr, commit 27d845f : 1388 passés, 1 ignoré, le 13/11/2026",
+ "tests_date": "13/11/2026",
+ "tests_date_en": "13 November 2026",
+ "code_commit": "27d845f",
+ "pypi_version": "0.1.2",
+ "_pypi": "pip index versions mandatia, le 13/11/2026",
+ "lock_since": "23 avril 2026",
+ "lock_since_en": "23 April 2026",
+ "started": "avril 2026",
+ "started_en": "April 2026",
+ "pilot_places": "Cinq",
+ "pilot_count": "5",
+ "pilot_places_en": "Five",
+ "_pilot": "décision d'Audric du 13/11/2026 : 5 organisations pilotes, santé et assurance d'abord, gratuit, par écrit",
+ "site_date": "13/11/2026",
+ "site_date_en": "13 November 2026",
+ "site_date_iso": "2026-11-13"
+}

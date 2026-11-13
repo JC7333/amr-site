@@ -1,0 +1,10 @@
+{
+ "key_id": "355dd6929e522c49",
+ "jwk": {
+  "kty": "OKP",
+  "crv": "Ed25519",
+  "x": "8p_NnLIcuwROq77hS1u2N3nj-dNM4-DQ9IrsshMb0kI",
+  "kid": "355dd6929e522c49",
+  "alg": "EdDSA"
+ }
+}
