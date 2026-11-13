@@ -83,6 +83,14 @@
     return result;
   }
 
+  /* Le registre public ne publie pas le nom du mandant, seulement une empreinte.
+     Celui qui connaît l'identifiant annoncé la recalcule et compare. */
+  async function matches(announced, ref) {
+    var digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(announced));
+    var hex = Array.prototype.map.call(new Uint8Array(digest), function (b) { return ("0" + b.toString(16)).slice(-2); }).join("");
+    return "sha256:" + hex === ref;
+  }
+
   async function verify(jws, jwk) {
     var parts = jws.trim().split(".");
     if (parts.length !== 3) return { ok: false };
@@ -125,10 +133,12 @@
     var verdict = evaluate(index, id, Date.now());
     if (verdict.status === "unknown") { outcome.appendChild(step("no", text.unknown, [text.unknownHelp])); return; }
     var m = index[id], per = m.perimeter || {};
+    var announced = files.announced[id], who = m.principal_ref.slice(0, 23) + "...";
+    if (announced) who = announced + " " + ((await matches(announced, m.principal_ref)) ? text.principalMatch : text.principalMismatch);
     var pairs = [
+      [announced ? text.principalAnnounced : text.principal, who],
+      [text.signed, m.principal_signed ? text.signedYes.replace("{key}", m.principal_key_id) : text.signedNo],
       [text.agent, m.agent_id],
-      [text.principal, m.principal_ref.slice(0, 23) + "..."],
-      [text.signed, m.principal_signed ? text.yes : text.no],
       [text.created, day(m.created_at)],
       [m.revoked_at ? text.revokedOn : text.expires, day(m.revoked_at || m.expires_at)]
     ];
@@ -150,7 +160,8 @@
 
   Promise.all([
     fetch("/assets/demo/registry-snapshot.jws").then(function (r) { if (!r.ok) throw new Error(); return r.text(); }),
-    fetch("/assets/demo/registry-key.json").then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
-  ]).then(function (got) { files = { jws: got[0], key: got[1] }; run(); })
+    fetch("/assets/demo/registry-key.json").then(function (r) { if (!r.ok) throw new Error(); return r.json(); }),
+    fetch("/assets/demo/lock-demo.json").then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; })
+  ]).then(function (got) { files = { jws: got[0], key: got[1], announced: got[2].announced_principals || {} }; run(); })
     .catch(function () { run(); });
 })();

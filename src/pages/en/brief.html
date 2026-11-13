@@ -8,14 +8,14 @@
 
     <h2>What AMR does, in four steps</h2>
     <ol class="plain">
-      <li><strong>Authorize.</strong> The principal writes what the agent may do, what it may never do, its ceilings, the end date.</li>
+      <li><strong>Authorize.</strong> The principal, a person or a body, writes and signs what its agent may do, what it may never do, its ceilings, the end date.</li>
       <li><strong>Lock.</strong> Before each action, the agent asks for a token. Outside the mandate, no token.</li>
-      <li><strong>Verify.</strong> Whoever receives the agent checks the mandate, offline, without an account.</li>
+      <li><strong>Verify.</strong> Whoever receives the agent checks who authorized it and within what limits, offline, without an account.</li>
       <li><strong>Prove, revoke.</strong> Each act is chained to the mandate. The principal revokes it at any time.</li>
     </ol>
 
     <h2>An example, with the registry's real answers</h2>
-    <p>A medical front-desk assistant, under a demonstration mandate, on {{f:demo_date_en}}.</p>
+    <p>A medical front-desk assistant, under a demonstration mandate signed by its clinic, on {{f:demo_date_en}}.</p>
     {{block:lockdemo_list}}
 
     <h2>What it does, what it does not do</h2>
@@ -30,12 +30,14 @@
         <li>It does not watch the agent while it acts.</li>
         <li>It checks action types, not content.</li>
         <li>It makes no system compliant with any text.</li>
+        <li>It does not check the signer's power within their organization.</li>
         <li>It is not legal advice.</li>
       </ul></div>
     </div>
 
     <h2>Good to know first</h2>
     <ul class="plain">
+      <li>“Mandate” here is not a mandate in the legal sense. It is {{f:def_mandat_en}}.</li>
       <li>Open source, Apache-2.0 licence, free. It runs on your side and makes no network call by default.</li>
       <li>{{f:tests_count_en}} automated tests, all passed on {{f:tests_date_en}}. {{f:tools_count}} tools, each with its limits written down.</li>
       <li>{{f:templates_count}} templates by trade (healthcare, recruitment, credit, life and health insurance, customer support). They are provisional baselines, with no practitioner review so far.</li>

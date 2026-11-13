@@ -25,7 +25,8 @@ Aucune dépendance : Python 3.9 ou plus récent suffit, sous Windows aussi.
 | un gabarit | `src/data/gabarits.json` |
 | le menu, le pied de page, les titres et descriptions des pages | `tools/build.py` (tables `PAGES` et `T`) |
 | l'apparence | `assets/site.css` |
-| la démonstration (vraies réponses du registre, instantané signé) | `tools/make_demo_registry.py`, qui réécrit `assets/demo/` |
+| la définition de « mandat » (une seule phrase, reprise partout) | `src/data/facts.json`, clés `def_mandat` et `def_mandat_en` |
+| la démonstration (vraies réponses du registre, mandats signés par leur mandant, instantané signé) | `tools/make_demo_registry.py`, qui réécrit `assets/demo/` |
 | les images d'aperçu des liens | `tools/og/`, à capturer en 1200 x 630 vers `assets/og-fr.jpg` et `assets/og-en.jpg` |
 
 ## Ce que le site tient, et que les contrôles vérifient

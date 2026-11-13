@@ -2,7 +2,7 @@
   <div class="wrap hero-in">
     <div>
       <h1>Pas de mandat valide,<br>pas d'action.</h1>
-      <p class="lede">AMR est un registre où un agent IA ne peut rien faire tant qu'une personne ou un organe ne l'a pas autorisé par écrit. Ceux qui reçoivent l'agent vérifient cette autorisation en quelques secondes, sans compte.</p>
+      <p class="lede">AMR est un registre où un agent IA ne peut rien faire tant qu'une personne ou un organe ne l'a pas autorisé par écrit. Celui qui reçoit l'agent vérifie en quelques secondes qui l'a autorisé, et dans quelles limites.</p>
       <div class="actions">
         <a class="btn" href="/verifier">Vérifier un mandat</a>
         <a class="btn btn-calme" href="/essentiel">L'essentiel en une page</a>
@@ -25,9 +25,9 @@
   <div class="wrap">
     <h2>Quatre temps, dans cet ordre</h2>
     <ol class="path">
-      <li><h3>Autoriser</h3><p>Le mandant écrit ce que l'agent peut faire, ce qu'il ne peut jamais faire, ses plafonds et la date de fin. Il peut signer avec sa propre clé.</p></li>
+      <li><h3>Autoriser</h3><p>Le mandant, une personne ou un organe, écrit ce que son agent peut faire, ce qu'il ne peut jamais faire, ses plafonds et la date de fin. Il signe avec sa clé, ou avec un certificat à son nom. Sans signature, le registre le dit.</p></li>
       <li><h3>Verrouiller</h3><p>Avant chaque action, l'agent demande un jeton au registre. Hors du mandat, pas de jeton.</p></li>
-      <li><h3>Vérifier</h3><p>Celui qui reçoit l'agent contrôle le mandat avec la clé publique du registre. Hors ligne, sans compte.</p></li>
+      <li><h3>Vérifier</h3><p>Celui qui reçoit l'agent contrôle qui l'a autorisé, dans quelles limites, et si cela tient toujours. Hors ligne, sans compte.</p></li>
       <li><h3>Prouver, retirer</h3><p>Chaque acte est chaîné au mandat. Le mandant le retire quand il veut, et toute la branche s'arrête.</p></li>
     </ol>
   </div>
@@ -40,7 +40,7 @@
       <div class="yes">
         <h3>Il fait</h3>
         <ul class="ticks">
-          <li>{{icon:ok}}<span>Il enregistre qui a autorisé quel agent, à faire quoi, jusqu'à quand.</span></li>
+          <li>{{icon:ok}}<span>Il enregistre qui a autorisé quel agent, à faire quoi, jusqu'à quand, et si cette personne a signé.</span></li>
           <li>{{icon:ok}}<span>Il refuse le jeton pour une action interdite, absente du mandat ou au-dessus du plafond.</span></li>
           <li>{{icon:ok}}<span>Il empêche un sous-mandat d'être plus large que son parent.</span></li>
           <li>{{icon:ok}}<span>Il arrête un mandat et toute sa branche dès que le mandant le retire.</span></li>
@@ -54,7 +54,7 @@
           <li>{{icon:no}}<span>Il ne surveille pas l'agent pendant qu'il agit. La supervision reste chez celui qui le déploie.</span></li>
           <li>{{icon:no}}<span>Il contrôle des types d'action, pas un contenu. Il ne lit ni un courrier ni une réponse.</span></li>
           <li>{{icon:no}}<span>Il ne rend aucun système conforme à un texte. Rien ici n'est un conseil juridique.</span></li>
-          <li>{{icon:no}}<span>Pour un identifiant ordinaire, il ne vérifie pas qui est la personne derrière la clé du mandant.</span></li>
+          <li>{{icon:no}}<span>Il ne vérifie pas que le signataire a le pouvoir d'engager son organisation. Pour un identifiant ordinaire, il ne vérifie pas non plus qui tient la clé.</span></li>
           <li>{{icon:no}}<span>Il ne défait pas une action déjà engagée. Retirer un mandat arrête la suite.</span></li>
           <li>{{icon:no}}<span>Il ne décide pas à votre place. Le mandat, c'est vous qui l'écrivez.</span></li>
         </ul>
@@ -63,7 +63,7 @@
     <p class="note"><a href="/installer#outils">Les limites, outil par outil</a></p>
     <div class="define">
       <h3>Ce que « mandat » veut dire ici</h3>
-      <p>L'autorisation écrite qu'une personne ou un organe donne pour son agent. Elle engage celui qui la donne, pas l'agent, qui n'est pas une personne. AMR ne déplace aucune responsabilité. Il rend lisible qui a autorisé quoi.</p>
+      <p>Pas un mandat au sens du Code civil : un agent IA n'est pas une personne, il ne peut pas en recevoir. Ici, le mot désigne {{f:def_mandat}}. Elle engage celui qui la signe, pas l'agent, qui n'est que son outil. AMR ne déplace aucune responsabilité. Il rend lisible qui a autorisé quoi.</p>
     </div>
   </div>
 </section>

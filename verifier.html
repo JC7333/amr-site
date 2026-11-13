@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vérifier un mandat | AMR</title>
-<meta name="description" content="Vérifiez dans votre navigateur un mandat du registre de démonstration : signature du registre, périmètre, statut. Sans compte, sans rien envoyer.">
+<meta name="description" content="Vérifiez dans votre navigateur un mandat du registre de démonstration : qui l&#x27;a signé, son périmètre, son statut. Sans compte, sans rien envoyer.">
 <link rel="canonical" href="https://www.mandatia.eu/verifier">
 <link rel="alternate" hreflang="fr" href="https://www.mandatia.eu/verifier">
 <link rel="alternate" hreflang="en" href="https://www.mandatia.eu/en/verify">
@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="AMR">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:title" content="Vérifier un mandat | AMR">
-<meta property="og:description" content="Vérifiez dans votre navigateur un mandat du registre de démonstration : signature du registre, périmètre, statut. Sans compte, sans rien envoyer.">
+<meta property="og:description" content="Vérifiez dans votre navigateur un mandat du registre de démonstration : qui l&#x27;a signé, son périmètre, son statut. Sans compte, sans rien envoyer.">
 <meta property="og:url" content="https://www.mandatia.eu/verifier">
 <meta property="og:image" content="https://www.mandatia.eu/assets/og-fr.jpg">
 <meta property="og:image:width" content="1200">
@@ -38,7 +38,7 @@
 <section class="page-head">
   <div class="wrap">
     <h1>Vérifier un mandat</h1>
-    <p class="lede">Avant d'accepter ce que demande un agent, on vérifie son mandat, comme on vérifie un Kbis avant de signer avec une société. Essayez sur le registre de démonstration. Rien n'est envoyé, votre navigateur fait le contrôle.</p>
+    <p class="lede">Avant d'accepter ce que demande un agent, on vérifie qui l'a autorisé et dans quelles limites, comme on vérifie un Kbis avant de signer avec une société. Essayez sur le registre de démonstration. Rien n'est envoyé, votre navigateur fait le contrôle.</p>
   </div>
 </section>
 
@@ -49,13 +49,13 @@
       <form id="checker-form" hidden>
         <label for="mandate-id">Identifiant du mandat</label>
         <div class="field">
-          <input type="text" id="mandate-id" value="eeec8535-d0ff-46f5-83a4-650353073815" autocomplete="off" spellcheck="false">
+          <input type="text" id="mandate-id" value="a37fb863-b560-4e2b-b181-7dbd23aabd82" autocomplete="off" spellcheck="false">
           <button class="btn" type="submit">Vérifier</button>
         </div>
         <div class="picks">
           <span>Essayer avec</span>
-          <button type="button" class="pick" data-id="eeec8535-d0ff-46f5-83a4-650353073815">un mandat actif</button>
-          <button type="button" class="pick" data-id="637c075e-e5d3-4583-aa0e-e66253f8b9f0">un mandat retiré</button>
+          <button type="button" class="pick" data-id="a37fb863-b560-4e2b-b181-7dbd23aabd82">un mandat actif</button>
+          <button type="button" class="pick" data-id="d2d18ba6-267c-41c2-9d3b-e68ce1ff08f6">un mandat retiré</button>
           <button type="button" class="pick" data-id="00000000-0000-4000-8000-000000000000">un identifiant inconnu</button>
         </div>
         <div class="tamper">
@@ -72,12 +72,14 @@
         <li>Il a lu deux fichiers de ce site&nbsp;: un instantané signé du registre de démonstration, et la clé publique de ce registre.</li>
         <li>Il a contrôlé la signature de l'instantané avec cette clé. Un seul caractère changé, et la signature ne tient plus.</li>
         <li>Il a cherché le mandat, puis appliqué la règle du registre. Un mandat est actif s'il n'est ni retiré ni expiré, et si tous les mandats au-dessus de lui tiennent aussi.</li>
+        <li>Il a calculé l'empreinte de l'identifiant que le mandant annonce, et l'a comparée à celle que publie le registre.</li>
       </ol>
 
       <h2>Ce que l'instantané ne dit pas</h2>
       <ul class="plain">
         <li>Il date du 13/11/2026. Un retrait fait après cette date n'y figure pas.</li>
-        <li>Le mandant apparaît sous un pseudonyme (une empreinte), jamais en clair. Le texte du mandat, les actes journalisés et les contestations ne sont pas publiés.</li>
+        <li>Le nom du mandant n'y figure pas, seulement une empreinte de son identifiant. Celui à qui le mandant a donné cet identifiant recalcule l'empreinte et compare, comme le fait cette page. Le texte du mandat, les actes journalisés et les contestations ne sont pas publiés.</li>
+        <li>«&nbsp;Signé par le mandant&nbsp;» veut dire signé avec la clé qu'il a enregistrée. Pour un identifiant ordinaire, le registre ne vérifie pas qui tient cette clé, ni le pouvoir de cette personne dans son organisation.</li>
         <li>Se fier à une clé publique, c'est se fier à celui qui la publie. Ici, c'est ce site, pour un registre de démonstration.</li>
         <li>Tout est fictif. Les organisations et les agents de cette démonstration n'existent pas.</li>
       </ul>
@@ -97,7 +99,7 @@ python -m amr.public_registry serve --export registry-snapshot.jws --public-key 
 <template id="icon-ok"><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#1b6e44"/><path d="M7 12.4l3.3 3.2L17 8.6" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></template>
 <template id="icon-no"><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#a0372a"/><path d="M8 8l8 8M16 8l-8 8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></template>
 <template id="icon-idle"><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="#4c6466" stroke-width="2"/><path d="M12 7v5.5l3.2 2" fill="none" stroke="#4c6466" stroke-width="2" stroke-linecap="round"/></svg></template>
-<script type="application/json" id="checker-text">{"locale": "fr-FR", "loadError": "Les fichiers de la démonstration n'ont pas pu être lus. Rechargez la page.", "unsupported": "Votre navigateur ne sait pas vérifier ce type de signature", "unsupportedHelp": "Il faut un navigateur récent (signature Ed25519). La vérification se fait aussi à la main, avec les commandes données plus bas.", "sigBad": "Signature invalide : ne rien croire de ce fichier", "sigBadTampered": "Le fichier a été modifié après sa signature par le registre. Le plafond falsifié n'est même pas lu.", "sigBadOther": "Le fichier ne correspond pas à la clé publique du registre.", "sigOk": "Signature du registre valide", "key": "Clé du registre", "snapshot": "Instantané du", "count": "Mandats publiés", "time": "Contrôle fait en", "timeValue": "{ms} ms, dans votre navigateur", "needId": "Indiquez un identifiant de mandat", "unknown": "Aucun mandat ne porte cet identifiant", "unknownHelp": "Pour celui qui reçoit l'agent, la suite est simple. Pas de mandat publié, pas d'action.", "agent": "Agent", "principal": "Mandant (pseudonyme)", "signed": "Signé par le mandant", "yes": "oui", "no": "non", "created": "Donné le", "expires": "Valable jusqu'au", "revokedOn": "Retiré le", "may": "Peut", "never": "Ne peut jamais", "ceiling": "Plafond par action", "status": {"active": "Mandat actif", "revoked": "Mandat retiré par le mandant", "inactive": "Mandat inactif", "expired": "Mandat expiré", "cut_by_parent": "Mandat coupé : un mandat au-dessus de lui ne tient plus"}}</script>
+<script type="application/json" id="checker-text">{"locale": "fr-FR", "loadError": "Les fichiers de la démonstration n'ont pas pu être lus. Rechargez la page.", "unsupported": "Votre navigateur ne sait pas vérifier ce type de signature", "unsupportedHelp": "Il faut un navigateur récent (signature Ed25519). La vérification se fait aussi à la main, avec les commandes données plus bas.", "sigBad": "Signature invalide : ne rien croire de ce fichier", "sigBadTampered": "Le fichier a été modifié après sa signature par le registre. Le plafond falsifié n'est même pas lu.", "sigBadOther": "Le fichier ne correspond pas à la clé publique du registre.", "sigOk": "Signature du registre valide", "key": "Clé du registre", "snapshot": "Instantané du", "count": "Mandats publiés", "time": "Contrôle fait en", "timeValue": "{ms} ms, dans votre navigateur", "needId": "Indiquez un identifiant de mandat", "unknown": "Aucun mandat ne porte cet identifiant", "unknownHelp": "Pour celui qui reçoit l'agent, la suite est simple. Pas de mandat publié, pas d'action.", "agent": "Agent", "principal": "Mandant (empreinte)", "signed": "Signé par le mandant", "created": "Donné le", "expires": "Valable jusqu'au", "revokedOn": "Retiré le", "may": "Peut", "never": "Ne peut jamais", "ceiling": "Plafond par action", "status": {"active": "Mandat actif", "revoked": "Mandat retiré par le mandant", "inactive": "Mandat inactif", "expired": "Mandat expiré", "cut_by_parent": "Mandat coupé : un mandat au-dessus de lui ne tient plus"}, "principalAnnounced": "Mandant annoncé", "principalMatch": "(son empreinte est bien celle que publie le registre)", "principalMismatch": "(son empreinte n'est pas celle que publie le registre : ne pas s'y fier)", "signedYes": "oui, avec la clé {key}", "signedNo": "non"}</script>
 
 </main>
 <footer class="foot"><div class="wrap">

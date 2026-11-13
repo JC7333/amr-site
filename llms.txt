@@ -2,6 +2,8 @@
 
 > Open-source MCP server (Apache-2.0) that records which person or body authorized which AI agent to do what, until when. It issues a signed action token only for an action inside that mandate, and keeps a hash-chained, append-only journal. Runs locally over stdio and makes no network call by default. Not legal advice; it does not make anyone compliant.
 
+"Mandate" here is not a mandate in the legal sense: an AI agent is not a person and cannot be given one. It means the written, dated and signed instruction by which an identified person sets what their agent may do on their behalf. The agent is that person's tool.
+
 Install and run (needs uv; the PyPI package is `mandatia`, version 0.1.2 on 13 November 2026; `uvx amr` installs a different project):
 
     uvx mandatia
