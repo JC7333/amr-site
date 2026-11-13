@@ -18,5 +18,8 @@
  "_pilot": "décision d'Audric du 13/11/2026 : 5 organisations pilotes, santé et assurance d'abord, gratuit, par écrit",
  "site_date": "13/11/2026",
  "site_date_en": "13 November 2026",
- "site_date_iso": "2026-11-13"
+ "site_date_iso": "2026-11-13",
+ "def_mandat": "l'instruction écrite, datée et signée par laquelle une personne identifiée fixe ce que son agent peut faire en son nom",
+ "def_mandat_en": "the written, dated and signed instruction by which an identified person sets what their agent may do on their behalf",
+ "_def_mandat": "décision d'Audric du 13/11/2026 au soir, après la réponse de deux avocats : pas un mandat au sens du Code civil. Écrite ici seulement, reprise par l'accueil, les questions, L'essentiel et llms.txt."
 }

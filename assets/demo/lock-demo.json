@@ -5,8 +5,13 @@
   "id": "agent-sante-rgpd",
   "version": "1.2.0"
  },
- "mandate_id": "eeec8535-d0ff-46f5-83a4-650353073815",
- "revoked_mandate_id": "637c075e-e5d3-4583-aa0e-e66253f8b9f0",
+ "mandate_id": "a37fb863-b560-4e2b-b181-7dbd23aabd82",
+ "revoked_mandate_id": "d2d18ba6-267c-41c2-9d3b-e68ce1ff08f6",
+ "announced_principals": {
+  "a37fb863-b560-4e2b-b181-7dbd23aabd82": "org:clinique-des-exemples",
+  "d2d18ba6-267c-41c2-9d3b-e68ce1ff08f6": "org:mutuelle-des-exemples"
+ },
+ "principal_key_id": "92ff5d64f4fddf6b",
  "revoked_reason_after": "mandate_status_revoked",
  "perimeter": {
   "allowed_actions": [
@@ -43,8 +48,8 @@
    "registry_check": false,
    "response": {
     "token": "eyJhbGciOiJFZERTQSIsImtpZCI6...",
-    "expires_at": "2026-11-13T17:18:02.447150+00:00",
-    "key_id": "355dd6929e522c49"
+    "expires_at": "2026-11-13T19:46:22.190054+00:00",
+    "key_id": "c2788f41582768fe"
    }
   },
   {
@@ -61,8 +66,8 @@
    "registry_check": true,
    "response": {
     "token": "eyJhbGciOiJFZERTQSIsImtpZCI6...",
-    "expires_at": "2026-11-13T17:13:32.453237+00:00",
-    "key_id": "355dd6929e522c49"
+    "expires_at": "2026-11-13T19:41:52.195269+00:00",
+    "key_id": "c2788f41582768fe"
    }
   },
   {
@@ -81,7 +86,7 @@
     "denied": true,
     "reason": "action_out_of_scope",
     "detail": "amount_above_limit:100 EUR",
-    "refused_by": "eeec8535-d0ff-46f5-83a4-650353073815"
+    "refused_by": "a37fb863-b560-4e2b-b181-7dbd23aabd82"
    }
   },
   {
@@ -97,7 +102,7 @@
     "denied": true,
     "reason": "action_out_of_scope",
     "detail": "forbidden:prescription",
-    "refused_by": "eeec8535-d0ff-46f5-83a4-650353073815"
+    "refused_by": "a37fb863-b560-4e2b-b181-7dbd23aabd82"
    }
   },
   {
@@ -113,7 +118,7 @@
     "denied": true,
     "reason": "action_out_of_scope",
     "detail": "forbidden:patient_message.send",
-    "refused_by": "eeec8535-d0ff-46f5-83a4-650353073815"
+    "refused_by": "a37fb863-b560-4e2b-b181-7dbd23aabd82"
    }
   }
  ]

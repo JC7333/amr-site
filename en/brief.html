@@ -45,14 +45,14 @@
 
     <h2>What AMR does, in four steps</h2>
     <ol class="plain">
-      <li><strong>Authorize.</strong> The principal writes what the agent may do, what it may never do, its ceilings, the end date.</li>
+      <li><strong>Authorize.</strong> The principal, a person or a body, writes and signs what its agent may do, what it may never do, its ceilings, the end date.</li>
       <li><strong>Lock.</strong> Before each action, the agent asks for a token. Outside the mandate, no token.</li>
-      <li><strong>Verify.</strong> Whoever receives the agent checks the mandate, offline, without an account.</li>
+      <li><strong>Verify.</strong> Whoever receives the agent checks who authorized it and within what limits, offline, without an account.</li>
       <li><strong>Prove, revoke.</strong> Each act is chained to the mandate. The principal revokes it at any time.</li>
     </ol>
 
     <h2>An example, with the registry's real answers</h2>
-    <p>A medical front-desk assistant, under a demonstration mandate, on 13 November 2026.</p>
+    <p>A medical front-desk assistant, under a demonstration mandate signed by its clinic, on 13 November 2026.</p>
     <ul class="ticks"><li><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#1b6e44"/><path d="M7 12.4l3.3 3.2L17 8.6" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><strong>Book an appointment.</strong> Allowed. Token valid for 5 minutes.</span></li><li><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#1b6e44"/><path d="M7 12.4l3.3 3.2L17 8.6" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><strong>Order €80 of supplies.</strong> Allowed. Token valid for 30 seconds, to be re-checked when acting.</span></li><li><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#a0372a"/><path d="M8 8l8 8M16 8l-8 8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg><span><strong>Order €2,000 of supplies.</strong> Refused. The mandate caps an order at €100.</span></li><li><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#a0372a"/><path d="M8 8l8 8M16 8l-8 8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg><span><strong>Renew a prescription.</strong> Refused. The mandate forbids it.</span></li><li><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#a0372a"/><path d="M8 8l8 8M16 8l-8 8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg><span><strong>Send a message to a patient.</strong> Refused. The mandate forbids it.</span></li></ul>
 
     <h2>What it does, what it does not do</h2>
@@ -67,12 +67,14 @@
         <li>It does not watch the agent while it acts.</li>
         <li>It checks action types, not content.</li>
         <li>It makes no system compliant with any text.</li>
+        <li>It does not check the signer's power within their organization.</li>
         <li>It is not legal advice.</li>
       </ul></div>
     </div>
 
     <h2>Good to know first</h2>
     <ul class="plain">
+      <li>“Mandate” here is not a mandate in the legal sense. It is the written, dated and signed instruction by which an identified person sets what their agent may do on their behalf.</li>
       <li>Open source, Apache-2.0 licence, free. It runs on your side and makes no network call by default.</li>
       <li>1,388 automated tests, all passed on 13 November 2026. 19 tools, each with its limits written down.</li>
       <li>5 templates by trade (healthcare, recruitment, credit, life and health insurance, customer support). They are provisional baselines, with no practitioner review so far.</li>

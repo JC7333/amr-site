@@ -51,10 +51,10 @@ PAGES = [
      "AMR is an open-source registry where an AI agent can do nothing until a person or a body has authorized it in writing. A third party checks it in seconds."),
     ("verify", "fr", "verifier.html", "fr/verifier.html", "verify", "plain",
      "Vérifier un mandat | AMR",
-     "Vérifiez dans votre navigateur un mandat du registre de démonstration : signature du registre, périmètre, statut. Sans compte, sans rien envoyer."),
+     "Vérifiez dans votre navigateur un mandat du registre de démonstration : qui l'a signé, son périmètre, son statut. Sans compte, sans rien envoyer."),
     ("verify", "en", "en/verify.html", "en/verify.html", "verify", "plain",
      "Verify a mandate | AMR",
-     "Check a mandate of the demonstration registry in your browser: registry signature, perimeter, status. No account, nothing sent."),
+     "Check a mandate of the demonstration registry in your browser: who signed it, its perimeter, its status. No account, nothing sent."),
     ("templates", "fr", "gabarits.html", "fr/gabarits.html", "templates", "plain",
      "Gabarits de mandat par métier | AMR",
      "Cinq mandats types écrits dans le code d'AMR : santé, recrutement, crédit, assurance vie et santé, service client. Ce que l'agent peut faire, ce qu'il ne peut jamais faire."),
@@ -220,8 +220,8 @@ def block_lockdemo(lang):
             f"<pre>{esc(raw)}</pre></details></li>")
     title = ("Un assistant de secrétariat médical demande cinq actions" if fr
              else "A medical front-desk assistant asks for five actions")
-    sub = ("Son mandat : lire le dossier, proposer des rendez-vous, rédiger, commander jusqu'à 100 €. Jamais prescrire ni écrire à un patient."
-           if fr else "Its mandate: read the record, propose appointments, draft, order up to €100. Never prescribe or write to a patient.")
+    sub = ("Sa clinique a écrit et signé ce qu'il peut faire : lire le dossier, proposer des rendez-vous, rédiger, commander jusqu'à 100 €. Jamais prescrire ni écrire à un patient."
+           if fr else "Its clinic wrote and signed what it may do: read the record, propose appointments, draft, order up to €100. Never prescribe or write to a patient.")
     foot = (f"Réponses réelles du registre AMR, produites le {FACTS['demo_date']} sur un mandat de démonstration. "
             "Ouvrez une ligne pour lire la réponse brute." if fr else
             f"Real answers of the AMR registry, produced on {FACTS['demo_date_en']} on a demonstration mandate. "

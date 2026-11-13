@@ -2,7 +2,7 @@
   <div class="wrap hero-in">
     <div>
       <h1>No valid mandate,<br>no action.</h1>
-      <p class="lede">AMR is a registry where an AI agent can do nothing until a person or a body has authorized it in writing. Those who receive the agent check that authorization in seconds, without an account.</p>
+      <p class="lede">AMR is a registry where an AI agent can do nothing until a person or a body has authorized it in writing. Whoever receives the agent checks in seconds who authorized it, and within what limits.</p>
       <div class="actions">
         <a class="btn" href="/en/verify">Verify a mandate</a>
         <a class="btn btn-calme" href="/en/brief">AMR in one page</a>
@@ -25,9 +25,9 @@
   <div class="wrap">
     <h2>Four steps, in this order</h2>
     <ol class="path">
-      <li><h3>Authorize</h3><p>The principal writes what the agent may do, what it may never do, its ceilings and the end date. It can sign with its own key.</p></li>
+      <li><h3>Authorize</h3><p>The principal, a person or a body, writes what its agent may do, what it may never do, its ceilings and the end date. It signs with its key, or with a certificate in its name. Without a signature, the registry says so.</p></li>
       <li><h3>Lock</h3><p>Before each action, the agent asks the registry for a token. Outside the mandate, no token.</p></li>
-      <li><h3>Verify</h3><p>Whoever receives the agent checks the mandate with the registry's public key. Offline, without an account.</p></li>
+      <li><h3>Verify</h3><p>Whoever receives the agent checks who authorized it, within what limits, and whether that still holds. Offline, without an account.</p></li>
       <li><h3>Prove, revoke</h3><p>Each act is chained to the mandate. The principal revokes it at any time, and the whole branch stops.</p></li>
     </ol>
   </div>
@@ -40,7 +40,7 @@
       <div class="yes">
         <h3>It does</h3>
         <ul class="ticks">
-          <li>{{icon:ok}}<span>It records who authorized which agent, to do what, until when.</span></li>
+          <li>{{icon:ok}}<span>It records who authorized which agent, to do what, until when, and whether that person signed.</span></li>
           <li>{{icon:ok}}<span>It refuses the token for an action that is forbidden, absent from the mandate or above the ceiling.</span></li>
           <li>{{icon:ok}}<span>It prevents a sub-mandate from being wider than its parent.</span></li>
           <li>{{icon:ok}}<span>It stops a mandate and its whole branch as soon as the principal revokes it.</span></li>
@@ -54,7 +54,7 @@
           <li>{{icon:no}}<span>It does not watch the agent while it acts. Oversight stays with whoever deploys it.</span></li>
           <li>{{icon:no}}<span>It checks action types, not content. It reads neither a letter nor an answer.</span></li>
           <li>{{icon:no}}<span>It makes no system compliant with any text. Nothing here is legal advice.</span></li>
-          <li>{{icon:no}}<span>For an ordinary identifier, it does not check who is the person behind the principal's key.</span></li>
+          <li>{{icon:no}}<span>It does not check that the signer has the power to bind their organization. For an ordinary identifier, it does not check who holds the key either.</span></li>
           <li>{{icon:no}}<span>It does not undo an action already under way. Revoking a mandate stops what comes next.</span></li>
           <li>{{icon:no}}<span>It does not decide for you. The mandate is yours to write.</span></li>
         </ul>
@@ -63,7 +63,7 @@
     <p class="note"><a href="/en/install#tools">The limits, tool by tool</a></p>
     <div class="define">
       <h3>What “mandate” means here</h3>
-      <p>The written authorization a person or a body gives for its agent. It binds the one who gives it, not the agent, which is not a person. AMR moves no liability. It makes readable who authorized what.</p>
+      <p>Not a mandate in the legal sense (in France, the Civil Code): an AI agent is not a person and cannot be given one. Here, the word means {{f:def_mandat_en}}. It binds the one who signs it, not the agent, which is only their tool. AMR moves no liability. It makes readable who authorized what.</p>
     </div>
   </div>
 </section>

@@ -29,7 +29,13 @@ VOICE = ("n'hésitez pas", "n’hésitez pas", "je me permets", "je serais ravi"
          "au cœur de", "dans le cadre de", "par ailleurs")
 # Décisions du 13/11/2026 et règles du Cap AMR, sur les pages nouvelles (pas les articles repris).
 DECISIONS = ("mandat légal", "mandats légaux", "autorité légale", "art_1984", "article 1984", "legal mandate",
-             "legal authority", "opposable", "conforme ai act", "compatible eidas", "ai act compliant")
+             "legal authority", "opposable", "conforme ai act", "compatible eidas", "ai act compliant",
+             # 13/11/2026 au soir : le mandat est l'écrit d'une personne, jamais celui de l'agent
+             "mandat de l'agent", "mandat donné à l'agent", "mandat donné à un agent", "mandataire",
+             "agent's mandate", "mandate given to the agent", "mandate holder")
+# La définition de « mandat » doit rester sur l'accueil, dans les deux langues.
+DEFINITION = {"index.html": ("def_mandat", "au sens du code civil"),
+              "en/index.html": ("def_mandat_en", "in the legal sense")}
 
 
 class Page(HTMLParser):
@@ -187,7 +193,22 @@ def check_demo(jws, key, demo, today):
     if not good:
         return ["démonstration : la signature de registry-snapshot.jws ne correspond pas à registry-key.json"]
     mandates = {m["id"]: m for m in json.loads(b64u(payload))["amr_public_registry"]["mandates"]}
+    return demo_content(mandates, demo, today)
+
+
+def demo_content(mandates, demo, today):
+    """Ce que la démonstration doit montrer, une fois la signature du registre vérifiée."""
+    errors = []
     active, revoked = mandates.get(demo["mandate_id"]), mandates.get(demo["revoked_mandate_id"])
+    for mandate in (active, revoked):
+        if not mandate:
+            continue
+        if not mandate.get("principal_signed"):
+            errors.append(f"démonstration : le mandat {mandate['id'][:8]} n'est pas signé par son mandant")
+        announced = demo.get("announced_principals", {}).get(mandate["id"], "")
+        if "sha256:" + hashlib.sha256(announced.encode()).hexdigest() != mandate.get("principal_ref"):
+            errors.append(f"démonstration : le mandant annoncé pour {mandate['id'][:8]} ne correspond pas "
+                          "à l'empreinte du registre")
     if not active or active["revoked_at"] or active["recorded_status"] != "active":
         errors.append("démonstration : le mandat actif n'est pas actif dans l'instantané")
     elif datetime.fromisoformat(active["expires_at"]) < today + timedelta(days=45):
@@ -264,8 +285,13 @@ def check(files, fresh, demo_files, today=None):
                 if mark in text:
                     errors.append(f"{name} : tiret long ou points de suspension typographiques ({mark!r})")
             for phrase in DECISIONS:
-                if phrase in low:
+                if phrase in low.replace("’", "'"):
                     errors.append(f"{name} : formulation écartée par décision (« {phrase} »)")
+        if name in DEFINITION:
+            fact, marker = DEFINITION[name]
+            plain = " ".join(low.replace("\u00a0", " ").replace("\u202f", " ").split())
+            if build.FACTS[fact].lower() not in plain or marker not in plain:
+                errors.append(f"{name} : la définition de « mandat » décidée le 13/11/2026 est absente")
     css = (ROOT / "assets/site.css").read_text(encoding="utf-8")
     if re.search(r"@import|url\(\s*[\"']?(https?:)?//", css):
         errors.append("assets/site.css : ressource chargée hors du site")
@@ -333,6 +359,12 @@ def selftest():
         ("tiret long dans un texte nouveau", "tiret long", lambda: both(lambda h: h.replace("AMR est ce mécanisme.", "AMR — ce mécanisme."))),
         ("retour de « mandat légal »", "écartée par décision", lambda: both(lambda h: h.replace("AMR est ce mécanisme.", "AMR crée un mandat légal."))),
         ("retour de « opposable »", "écartée par décision", lambda: both(lambda h: h.replace("AMR est ce mécanisme.", "Le mandat est opposable."))),
+        ("retour du « mandat de l'agent »", "écartée par décision", lambda: both(lambda h: h.replace("AMR est ce mécanisme.", "Le mandat de l'agent est vérifié."))),
+        ("définition de « mandat » retirée de l'accueil", "définition de « mandat »",
+         lambda: both(lambda h: h.replace("au sens du Code civil", "au sens strict"))),
+        ("mandant annoncé qui n'est pas celui du registre", "ne correspond pas à l'empreinte",
+         lambda: (files, fresh, dict(demo, demo=dict(demo["demo"], announced_principals={
+             k: "org:une-autre-clinique" for k in demo["demo"]["announced_principals"]})))),
         ("formule de machine", "voix d'Audric", lambda: both(lambda h: h.replace("AMR est ce mécanisme.", "N'hésitez pas à m'écrire."))),
         ("second titre principal", "titre(s) principal", lambda: both(lambda h: h.replace("<h2>Quatre temps", "<h1>Quatre temps").replace("dans cet ordre</h2>", "dans cet ordre</h1>"))),
         ("instantané falsifié (plafond 100 000 €)", "signature", forged),
@@ -347,7 +379,16 @@ def selftest():
         seen = any(expected in e for e in found)
         print(("vu      " if seen else "NON VU  ") + label)
         failed += 0 if seen else 1
-    print(f"{len(cases) - failed} défauts réintroduits sur {len(cases)} détectés")
+    # L'instantané est signé par le registre : pour éprouver le contrôle « signé par son mandant »
+    # sans casser cette signature, on retire la signature du mandant dans la copie déjà décodée.
+    mandates = {m["id"]: dict(m, principal_signed=False)
+                for m in json.loads(b64u(demo["jws"].split(".")[1]))["amr_public_registry"]["mandates"]}
+    seen = any("pas signé par son mandant" in e
+               for e in demo_content(mandates, demo["demo"], datetime.now(timezone.utc)))
+    print(("vu      " if seen else "NON VU  ") + "mandat de démonstration non signé par son mandant")
+    failed += 0 if seen else 1
+    total = len(cases) + 1
+    print(f"{total - failed} défauts réintroduits sur {total} détectés")
     return 1 if failed else 0
 
 
