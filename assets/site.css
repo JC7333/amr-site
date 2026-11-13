@@ -291,6 +291,7 @@ th { color: var(--encre); font-weight: 600; }
 .checker .field { display: flex; gap: 0.7rem; margin-top: 0.6rem; flex-wrap: wrap; }
 .checker input[type="text"] { flex: 1 1 20rem; min-width: 0; font: inherit; font-family: var(--mono); font-size: 0.95rem; padding: 0.8rem 0.9rem; border: 2px solid var(--trait); border-radius: 0.8rem; color: var(--encre); background: var(--blanc); }
 .checker input[type="text"]:focus { border-color: var(--lac); outline: none; }
+.checker + .prose { margin-top: 3.5rem; }
 .picks { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.9rem; align-items: center; font-size: 0.98rem; color: var(--doux); }
 .pick { font: inherit; font-size: 0.95rem; padding: 0.4rem 0.8rem; border-radius: 2rem; border: 1px solid var(--trait); background: var(--brume); color: var(--encre); cursor: pointer; }
 .pick:hover { border-color: var(--lac); }
