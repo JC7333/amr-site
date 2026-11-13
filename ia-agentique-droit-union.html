@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L'IA agentique dans le droit de l'Union — AMR</title>
+<meta name="description" content="Annexe XIV du règlement (UE) 2024/1689, ajoutée par le règlement (UE) 2026/1744 : le code AIH 0401 nomme l'IA agentique. Le texte, cité à la lettre, avec ses liens officiels.">
+<meta property="og:title" content="L'IA agentique dans le droit de l'Union — AMR">
+<meta property="og:description" content="Annexe XIV du règlement sur l'IA, code AIH 0401 : le texte officiel, cité à la lettre.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mandatia.eu/ia-agentique-droit-union">
+<meta property="og:image" content="https://www.mandatia.eu/og-mandatia.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.mandatia.eu/og-mandatia.png">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><circle cx='20' cy='20' r='17' fill='%235C6B5E'/><circle cx='20' cy='20' r='14' fill='none' stroke='%23C4A96A' stroke-width='0.8'/><path d='M13 20.5 L18 25 L27 14.5' stroke='%23FDFBF7' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #FDFBF7;
+  --bg-alt: #F7F5F0;
+  --text: #2C2C2C;
+  --text-light: #6B6B6B;
+  --sage: #5C6B5E;
+  --sage-light: #7A8A7C;
+  --gold: #C4A96A;
+  --gold-light: #D4BE8A;
+  --dark: #1A1A1A;
+  --code-bg: #F0EDE6;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Outfit', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --max-w: 760px;
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 2rem;
+  --space-lg: 4rem;
+  --space-xl: 6rem;
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(253, 251, 247, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--text);
+  text-decoration: none;
+  transition: opacity 0.3s;
+}
+
+.nav-logo:hover { opacity: 0.78; }
+
+.nav-logo .logo-mark {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.nav-logo .logo-text { line-height: 1; }
+.nav-logo .logo-text span { color: var(--gold); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text-light);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover { color: var(--sage); }
+
+@media (max-width: 768px) {
+  .nav-links { gap: 0.75rem; }
+  nav { padding: 0.75rem 1rem; }
+  .nav-logo { font-size: 1.3rem; gap: 0.5rem; }
+  .nav-logo .logo-mark { width: 26px; height: 26px; }
+  .nav-links a { font-size: 0.8rem; }
+}
+
+article {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-md);
+}
+
+@media (max-width: 768px) {
+  article { padding: var(--space-lg) var(--space-sm); }
+}
+
+.article-header {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+}
+
+.article-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: var(--space-md);
+}
+
+.article-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--text);
+  margin-bottom: var(--space-md);
+  letter-spacing: -0.01em;
+}
+
+.article-subtitle {
+  font-family: var(--font-serif);
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  font-style: italic;
+  color: var(--text-light);
+  max-width: 580px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+.article-body h2 {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text);
+  margin-top: var(--space-lg);
+  margin-bottom: var(--space-md);
+}
+
+.article-body p {
+  font-size: 1.05rem;
+  color: var(--text);
+  line-height: 1.8;
+  margin-bottom: var(--space-md);
+}
+
+.article-body p.lead {
+  font-size: 1.15rem;
+  color: var(--text);
+  font-weight: 400;
+}
+
+.article-body em {
+  font-style: italic;
+}
+
+.article-body strong {
+  font-weight: 500;
+  color: var(--text);
+}
+
+.pull-quote {
+  font-family: var(--font-serif);
+  font-size: clamp(1.4rem, 2.6vw, 1.8rem);
+  font-weight: 600;
+  font-style: italic;
+  color: var(--gold);
+  margin: var(--space-lg) 0;
+  padding-left: var(--space-md);
+  border-left: 3px solid var(--gold-light);
+  line-height: 1.4;
+}
+
+.sep {
+  width: 40px;
+  height: 1px;
+  background: var(--gold);
+  margin: var(--space-lg) auto;
+}
+
+.cta-block {
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid rgba(0,0,0,0.06);
+  text-align: center;
+}
+
+.cta-block p {
+  font-size: 1rem;
+  color: var(--text-light);
+  margin-bottom: var(--space-md);
+}
+
+.cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-primary, .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 2rem;
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+
+.btn-primary { background: var(--sage); color: #fff; }
+.btn-primary:hover { background: #4D5B4F; }
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid rgba(0,0,0,0.15);
+}
+.btn-secondary:hover { border-color: var(--sage); color: var(--sage); }
+
+footer {
+  text-align: center;
+  padding: var(--space-lg) var(--space-md);
+  font-size: 0.8rem;
+  color: var(--text-light);
+  border-top: 1px solid rgba(0,0,0,0.04);
+}
+
+footer a { color: var(--sage); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+.lang-toggle {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--text-light);
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  transition: all 0.3s;
+}
+.lang-toggle:hover { border-color: var(--sage); color: var(--sage); }
+@media (max-width: 768px) {
+  .lang-toggle { font-size: 0.7rem; padding: 0.25rem 0.5rem; }
+}
+.legal-quote {
+  margin: 0 0 var(--space-md);
+  padding: 1rem 1.25rem;
+  background: var(--bg-alt);
+  border-left: 3px solid var(--sage-light);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+.legal-quote p { margin-bottom: 0.5rem !important; font-size: 1rem !important; }
+.legal-quote p:last-child { margin-bottom: 0 !important; }
+.legal-quote .code {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--sage);
+  white-space: nowrap;
+}
+.legal-quote cite {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  font-style: normal;
+  color: var(--text-light);
+}
+.article-body a { color: var(--sage); overflow-wrap: anywhere; }
+.article-body ul { margin: 0 0 var(--space-md) 1.25rem; }
+.article-body li { font-size: 1.05rem; line-height: 1.8; margin-bottom: 0.4rem; }
+/* Only the other language is hidden; the shown language keeps its own display. */
+html:not([lang="fr"]) [data-lang="fr"] { display: none !important; }
+html[lang="fr"] [data-lang="en"] { display: none !important; }
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-logo" aria-label="AMR — Agent Mandate Registry">
+    <svg class="logo-mark" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="20" cy="20" r="17" fill="#5C6B5E"/>
+      <circle cx="20" cy="20" r="14" fill="none" stroke="#C4A96A" stroke-width="0.8"/>
+      <path d="M13 20.5 L18 25 L27 14.5" stroke="#FDFBF7" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="logo-text">AM<span>R</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/" data-lang="en">Home</a><a href="/" data-lang="fr">Accueil</a></li>
+    <li><a href="https://github.com/JC7333/amr" target="_blank" rel="noopener">GitHub</a></li>
+    <li><button class="lang-toggle" id="langToggle" aria-label="Switch language">FR / EN</button></li>
+  </ul>
+</nav>
+
+<article>
+  <header class="article-header">
+    <div class="article-eyebrow" data-lang="fr">Texte officiel · relu sur EUR-Lex le 13/11/2026</div>
+    <div class="article-eyebrow" data-lang="en">Official text · read on EUR-Lex on 13 November 2026</div>
+    <h1 class="article-title" data-lang="fr">L'IA agentique dans le droit de l'Union</h1>
+    <h1 class="article-title" data-lang="en">Agentic AI in EU law</h1>
+    <p class="article-subtitle" data-lang="fr">Depuis l'été 2026, le règlement sur l'IA nomme l'IA agentique. Voici le texte, cité à la lettre, et ce qu'il ne dit pas.</p>
+    <p class="article-subtitle" data-lang="en">Since summer 2026, the AI Act names agentic AI. Here is the text, quoted word for word, and what it does not say.</p>
+  </header>
+
+  <div class="article-body">
+    <!-- FR -->
+    <div data-lang="fr">
+      <p class="lead">Le règlement (UE) 2026/1744 du 8 juillet 2026, dit « omnibus numérique sur l'IA », publié au Journal officiel de l'Union européenne le 24 juillet 2026 et en vigueur depuis le 27 juillet 2026, modifie le règlement sur l'IA (règlement (UE) 2024/1689). Il y ajoute une annexe XIV.</p>
+
+      <h2>Ce que dit le texte</h2>
+      <p>Le titre de l'annexe XIV :</p>
+      <div class="legal-quote">
+        <p>« Liste des codes, des catégories et des types correspondants de systèmes d'IA aux fins de la procédure de notification visée à l'article 30, précisant le champ d'application de la désignation en tant qu'organismes notifiés »</p>
+      </div>
+      <p>Dans cette liste, deux lignes parlent de l'IA agentique :</p>
+      <div class="legal-quote">
+        <p><span class="code">AIH 0401</span> « Systèmes d'IA fondés sur d'autres technologies d'IA émergentes non couvertes par d'autres codes, notamment l'IA agentique »</p>
+        <p><span class="code">AIH 0205</span> « Systèmes d'IA qui tirent des enseignements de leur environnement, à l'exclusion des systèmes d'IA couverts par le code AIH 0401 »</p>
+        <cite>Règlement (UE) 2024/1689, annexe XIV, ajoutée par le règlement (UE) 2026/1744.</cite>
+      </div>
+
+      <h2>À quoi sert cette liste</h2>
+      <p>L'article 30, paragraphe 2, du règlement sur l'IA, dans sa rédaction issue du règlement (UE) 2026/1744 :</p>
+      <div class="legal-quote">
+        <p>« Les autorités notifiantes informent la Commission et les autres États membres, sur la base de la liste des codes, des catégories et des types correspondants de systèmes d'IA visés à l'annexe XIV, et à l'aide de l'outil de notification électronique mis au point et géré par la Commission, quant à chaque organisme d'évaluation de la conformité visé au paragraphe 1. »</p>
+      </div>
+      <p>Autrement dit, ces codes décrivent les types de systèmes d'IA pour lesquels un organisme d'évaluation de la conformité est désigné. Le même article permet à la Commission de modifier l'annexe XIV par actes délégués.</p>
+
+      <h2>Ce que le texte ne dit pas</h2>
+      <p>L'annexe XIV ne définit pas l'IA agentique. Elle ne mentionne ni mandat, ni registre de mandats. AMR ne prétend pas en découler.</p>
+
+      <h2>Ce que fait AMR, et ce qu'il ne fait pas</h2>
+      <p>AMR est un serveur MCP open source (Apache-2.0). Il enregistre le mandat d'un agent : qui l'a mandaté, pour quoi, jusqu'à quand. Il refuse un jeton d'action hors du périmètre de ce mandat et garde une chaîne de preuves que l'on peut vérifier. AMR n'est ni une certification, ni une évaluation de la conformité, ni un organisme notifié.</p>
+
+      <h2>Sources</h2>
+      <ul>
+        <li>Règlement (UE) 2026/1744, identifiant européen (ELI) : <a href="http://data.europa.eu/eli/reg/2026/1744/oj" target="_blank" rel="noopener">data.europa.eu/eli/reg/2026/1744/oj</a></li>
+        <li>Texte français sur EUR-Lex : <a href="https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=OJ:L_202601744" target="_blank" rel="noopener">eur-lex.europa.eu, JO L du 24/07/2026</a></li>
+        <li>Règlement (UE) 2024/1689 (règlement sur l'IA), ELI : <a href="http://data.europa.eu/eli/reg/2024/1689/oj" target="_blank" rel="noopener">data.europa.eu/eli/reg/2024/1689/oj</a></li>
+      </ul>
+      <p>Seule la version publiée au Journal officiel de l'Union européenne fait foi.</p>
+
+      <div class="sep"></div>
+      <p style="text-align: center; font-style: italic; color: var(--text-light);">Audric BUGNARD, médecin à Aix-les-Bains.</p>
+    </div>
+
+    <!-- EN -->
+    <div data-lang="en">
+      <p class="lead">Regulation (EU) 2026/1744 of 8 July 2026, the “Digital Omnibus on AI”, published in the Official Journal of the European Union on 24 July 2026 and in force since 27 July 2026, amends the AI Act (Regulation (EU) 2024/1689). It adds an Annex XIV.</p>
+
+      <h2>What the text says</h2>
+      <p>The title of Annex XIV:</p>
+      <div class="legal-quote">
+        <p>“The list of codes, categories and corresponding types of AI systems for the purpose of the notification procedure referred to in Article 30 specifying the scope of the designation as notified bodies”</p>
+      </div>
+      <p>In that list, two rows concern agentic AI:</p>
+      <div class="legal-quote">
+        <p><span class="code">AIH 0401</span> “AI systems based on other emerging AI technologies not covered by other codes, including Agentic AI”</p>
+        <p><span class="code">AIH 0205</span> “AI systems that learn from their environment, excluding AI systems covered under AIH 0401”</p>
+        <cite>Regulation (EU) 2024/1689, Annex XIV, added by Regulation (EU) 2026/1744.</cite>
+      </div>
+
+      <h2>What the list is for</h2>
+      <p>Article 30(2) of the AI Act, as amended by Regulation (EU) 2026/1744:</p>
+      <div class="legal-quote">
+        <p>“Notifying authorities shall notify the Commission and the other Member States, based on the list of codes, categories, and corresponding types of AI systems referred to in Annex XIV, and using the electronic notification tool developed and managed by the Commission, of each conformity assessment body referred to in paragraph 1.”</p>
+      </div>
+      <p>In other words, these codes describe the types of AI systems for which a conformity assessment body is designated. The same article empowers the Commission to amend Annex XIV by delegated acts.</p>
+
+      <h2>What the text does not say</h2>
+      <p>Annex XIV does not define agentic AI. It mentions neither mandates nor mandate registries. AMR does not claim to derive from it.</p>
+
+      <h2>What AMR does, and what it does not</h2>
+      <p>AMR is an open-source MCP server (Apache-2.0). It records an agent's mandate: who gave it, for what, until when. It refuses an action token outside that mandate's scope and keeps a chain of evidence anyone can verify. AMR is not a certification, not a conformity assessment and not a notified body.</p>
+
+      <h2>Sources</h2>
+      <ul>
+        <li>Regulation (EU) 2026/1744, European Legislation Identifier (ELI): <a href="http://data.europa.eu/eli/reg/2026/1744/oj" target="_blank" rel="noopener">data.europa.eu/eli/reg/2026/1744/oj</a></li>
+        <li>English text on EUR-Lex: <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202601744" target="_blank" rel="noopener">eur-lex.europa.eu, OJ L of 24 July 2026</a></li>
+        <li>Regulation (EU) 2024/1689 (AI Act), ELI: <a href="http://data.europa.eu/eli/reg/2024/1689/oj" target="_blank" rel="noopener">data.europa.eu/eli/reg/2024/1689/oj</a></li>
+      </ul>
+      <p>Only the version published in the Official Journal of the European Union is authentic.</p>
+
+      <div class="sep"></div>
+      <p style="text-align: center; font-style: italic; color: var(--text-light);">Audric BUGNARD, physician in Aix-les-Bains.</p>
+    </div>
+  </div>
+
+  <div class="cta-block">
+    <p data-lang="fr">Le code et la spécification d'AMR sont publics.</p>
+    <p data-lang="en">AMR's code and specification are public.</p>
+    <div class="cta-buttons">
+      <a href="https://github.com/JC7333/amr" target="_blank" rel="noopener" class="btn-primary"><span data-lang="fr">Voir AMR sur GitHub →</span><span data-lang="en">See AMR on GitHub →</span></a>
+      <a href="/" class="btn-secondary"><span data-lang="fr">Retour à mandatia.eu</span><span data-lang="en">Back to mandatia.eu</span></a>
+    </div>
+  </div>
+</article>
+
+<footer>
+  <p>AMR — Agent Mandate Registry</p>
+  <p>Open Source · Apache-2.0 · <a href="https://github.com/JC7333/amr" target="_blank" rel="noopener">GitHub</a></p>
+  <p style="margin-top: 0.5rem;"><a href="/mentions-legales" data-lang="en">Legal notice</a><a href="/mentions-legales" data-lang="fr">Mentions légales</a></p>
+  <p style="margin-top: 0.5rem;">© 2026 Audric Bugnard</p>
+</footer>
+
+<script>
+// Language toggle (same key as the home page)
+(function() {
+  const html = document.documentElement;
+  const btn = document.getElementById('langToggle');
+  let saved = null;
+  try { saved = localStorage.getItem('amr-lang'); } catch (e) {}
+  if (saved) {
+    html.lang = saved;
+  } else if (navigator.language && navigator.language.startsWith('fr')) {
+    html.lang = 'fr';
+  } else {
+    html.lang = 'en';
+  }
+  btn.addEventListener('click', function() {
+    const next = html.lang === 'en' ? 'fr' : 'en';
+    html.lang = next;
+    try { localStorage.setItem('amr-lang', next); } catch (e) {}
+  });
+})();
+</script>
+</body>
+
+</html>
