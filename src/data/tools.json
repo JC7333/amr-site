@@ -1,0 +1,210 @@
+[
+ {
+  "id": "autoriser",
+  "fr": "Autoriser",
+  "en": "Authorize",
+  "tools": [
+   {
+    "name": "create_mandate",
+    "fr": [
+     "Émettez un mandat structuré juridiquement : identité du mandant, périmètre de l'agent, base légale, expiration. Chaque mandat est hashé SHA-256 et chaîné."
+    ],
+    "en": [
+     "Issue a legally-structured mandate with principal identity, agent scope, legal basis, and expiration. Every mandate is SHA-256 hashed and chained."
+    ]
+   },
+   {
+    "name": "register_principal_key",
+    "fr": [
+     "Le mandant enregistre sa propre clé publique Ed25519, pour que ses mandats portent sa signature.",
+     "Limite connue : pour un <code>principal_id</code> ordinaire, le registre ne vérifie pas qui enregistre une clé (la première enregistrée gagne) ; une signature valable prouve donc la possession de cette clé, pas l'identité de la personne derrière. Un identifiant <code>did:web</code> comble ce manque au niveau d'un nom de domaine : la clé n'est acceptée que si le domaine la publie (option réseau, désactivée par défaut)."
+    ],
+    "en": [
+     "The principal registers its own Ed25519 public key, so that its mandates can carry its signature.",
+     "Known limit: for an ordinary <code>principal_id</code>, the registry does not check who registers a key (first registration wins), so a valid signature proves possession of that key, not the identity of the person behind it. A <code>did:web</code> identifier closes this gap at the level of a domain name: the key is accepted only if the domain publishes it (network option, off by default)."
+    ]
+   },
+   {
+    "name": "prepare_mandate_signature",
+    "fr": [
+     "Les octets exacts d'un mandat que le mandant signe avec sa propre clé. Un agent ne peut pas signer à sa place."
+    ],
+    "en": [
+     "The exact bytes of a mandate for the principal to sign with its own key. An agent cannot sign in its place."
+    ]
+   },
+   {
+    "name": "prepare_mandate_pdf",
+    "fr": [
+     "Le mandat en PDF, que le mandant lit et signe avec son propre outil de signature. Le registre ne le signe pas ; une fois signé, le fichier va à attach_signed_mandate_pdf."
+    ],
+    "en": [
+     "The mandate as a PDF for the principal to read and sign with its own signature tool. The registry does not sign it; once signed, the file goes to attach_signed_mandate_pdf."
+    ]
+   },
+   {
+    "name": "attach_signed_mandate_pdf",
+    "fr": [
+     "Vérifie, hors ligne, la signature PAdES posée par le mandant sur ce PDF, selon les autorités de confiance choisies par l'opérateur, et inscrit le signataire dans la preuve. Il ne lit pas les listes de confiance européennes, ne vérifie pas la révocation et ne décide pas si le signataire peut engager le mandant."
+    ],
+    "en": [
+     "Checks, offline, the PAdES signature the principal put on that PDF, against the trust roots the operator chose, and records the signer in the proof. It does not read the EU trusted lists, does not check revocation, and does not decide whether the signer may act for the principal."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "verrouiller",
+  "fr": "Verrouiller",
+  "en": "Lock",
+  "tools": [
+   {
+    "name": "issue_action_token",
+    "fr": [
+     "<strong>Le verrou.</strong> AMR se place dans la couche d'émission de jetons. Pas de mandat valide → pas de jeton JWS signé Ed25519 → pas d'action possible. Verrou structurel avant l'acte, pas un audit après. Dans le code open source depuis le 23 avril 2026."
+    ],
+    "en": [
+     "<strong>The lock.</strong> AMR sits in the token issuance layer. No valid mandate → no Ed25519-signed JWS token → no action possible. Structural enforcement before the act, not audit after. In the open-source code since April 23, 2026."
+    ]
+   },
+   {
+    "name": "check_action_token",
+    "fr": [
+     "Revérifier un jeton d'action auprès du registre au moment d'agir : la signature prouve l'autorisation à l'émission, ce contrôle dit si elle tient encore."
+    ],
+    "en": [
+     "Re-check an action token with the registry at the moment of acting: the signature proves the authorization at issue time, this says whether it still holds now."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "verifier",
+  "fr": "Vérifier",
+  "en": "Verify",
+  "tools": [
+   {
+    "name": "verify_mandate",
+    "fr": [
+     "Avant toute action sensible, l'agent vérifie : ce mandat est-il valide, actif, dans le périmètre ? Un appel. Réponse instantanée."
+    ],
+    "en": [
+     "Before any sensitive action, the agent checks: is this mandate valid, active, and within scope? One call. Instant answer."
+    ]
+   },
+   {
+    "name": "issue_mandate_attestation",
+    "fr": [
+     "Une attestation signée d'un mandat, que l'agent montre à un tiers. Le destinataire la vérifie hors ligne avec la clé publique du registre, sans compte."
+    ],
+    "en": [
+     "A signed attestation of a mandate, for the agent to show a third party. The receiver verifies it offline with the registry's public key, without an account."
+    ]
+   },
+   {
+    "name": "get_registry_public_key",
+    "fr": [
+     "La clé publique du registre, pour vérifier attestations et jetons sans appeler le registre."
+    ],
+    "en": [
+     "The registry's public key, for checking attestations and tokens without calling the registry."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "prouver",
+  "fr": "Prouver",
+  "en": "Prove",
+  "tools": [
+   {
+    "name": "log_action",
+    "fr": [
+     "Enregistrez chaque action prise sous un mandat. Chaque événement est hashé, horodaté et chaîné au mandat parent. Piste d'audit dont toute modification se voit, par construction."
+    ],
+    "en": [
+     "Log every action taken under a mandate. Each event is hashed, timestamped, and chained to the parent mandate. Tamper-evident audit trail by construction."
+    ]
+   },
+   {
+    "name": "get_proof",
+    "fr": [
+     "Générez une preuve cryptographique de tout mandat ou action. Vérification de chaîne SHA-256. Toute modification se voit. Vérifiable par un tiers."
+    ],
+    "en": [
+     "Generate a cryptographic proof of any mandate or action. SHA-256 chain verification. Tamper-evident. Independently verifiable."
+    ]
+   },
+   {
+    "name": "export_insurer_dossier",
+    "fr": [
+     "Un dossier signé d'un mandat sur une période, pour un assureur ou un auditeur : périmètre, statut, sous-mandats, actions, jetons et contrôles d'intégrité. JSON et page imprimable."
+    ],
+    "en": [
+     "A signed dossier of a mandate over a period, for an insurer or an auditor: perimeter, status, sub-mandates, actions, tokens and integrity checks. JSON and printable page."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "retirer",
+  "fr": "Retirer, contester, signaler",
+  "en": "Revoke, contest, report",
+  "tools": [
+   {
+    "name": "revoke_mandate",
+    "fr": [
+     "Révoquer un mandat maintenant. Définitif. Le mandat et toute sa branche de sous-mandats s'arrêtent aussitôt ; les jetons déjà émis sont signalés jusqu'à leur fin."
+    ],
+    "en": [
+     "Revoke a mandate now. Final. The mandate and its whole branch of sub-mandates stop at once; tokens already issued are reported until they end."
+    ]
+   },
+   {
+    "name": "prepare_revocation_signature",
+    "fr": [
+     "Les octets d'une révocation que le mandant signe, quand il a une clé enregistrée."
+    ],
+    "en": [
+     "The bytes of a revocation for the principal to sign, when it has a registered key."
+    ]
+   },
+   {
+    "name": "contest_action",
+    "fr": [
+     "Consigner qu'un mandant conteste un acte déjà accompli par un agent : une trace datée et chaînée, une par acte, non modifiable."
+    ],
+    "en": [
+     "Record that a principal contests an action an agent already performed: a dated, chained record, one per action, that cannot be edited."
+    ]
+   },
+   {
+    "name": "prepare_contest_signature",
+    "fr": [
+     "Les octets d'une contestation que le mandant signe, quand il a une clé enregistrée."
+    ],
+    "en": [
+     "The bytes of a contest for the principal to sign, when it has a registered key."
+    ]
+   },
+   {
+    "name": "list_action_contests",
+    "fr": [
+     "Lister les actes contestés, avec un rappel de délai de réponse choisi par l'opérateur. Aucun délai légal n'est calculé."
+    ],
+    "en": [
+     "List the contested actions, with a response-deadline reminder chosen by the operator. No legal deadline is computed."
+    ]
+   },
+   {
+    "name": "report_issue",
+    "fr": [
+     "Signaler un problème d'AMR lui-même. Sans jeton de l'opérateur, aucun appel réseau : un lien prérempli à ouvrir."
+    ],
+    "en": [
+     "Report a problem with AMR itself. Without an operator token, no network call: a pre-filled link to open."
+    ]
+   }
+  ]
+ }
+]

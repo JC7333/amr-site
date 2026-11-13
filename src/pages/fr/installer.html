@@ -1,0 +1,58 @@
+<section class="page-head">
+  <div class="wrap">
+    <h1>Installer AMR</h1>
+    <p class="lede">Écrit pour qu'un agent IA (Claude Code, Cursor, tout client MCP) installe AMR et obtienne seul un premier mandat vérifié. Sans compte, sans e-mail, sans personne à qui demander.</p>
+  </div>
+</section>
+
+<section class="page-body">
+  <div class="wrap">
+    <div class="prose">
+      <h2>1. Lancer le serveur</h2>
+      <p>Il faut <a href="https://docs.astral.sh/uv/">uv</a>. Le paquet PyPI s'appelle « mandatia » (version {{f:pypi_version}} au {{f:site_date}}).</p>
+<pre><code>uvx mandatia
+
+<span class="c"># le dernier code du dépôt, à la place :</span>
+uvx --from git+https://github.com/JC7333/amr amr
+
+<span class="c"># ou cloner et lancer :</span>
+git clone https://github.com/JC7333/amr.git &amp;&amp; cd amr &amp;&amp; uv sync &amp;&amp; uv run amr</code></pre>
+      <p><code>uvx amr</code> installe un autre projet, sans rapport : ne l'utilisez pas. AMR fonctionne avec les versions 1 et 2 du SDK Python MCP (<code>mcp&gt;=1.2,&lt;3</code>) ; aucune épingle de version n'est nécessaire.</p>
+      <p>Tout tourne sur votre machine. AMR ne fait aucun appel réseau, sauf deux options désactivées par défaut : <code>report_issue</code> si l'opérateur définit <code>AMR_ISSUE_TOKEN</code>, et la vérification de clé <code>did:web</code> s'il définit <code>AMR_DID_WEB_RESOLVE=1</code>.</p>
+
+      <h2>2. Le déclarer dans votre client MCP</h2>
+<pre><code><span class="c"># Claude Code</span>
+claude mcp add amr -- uvx mandatia
+
+<span class="c"># Autres clients MCP (Cursor : .cursor/mcp.json) : définir les trois chemins</span>
+AMR_DB_PATH=/absolute/path/amr_mandates.db
+AMR_SIGNING_KEY_PATH=/absolute/path/amr_signing_key.pem
+AMR_PUBLIC_KEY_PATH=/absolute/path/amr_signing_key.pub</code></pre>
+      <p>Par défaut, AMR écrit sa base et sa clé dans le dossier courant du client. Gardez la clé privée <code>.pem</code> hors du contrôle de version.</p>
+
+      <h2>3. Donner à chaque côté ses seuls outils</h2>
+      <p>Un agent qui peut créer, signer ou révoquer son propre mandat s'autorise lui-même, et le mandat ne prouve alors rien. Définissez <code>AMR_TOOL_PROFILE</code> dans l'environnement de chaque client, tous pointant vers le même <code>AMR_DB_PATH</code>.</p>
+    </div>
+    <div class="scroll">
+      <table>
+        <thead><tr><th scope="col">Profil</th><th scope="col">Qui</th><th scope="col">Outils</th></tr></thead>
+        <tbody>
+          <tr><td><code>principal</code></td><td>la personne ou l'organe qui donne les mandats</td><td>créer, signer, révoquer, contester, prouver</td></tr>
+          <tr><td><code>agent</code></td><td>l'agent qui agit sous un mandat</td><td><code>verify_mandate</code>, <code>issue_action_token</code>, <code>log_action</code>, <code>issue_mandate_attestation</code>, <code>get_registry_public_key</code> ; <code>create_mandate</code> uniquement pour des sous-mandats sous son propre mandat</td></tr>
+          <tr><td><code>receiver</code></td><td>un tiers sur lequel l'agent agit</td><td><code>check_action_token</code>, <code>get_registry_public_key</code></td></tr>
+          <tr><td><code>full</code> (par défaut)</td><td>tests et installations à un seul utilisateur</td><td>tous les outils</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="prose">
+      <h2>4. Le premier mandat, dans cet ordre</h2>
+      <p><code>create_mandate</code>, <code>verify_mandate</code>, <code>log_action</code>, <code>issue_mandate_attestation</code> avec <code>get_registry_public_key</code>, <code>revoke_mandate</code>, <code>get_proof</code>.</p>
+      <p>Un exemple exécutable, vérifié par la suite de tests : <code>uv run python examples/quickstart_agent.py</code>.</p>
+      <p>Résumés lisibles par machine : <a href="https://github.com/JC7333/amr/blob/main/AGENTS.md">AGENTS.md</a>, <a href="https://github.com/JC7333/amr/blob/main/llms.txt">llms.txt du dépôt</a>, <a href="/llms.txt">llms.txt de ce site</a>, <a href="https://github.com/JC7333/amr#quickstart-for-agents">README</a>.</p>
+    </div>
+
+    <h2 id="outils">Les {{f:tools_count}} outils</h2>
+    <p class="prose">Rangés par ce qu'ils servent à faire. Les limites connues sont écrites à côté de l'outil concerné.</p>
+    {{block:tools}}
+  </div>
+</section>

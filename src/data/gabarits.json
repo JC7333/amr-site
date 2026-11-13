@@ -1,0 +1,97 @@
+[
+ {
+  "id": "agent-sante-rgpd",
+  "fr": {
+   "title": "Assistant de cabinet ou d'établissement de santé",
+   "teaser": "Lit le dossier, propose des rendez-vous, commande jusqu'à 100 €. Ne prescrit jamais.",
+   "may": ["lire le dossier patient", "prendre des rendez-vous", "rédiger des courriers et des messages aux patients", "commander des fournitures"],
+   "never": ["prescrire", "poser un diagnostic", "modifier ou exporter le dossier", "envoyer lui-même un courrier ou un message", "créer un sous-agent"],
+   "rules": ["100&nbsp;€ par commande au plus. Un jeton de commande vit 30 secondes au plus.", "Le mandat peut porter la décision d'un organe (commission, intitulé, date, personnes ou fonctions désignées), scellée dans l'empreinte de la chaîne."],
+   "limit": ["AMR ne vérifie pas que cette décision existe."]
+  },
+  "en": {
+   "title": "Healthcare practice or facility assistant",
+   "teaser": "Reads the record, proposes appointments, orders up to €100. Never prescribes.",
+   "may": ["read the patient record", "book appointments", "draft letters and patient messages", "order supplies"],
+   "never": ["prescribe", "diagnose", "change or export the record", "send a letter or message itself", "create a sub-agent"],
+   "rules": ["100&nbsp;€ per order at most. An order token lives 30 seconds at most.", "The mandate can record the decision of a body (committee, title, date, designated persons or roles), sealed into the chain hash."],
+   "limit": ["AMR does not check that the decision exists."]
+  }
+ },
+ {
+  "id": "agent-rh-recrutement",
+  "fr": {
+   "title": "Assistant de recruteur",
+   "teaser": "Prépare une présélection motivée. Ne rejette ni ne retient aucun candidat.",
+   "may": ["lire les candidatures reçues", "rédiger une annonce", "proposer une présélection motivée à un recruteur humain", "proposer et réserver des créneaux d'entretien dans l'agenda de l'entreprise", "rédiger des messages aux candidats"],
+   "never": ["rejeter ni retenir un candidat", "envoyer une offre, un refus ou un message à un candidat", "reconnaître des émotions", "catégoriser des personnes à partir de données biométriques", "déduire des données sensibles", "exporter les données des candidats", "créer un sous-agent"],
+   "rules": ["Toute décision sur un candidat reste à un humain."],
+   "limit": ["AMR contrôle des types d'action, pas un contenu. Il ne lit pas une présélection pour juger de ses motifs."]
+  },
+  "en": {
+   "title": "Recruiter's assistant",
+   "teaser": "Prepares a reasoned shortlist. Never rejects or selects a candidate.",
+   "may": ["read the applications received", "draft a job posting", "propose a reasoned shortlist to a human recruiter", "propose and book interview slots in the company calendar", "draft messages to candidates"],
+   "never": ["reject or select a candidate", "send an offer, a rejection or any message to a candidate", "recognize emotions", "categorize people from biometric data", "infer sensitive data", "export candidate data", "create a sub-agent"],
+   "rules": ["Every decision on a candidate stays with a human."],
+   "limit": ["AMR checks action types, not content. It does not read a shortlist to judge its reasons."]
+  }
+ },
+ {
+  "id": "agent-credit",
+  "fr": {
+   "title": "Assistant d'analyste crédit",
+   "teaser": "Rédige l'analyse de solvabilité. N'accorde ni ne refuse aucun crédit.",
+   "may": ["lire la demande de crédit et les pièces fournies", "rédiger une analyse de solvabilité", "proposer une décision motivée à un analyste humain", "rédiger des messages au demandeur"],
+   "never": ["accorder ni refuser un crédit", "fixer le taux, le montant ou la durée", "envoyer lui-même un message au demandeur", "exécuter un paiement", "exporter le dossier de crédit", "créer un sous-agent"],
+   "rules": ["Toute décision sur un crédit reste à un humain, qui doit pouvoir s'écarter de la proposition de l'agent."],
+   "limit": ["Les références juridiques visent le crédit à la consommation aux personnes physiques. La détection de fraude ne fait pas partie de ce gabarit."]
+  },
+  "en": {
+   "title": "Credit analyst's assistant",
+   "teaser": "Drafts the creditworthiness analysis. Never grants or refuses a credit.",
+   "may": ["read the credit application and the documents provided", "draft a creditworthiness analysis", "propose a reasoned decision to a human analyst", "draft messages to the applicant"],
+   "never": ["grant or refuse a credit", "set the final rate, amount or duration", "send a message to the applicant itself", "execute a payment", "export the credit file", "create a sub-agent"],
+   "rules": ["Every decision on a credit stays with a human, who must be able to depart from the agent's proposal."],
+   "limit": ["The legal references point to consumer credit to natural persons. Fraud detection is not part of this template."]
+  }
+ },
+ {
+  "id": "agent-assurance-sante-vie",
+  "fr": {
+   "title": "Assistant de souscripteur en assurance vie et santé",
+   "teaser": "Propose un tarif motivé. N'accepte ni ne refuse aucune adhésion.",
+   "may": ["lire le dossier de souscription et les pièces fournies", "rédiger une évaluation du risque", "proposer un tarif motivé à un souscripteur humain", "rédiger les documents du contrat et les messages à l'assuré"],
+   "never": ["accepter ni refuser une adhésion", "fixer le tarif final", "envoyer lui-même un message à l'assuré", "utiliser le résultat d'un test génétique", "exporter des données de santé", "créer un sous-agent"],
+   "rules": ["La gestion des sinistres ne fait pas partie de ce gabarit."],
+   "limit": ["Interdire l'action « test génétique » refuse un jeton pour ce type d'action. Cela n'empêche pas un agent de lire un résultat caché dans un dossier qu'il peut lire."]
+  },
+  "en": {
+   "title": "Life and health underwriter's assistant",
+   "teaser": "Proposes a reasoned premium. Never accepts or refuses an application.",
+   "may": ["read the underwriting file and the documents provided", "draft a risk assessment", "propose a reasoned premium to a human underwriter", "draft the contract documents and messages to the insured person"],
+   "never": ["accept or refuse an application", "set the final premium", "send a message to the insured person itself", "use the result of a genetic test", "export health data", "create a sub-agent"],
+   "rules": ["Claims handling is not part of this template."],
+   "limit": ["Forbidding the genetic test action refuses a token for that action type. It does not stop an agent from reading a result hidden in a file it may read."]
+  }
+ },
+ {
+  "id": "agent-support-client",
+  "fr": {
+   "title": "Agent de service client",
+   "teaser": "Accorde un geste commercial jusqu'à 50 €. Ne refuse jamais un remboursement.",
+   "may": ["lire le compte du client et son historique", "répondre à un ticket en disant que la réponse vient d'une IA", "orienter un ticket", "proposer un geste commercial et l'accorder"],
+   "never": ["refuser un remboursement ou une réclamation", "résilier un contrat", "fermer un compte", "changer les coordonnées de paiement", "exporter les données du client", "créer un sous-agent"],
+   "rules": ["50&nbsp;€ par geste au plus. Un mandat peut baisser ce plafond, jamais le relever.", "Toute décision contre le client est laissée à un humain."],
+   "limit": ["Le gabarit ne fixe aucun plafond cumulé par période. Plusieurs gestes peuvent s'additionner, sauf si le mandant en ajoute un.", "AMR ne lit pas une réponse pour vérifier ce qu'elle dit."]
+  },
+  "en": {
+   "title": "Customer support agent",
+   "teaser": "Grants a commercial gesture up to €50. Never refuses a refund.",
+   "may": ["read the customer's account and history", "answer a ticket saying the answer comes from an AI", "route a ticket", "propose a commercial gesture and grant it"],
+   "never": ["refuse a refund or a complaint", "terminate a contract", "close an account", "change payment details", "export the customer's data", "create a sub-agent"],
+   "rules": ["50&nbsp;€ per gesture at most. A mandate may lower this ceiling, never raise it.", "Every decision against the customer is left to a human."],
+   "limit": ["The template sets no cumulative ceiling per period. Several gestures can add up unless the principal adds one.", "AMR does not read an answer to check what it says."]
+  }
+ }
+]

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Install AMR, for agents and developers | AMR</title>
+<meta name="description" content="One command to install AMR, tool profiles by role and the reference of the MCP tools, each with its limits.">
+<link rel="canonical" href="https://www.mandatia.eu/en/install">
+<link rel="alternate" hreflang="fr" href="https://www.mandatia.eu/installer">
+<link rel="alternate" hreflang="en" href="https://www.mandatia.eu/en/install">
+<link rel="alternate" hreflang="x-default" href="https://www.mandatia.eu/installer">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AMR">
+<meta property="og:locale" content="en_GB">
+<meta property="og:title" content="Install AMR, for agents and developers | AMR">
+<meta property="og:description" content="One command to install AMR, tool profiles by role and the reference of the MCP tools, each with its limits.">
+<meta property="og:url" content="https://www.mandatia.eu/en/install">
+<meta property="og:image" content="https://www.mandatia.eu/assets/og-en.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b3436">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/lexend-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<script src="/assets/menu.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#contenu">Skip to content</a>
+<header class="top"><div class="wrap top-in">
+<a class="brand" href="/en/" aria-label="AMR home"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#0b3436"/><circle cx="20" cy="20" r="14.2" fill="none" stroke="#e3b04b" stroke-width="1.1"/><path d="M12.8 20.6l5 4.6 9.4-10.6" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>AMR</span></a>
+<nav class="nav" aria-label="Menu"><a href="/en/#how">How it works</a><a href="/en/verify">Verify</a><a href="/en/templates">Templates</a><a href="/en/install" aria-current="page">Install</a><a href="/en/#questions">Questions</a><a class="lang" href="/installer" lang="fr" hreflang="fr">Français</a><a class="btn" href="mailto:audric@mandatia.eu">Write to me</a></nav>
+<details class="menu"><summary>Menu</summary><div class="menu-list"><a href="/en/#how">How it works</a><a href="/en/verify">Verify</a><a href="/en/templates">Templates</a><a href="/en/install" aria-current="page">Install</a><a href="/en/#questions">Questions</a><a href="/installer" lang="fr" hreflang="fr">Français</a><a href="mailto:audric@mandatia.eu">Write to me</a></div></details>
+</div></header>
+<main id="contenu">
+<section class="page-head">
+  <div class="wrap">
+    <h1>Install AMR</h1>
+    <p class="lede">Written so that an AI agent (Claude Code, Cursor, any MCP client) can install AMR and reach a first verified mandate alone. No account, no email, nobody to ask.</p>
+  </div>
+</section>
+
+<section class="page-body">
+  <div class="wrap">
+    <div class="prose">
+      <h2>1. Run the server</h2>
+      <p>It needs <a href="https://docs.astral.sh/uv/">uv</a>. The PyPI package is named “mandatia” (version 0.1.2 on 13 November 2026).</p>
+<pre><code>uvx mandatia
+
+<span class="c"># the latest code of the repository instead:</span>
+uvx --from git+https://github.com/JC7333/amr amr
+
+<span class="c"># or clone and run:</span>
+git clone https://github.com/JC7333/amr.git &amp;&amp; cd amr &amp;&amp; uv sync &amp;&amp; uv run amr</code></pre>
+      <p><code>uvx amr</code> installs a different, unrelated project: do not use it. AMR runs with version 1 and version 2 of the MCP Python SDK (<code>mcp&gt;=1.2,&lt;3</code>); no extra version pin is needed.</p>
+      <p>Everything runs on your machine. AMR makes no network call, except two options that stay off by default: <code>report_issue</code> once the operator sets <code>AMR_ISSUE_TOKEN</code>, and the <code>did:web</code> key check once the operator sets <code>AMR_DID_WEB_RESOLVE=1</code>.</p>
+
+      <h2>2. Declare it in your MCP client</h2>
+<pre><code><span class="c"># Claude Code</span>
+claude mcp add amr -- uvx mandatia
+
+<span class="c"># Other MCP clients (Cursor: .cursor/mcp.json): set the three paths</span>
+AMR_DB_PATH=/absolute/path/amr_mandates.db
+AMR_SIGNING_KEY_PATH=/absolute/path/amr_signing_key.pem
+AMR_PUBLIC_KEY_PATH=/absolute/path/amr_signing_key.pub</code></pre>
+      <p>By default AMR writes its database and its key in the client's current directory. Keep the <code>.pem</code> private key out of version control.</p>
+
+      <h2>3. Give each side only its own tools</h2>
+      <p>An agent that can create, sign or revoke its own mandate authorizes itself, and the mandate then proves nothing. Set <code>AMR_TOOL_PROFILE</code> in the environment of each client, all pointing at the same <code>AMR_DB_PATH</code>.</p>
+    </div>
+    <div class="scroll">
+      <table>
+        <thead><tr><th scope="col">Profile</th><th scope="col">Who</th><th scope="col">Tools</th></tr></thead>
+        <tbody>
+          <tr><td><code>principal</code></td><td>the person or body that grants mandates</td><td>create, sign, revoke, contest, prove</td></tr>
+          <tr><td><code>agent</code></td><td>the agent that acts under a mandate</td><td><code>verify_mandate</code>, <code>issue_action_token</code>, <code>log_action</code>, <code>issue_mandate_attestation</code>, <code>get_registry_public_key</code>; <code>create_mandate</code> for sub-mandates under its own mandate only</td></tr>
+          <tr><td><code>receiver</code></td><td>a third party the agent acts upon</td><td><code>check_action_token</code>, <code>get_registry_public_key</code></td></tr>
+          <tr><td><code>full</code> (default)</td><td>tests and single-user setups</td><td>every tool</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="prose">
+      <h2>4. The first mandate, in this order</h2>
+      <p><code>create_mandate</code>, <code>verify_mandate</code>, <code>log_action</code>, <code>issue_mandate_attestation</code> with <code>get_registry_public_key</code>, <code>revoke_mandate</code>, <code>get_proof</code>.</p>
+      <p>A runnable example, checked by the test suite: <code>uv run python examples/quickstart_agent.py</code>.</p>
+      <p>Machine-readable summaries: <a href="https://github.com/JC7333/amr/blob/main/AGENTS.md">AGENTS.md</a>, <a href="https://github.com/JC7333/amr/blob/main/llms.txt">the repository's llms.txt</a>, <a href="/llms.txt">this site's llms.txt</a>, <a href="https://github.com/JC7333/amr#quickstart-for-agents">README</a>.</p>
+    </div>
+
+    <h2 id="tools">The 19 tools</h2>
+    <p class="prose">Grouped by what they are for. Known limits are written next to the tool concerned.</p>
+    <section class="toolgroup" id="autoriser"><h3>Authorize</h3><ul class="tools"><li><span class="tool">create_mandate</span><div><p>Issue a legally-structured mandate with principal identity, agent scope, legal basis, and expiration. Every mandate is SHA-256 hashed and chained.</p></div></li><li><span class="tool">register_principal_key</span><div><p>The principal registers its own Ed25519 public key, so that its mandates can carry its signature.</p><p>Known limit: for an ordinary <code>principal_id</code>, the registry does not check who registers a key (first registration wins), so a valid signature proves possession of that key, not the identity of the person behind it. A <code>did:web</code> identifier closes this gap at the level of a domain name: the key is accepted only if the domain publishes it (network option, off by default).</p></div></li><li><span class="tool">prepare_mandate_signature</span><div><p>The exact bytes of a mandate for the principal to sign with its own key. An agent cannot sign in its place.</p></div></li><li><span class="tool">prepare_mandate_pdf</span><div><p>The mandate as a PDF for the principal to read and sign with its own signature tool. The registry does not sign it; once signed, the file goes to attach_signed_mandate_pdf.</p></div></li><li><span class="tool">attach_signed_mandate_pdf</span><div><p>Checks, offline, the PAdES signature the principal put on that PDF, against the trust roots the operator chose, and records the signer in the proof. It does not read the EU trusted lists, does not check revocation, and does not decide whether the signer may act for the principal.</p></div></li></ul></section><section class="toolgroup" id="verrouiller"><h3>Lock</h3><ul class="tools"><li><span class="tool">issue_action_token</span><div><p><strong>The lock.</strong> AMR sits in the token issuance layer. No valid mandate → no Ed25519-signed JWS token → no action possible. Structural enforcement before the act, not audit after. In the open-source code since April 23, 2026.</p></div></li><li><span class="tool">check_action_token</span><div><p>Re-check an action token with the registry at the moment of acting: the signature proves the authorization at issue time, this says whether it still holds now.</p></div></li></ul></section><section class="toolgroup" id="verifier"><h3>Verify</h3><ul class="tools"><li><span class="tool">verify_mandate</span><div><p>Before any sensitive action, the agent checks: is this mandate valid, active, and within scope? One call. Instant answer.</p></div></li><li><span class="tool">issue_mandate_attestation</span><div><p>A signed attestation of a mandate, for the agent to show a third party. The receiver verifies it offline with the registry's public key, without an account.</p></div></li><li><span class="tool">get_registry_public_key</span><div><p>The registry's public key, for checking attestations and tokens without calling the registry.</p></div></li></ul></section><section class="toolgroup" id="prouver"><h3>Prove</h3><ul class="tools"><li><span class="tool">log_action</span><div><p>Log every action taken under a mandate. Each event is hashed, timestamped, and chained to the parent mandate. Tamper-evident audit trail by construction.</p></div></li><li><span class="tool">get_proof</span><div><p>Generate a cryptographic proof of any mandate or action. SHA-256 chain verification. Tamper-evident. Independently verifiable.</p></div></li><li><span class="tool">export_insurer_dossier</span><div><p>A signed dossier of a mandate over a period, for an insurer or an auditor: perimeter, status, sub-mandates, actions, tokens and integrity checks. JSON and printable page.</p></div></li></ul></section><section class="toolgroup" id="retirer"><h3>Revoke, contest, report</h3><ul class="tools"><li><span class="tool">revoke_mandate</span><div><p>Revoke a mandate now. Final. The mandate and its whole branch of sub-mandates stop at once; tokens already issued are reported until they end.</p></div></li><li><span class="tool">prepare_revocation_signature</span><div><p>The bytes of a revocation for the principal to sign, when it has a registered key.</p></div></li><li><span class="tool">contest_action</span><div><p>Record that a principal contests an action an agent already performed: a dated, chained record, one per action, that cannot be edited.</p></div></li><li><span class="tool">prepare_contest_signature</span><div><p>The bytes of a contest for the principal to sign, when it has a registered key.</p></div></li><li><span class="tool">list_action_contests</span><div><p>List the contested actions, with a response-deadline reminder chosen by the operator. No legal deadline is computed.</p></div></li><li><span class="tool">report_issue</span><div><p>Report a problem with AMR itself. Without an operator token, no network call: a pre-filled link to open.</p></div></li></ul></section>
+  </div>
+</section>
+
+</main>
+<footer class="foot"><div class="wrap">
+<div class="foot-in">
+<div><a class="brand" href="/en/" aria-label="AMR home"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#0b3436"/><circle cx="20" cy="20" r="14.2" fill="none" stroke="#e3b04b" stroke-width="1.1"/><path d="M12.8 20.6l5 4.6 9.4-10.6" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>AMR</span></a>
+<p class="note">The registry where an AI agent can do nothing until a mandate has authorized it.</p>
+<p class="note">Audric BUGNARD, physician in Aix-les-Bains, France<br><a href="mailto:audric@mandatia.eu">audric@mandatia.eu</a></p></div>
+<div><h2>Understand</h2><ul><li><a href="/en/#how">How it works</a></li><li><a href="/en/#questions">Questions</a></li><li><a href="/en/brief">AMR in one page</a></li><li><a href="/en/agentic-ai-eu-law">Agentic AI in EU law</a></li><li><a href="/pourquoi-autorisation-prospective">Why authorize before (in French)</a></li><li><a href="/pour-compliance-officers">For compliance officers (in French)</a></li></ul></div><div><h2>Use</h2><ul><li><a href="/en/verify">Verify a mandate</a></li><li><a href="/en/templates">Templates</a></li><li><a href="/en/install">Install</a></li><li><a href="/en/install#tools">The 19 tools</a></li><li><a href="https://github.com/JC7333/amr">Code on GitHub</a></li><li><a href="https://pypi.org/project/mandatia/">Package on PyPI</a></li></ul></div><div><h2>This site</h2><ul><li><a href="/en/legal-notice">Legal notice</a></li><li><a href="/llms.txt">llms.txt, for agents</a></li><li><a href="https://github.com/JC7333/amr-site">Source of this site</a></li></ul></div>
+</div>
+<p class="legal"><span>Open source, Apache-2.0 licence. This site sets no cookie and loads nothing from a third party.</span><span>Updated 13 November 2026</span></p>
+</div></footer>
+</body>
+</html>

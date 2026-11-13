@@ -1,0 +1,120 @@
+{
+ "generated_on": "2026-11-13",
+ "amr_version": "0.1.2",
+ "template": {
+  "id": "agent-sante-rgpd",
+  "version": "1.2.0"
+ },
+ "mandate_id": "eeec8535-d0ff-46f5-83a4-650353073815",
+ "revoked_mandate_id": "637c075e-e5d3-4583-aa0e-e66253f8b9f0",
+ "revoked_reason_after": "mandate_status_revoked",
+ "perimeter": {
+  "allowed_actions": [
+   "appointment.book",
+   "appointment.propose",
+   "appointment.read",
+   "letter.draft",
+   "patient_message.draft",
+   "patient_record.read",
+   "supplies.order"
+  ],
+  "forbidden_actions": [
+   "agent.create",
+   "diagnosis",
+   "letter.send",
+   "patient_message.send",
+   "patient_record.delete",
+   "patient_record.export",
+   "patient_record.write",
+   "prescription"
+  ],
+  "max_amount": "100",
+  "currency": "EUR"
+ },
+ "cases": [
+  {
+   "key": "book",
+   "action_type": "appointment.book",
+   "metadata": {},
+   "fr": "Réserver un rendez-vous",
+   "en": "Book an appointment",
+   "issued": true,
+   "lifetime_seconds": 300,
+   "registry_check": false,
+   "response": {
+    "token": "eyJhbGciOiJFZERTQSIsImtpZCI6...",
+    "expires_at": "2026-11-13T17:18:02.447150+00:00",
+    "key_id": "355dd6929e522c49"
+   }
+  },
+  {
+   "key": "order_ok",
+   "action_type": "supplies.order",
+   "metadata": {
+    "amount": "80",
+    "currency": "EUR"
+   },
+   "fr": "Commander 80 € de fournitures",
+   "en": "Order €80 of supplies",
+   "issued": true,
+   "lifetime_seconds": 30,
+   "registry_check": true,
+   "response": {
+    "token": "eyJhbGciOiJFZERTQSIsImtpZCI6...",
+    "expires_at": "2026-11-13T17:13:32.453237+00:00",
+    "key_id": "355dd6929e522c49"
+   }
+  },
+  {
+   "key": "order_over",
+   "action_type": "supplies.order",
+   "metadata": {
+    "amount": "2000",
+    "currency": "EUR"
+   },
+   "fr": "Commander 2 000 € de fournitures",
+   "en": "Order €2,000 of supplies",
+   "issued": false,
+   "reason": "action_out_of_scope",
+   "detail": "amount_above_limit:100 EUR",
+   "response": {
+    "denied": true,
+    "reason": "action_out_of_scope",
+    "detail": "amount_above_limit:100 EUR",
+    "refused_by": "eeec8535-d0ff-46f5-83a4-650353073815"
+   }
+  },
+  {
+   "key": "prescribe",
+   "action_type": "prescription",
+   "metadata": {},
+   "fr": "Renouveler une ordonnance",
+   "en": "Renew a prescription",
+   "issued": false,
+   "reason": "action_out_of_scope",
+   "detail": "forbidden:prescription",
+   "response": {
+    "denied": true,
+    "reason": "action_out_of_scope",
+    "detail": "forbidden:prescription",
+    "refused_by": "eeec8535-d0ff-46f5-83a4-650353073815"
+   }
+  },
+  {
+   "key": "send",
+   "action_type": "patient_message.send",
+   "metadata": {},
+   "fr": "Envoyer un message à un patient",
+   "en": "Send a message to a patient",
+   "issued": false,
+   "reason": "action_out_of_scope",
+   "detail": "forbidden:patient_message.send",
+   "response": {
+    "denied": true,
+    "reason": "action_out_of_scope",
+    "detail": "forbidden:patient_message.send",
+    "refused_by": "eeec8535-d0ff-46f5-83a4-650353073815"
+   }
+  }
+ ]
+}

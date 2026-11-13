@@ -1,0 +1,30 @@
+# AMR (Agent Mandate Registry), mandatia.eu
+
+> Open-source MCP server (Apache-2.0) that records which person or body authorized which AI agent to do what, until when. It issues a signed action token only for an action inside that mandate, and keeps a hash-chained, append-only journal. Runs locally over stdio and makes no network call by default. Not legal advice; it does not make anyone compliant.
+
+Install and run (needs uv; the PyPI package is `mandatia`, version {{f:pypi_version}} on {{f:site_date_en}}; `uvx amr` installs a different project):
+
+    uvx mandatia
+
+Latest code of the repository instead:
+
+    uvx --from git+https://github.com/JC7333/amr amr
+
+Give each side only its tools with AMR_TOOL_PROFILE: `principal` (grant, sign, revoke), `agent` (token, log, attestation; sub-mandates only), `receiver` (check a token), `full` (default, every tool). An agent must not run the principal's tools: a mandate it granted to itself proves nothing.
+
+## This site
+- [Install, for agents and developers](https://www.mandatia.eu/en/install): quickstart, tool profiles, reference of the MCP tools with their limits
+- [Mandate templates](https://www.mandatia.eu/en/templates): healthcare, recruitment, credit, life and health insurance, customer support
+- [Verify a mandate](https://www.mandatia.eu/en/verify): a signed snapshot of a demonstration registry, checked in the browser
+- [AMR in one page](https://www.mandatia.eu/en/brief): what it does and does not do
+- Demonstration data: https://www.mandatia.eu/assets/demo/registry-snapshot.jws (signed snapshot), https://www.mandatia.eu/assets/demo/registry-key.json (public key), https://www.mandatia.eu/assets/demo/lock-demo.json (real answers of the registry)
+
+## Code and specifications
+- [Repository](https://github.com/JC7333/amr) and its own [llms.txt](https://github.com/JC7333/amr/blob/main/llms.txt)
+- [AGENTS.md](https://github.com/JC7333/amr/blob/main/AGENTS.md): what AMR does and does not do, tools, how to report a problem
+- [Token issuance](https://github.com/JC7333/amr/blob/main/docs/token-issuance-spec.md)
+- [Mandate attestation, offline verification](https://github.com/JC7333/amr/blob/main/docs/mandate-attestation-spec.md)
+- [Public registry snapshot](https://github.com/JC7333/amr/blob/main/docs/public-registry-spec.md)
+
+## Contact
+- audric@mandatia.eu (Audric Bugnard, physician, Aix-les-Bains, France). Never send real mandate contents, personal data, keys or tokens.

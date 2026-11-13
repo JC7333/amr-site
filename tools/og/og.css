@@ -1,0 +1,13 @@
+/* Image d'aperçu des liens : ouvrir og-fr.html ou og-en.html et capturer en 1200 x 630. */
+@font-face { font-family: "Lexend"; src: url("../../assets/fonts/lexend-latin.woff2") format("woff2"); font-weight: 100 900; }
+body.og { width: 1200px; height: 630px; margin: 0; background: linear-gradient(160deg, #ffffff 0%, #f2f6f5 55%, #dcebe8 100%); overflow: hidden; }
+.og-in { padding: 64px 76px; position: relative; height: 630px; }
+.og-brand { display: flex; align-items: center; gap: 14px; font-weight: 600; font-size: 30px; color: #0e2a2b; letter-spacing: 0.03em; }
+.og-brand svg { width: 52px; height: 52px; }
+.og h1 { font-size: 84px; margin-top: 46px; letter-spacing: -0.04em; line-height: 1.04; }
+.og-sub { font-size: 29px; font-weight: 300; margin-top: 30px; max-width: 900px; line-height: 1.4; color: #274244; }
+.og-chips { display: flex; gap: 14px; margin-top: 44px; font-size: 24px; font-weight: 500; }
+.og-chips span { padding: 12px 22px; border-radius: 16px; }
+.og-chips .ok { background: #e6f3eb; color: #1b6e44; }
+.og-chips .no { background: #faece8; color: #a0372a; text-decoration: line-through; text-decoration-thickness: 2px; }
+.og-url { position: absolute; right: 76px; top: 70px; font-size: 26px; color: #4c6466; }

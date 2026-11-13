@@ -1,0 +1,127 @@
+<section class="hero">
+  <div class="wrap hero-in">
+    <div>
+      <h1>No valid mandate,<br>no action.</h1>
+      <p class="lede">AMR is a registry where an AI agent can do nothing until a person or a body has authorized it in writing. Those who receive the agent check that authorization in seconds, without an account.</p>
+      <div class="actions">
+        <a class="btn" href="/en/verify">Verify a mandate</a>
+        <a class="btn btn-calme" href="/en/brief">AMR in one page</a>
+      </div>
+      <p class="sub">Open source, free, installed on your side. <a href="/en/install">Installation guide</a></p>
+    </div>
+    {{block:lockdemo}}
+  </div>
+</section>
+
+<section class="band" id="why">
+  <div class="wrap">
+    <h2>The decision exists. Nothing imposes it on the agent.</h2>
+    <p class="lede">A management board or a committee decides what an AI tool is allowed to do. It is written somewhere. But between that text and the real settings of the agent, there are often only people and reviews.</p>
+    <p class="narrow">As long as the agent proposes and a human validates, this holds. The day it acts alone (it orders, it writes in a record, it answers a patient), you need a mechanism that refuses to work without authorization. AMR is that mechanism.</p>
+  </div>
+</section>
+
+<section class="band band-brume" id="how">
+  <div class="wrap">
+    <h2>Four steps, in this order</h2>
+    <ol class="path">
+      <li><h3>Authorize</h3><p>The principal writes what the agent may do, what it may never do, its ceilings and the end date. It can sign with its own key.</p></li>
+      <li><h3>Lock</h3><p>Before each action, the agent asks the registry for a token. Outside the mandate, no token.</p></li>
+      <li><h3>Verify</h3><p>Whoever receives the agent checks the mandate with the registry's public key. Offline, without an account.</p></li>
+      <li><h3>Prove, revoke</h3><p>Each act is chained to the mandate. The principal revokes it at any time, and the whole branch stops.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="band" id="limits">
+  <div class="wrap">
+    <h2>What AMR does. What it does not do.</h2>
+    <div class="two">
+      <div class="yes">
+        <h3>It does</h3>
+        <ul class="ticks">
+          <li>{{icon:ok}}<span>It records who authorized which agent, to do what, until when.</span></li>
+          <li>{{icon:ok}}<span>It refuses the token for an action that is forbidden, absent from the mandate or above the ceiling.</span></li>
+          <li>{{icon:ok}}<span>It prevents a sub-mandate from being wider than its parent.</span></li>
+          <li>{{icon:ok}}<span>It stops a mandate and its whole branch as soon as the principal revokes it.</span></li>
+          <li>{{icon:ok}}<span>It gives the third party a signed attestation to check alone.</span></li>
+          <li>{{icon:ok}}<span>It keeps a hash chain in which any change shows.</span></li>
+        </ul>
+      </div>
+      <div class="no">
+        <h3>It does not</h3>
+        <ul class="ticks">
+          <li>{{icon:no}}<span>It does not watch the agent while it acts. Oversight stays with whoever deploys it.</span></li>
+          <li>{{icon:no}}<span>It checks action types, not content. It reads neither a letter nor an answer.</span></li>
+          <li>{{icon:no}}<span>It makes no system compliant with any text. Nothing here is legal advice.</span></li>
+          <li>{{icon:no}}<span>For an ordinary identifier, it does not check who is the person behind the principal's key.</span></li>
+          <li>{{icon:no}}<span>It does not undo an action already under way. Revoking a mandate stops what comes next.</span></li>
+          <li>{{icon:no}}<span>It does not decide for you. The mandate is yours to write.</span></li>
+        </ul>
+      </div>
+    </div>
+    <p class="note"><a href="/en/install#tools">The limits, tool by tool</a></p>
+    <div class="define">
+      <h3>What “mandate” means here</h3>
+      <p>The written authorization a person or a body gives for its agent. It binds the one who gives it, not the agent, which is not a person. AMR moves no liability. It makes readable who authorized what.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band band-brume" id="templates">
+  <div class="wrap">
+    <h2>{{f:templates_count}} templates to start from a real case</h2>
+    <p class="lede">A template is a standard mandate written into the code: what the agent may do, what it may never do, its ceilings. A mandate built on it can tighten it, not loosen it.</p>
+    {{block:gabarits_teaser}}
+    <p class="note">Each template is a provisional baseline. No practitioner review is recorded yet.</p>
+  </div>
+</section>
+
+<section class="band" id="proofs">
+  <div class="wrap">
+    <h2>Do not take my word for it</h2>
+    <p class="lede">Everything written here can be checked. Here is where.</p>
+    <dl class="proofs">
+      <div><dt>The code is public</dt><dd>Apache-2.0 licence. <a href="https://github.com/JC7333/amr">Read the code</a></dd></div>
+      <div><dt>{{f:tests_count_en}} automated tests</dt><dd>All passed on {{f:tests_date_en}}. <a href="https://github.com/JC7333/amr/tree/main/tests">See the tests</a></dd></div>
+      <div><dt>{{f:tools_count}} tools, each with its limits</dt><dd>The limits are written next to each tool. <a href="/en/install#tools">The full list</a></dd></div>
+      <div><dt>One command to install it</dt><dd><code>uvx mandatia</code>, package published on <a href="https://pypi.org/project/mandatia/">PyPI</a>.</dd></div>
+      <div><dt>Nothing leaves your machine</dt><dd>No network call by default. Two options exist, off at the start. <a href="/en/install">Which ones</a></dd></div>
+      <div><dt>The lock dates from {{f:lock_since_en}}</dt><dd>It has been in the code since that day. <a href="https://github.com/JC7333/amr/blob/main/docs/token-issuance-spec.md">The token specification</a></dd></div>
+    </dl>
+  </div>
+</section>
+
+<section class="band band-nuit" id="pilot">
+  <div class="wrap pilot">
+    <div>
+      <h2>{{f:pilot_places_en}} pilot organizations</h2>
+      <p class="lede">Healthcare and insurance first. Free. Everything is done in writing, at your pace. No call is needed.</p>
+      <a class="btn" href="mailto:audric@mandatia.eu?subject=AMR%20pilot%20organization&amp;body=Organization%3A%0A%0AWhat%20the%20agent%20does%20today%3A%0A%0AWhat%20it%20is%20allowed%20to%20do%2C%20or%20who%20decides%20it%3A%0A">Propose my organization</a>
+    </div>
+    <ol>
+      <li><span>You write to me what your agent is allowed to do, or the decision that authorizes it.</span></li>
+      <li><span>We turn it into its mandate, starting from a template.</span></li>
+      <li><span>Installation is one command, which your agent can run itself.</span></li>
+      <li><span>You tell me what is missing or what gets in the way. That is all I ask in return.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section class="band band-brume" id="questions">
+  <div class="wrap">
+    <h2>The questions I get asked</h2>
+    {{block:faq}}
+  </div>
+</section>
+
+<section class="band" id="physician">
+  <div class="wrap founder">
+    <h2>Why a physician wrote AMR</h2>
+    <div class="body">
+      <p>A prescription is a written order: dated, signed, limited. This drug, this dose, this duration. For a prescription-only drug, the pharmacist checks it before dispensing. Without it, nothing leaves the drawer, and nobody sees that as a burden. It is what makes the whole thing reliable.</p>
+      <p>When I started handing tasks to AI agents, I found nowhere that written order one checks before acting. AMR is my attempt to make it. I do this in the evening, after consultations, since {{f:started_en}}.</p>
+      <p class="sign"><strong>Audric BUGNARD, physician</strong>Aix-les-Bains, France. <a href="mailto:audric@mandatia.eu">audric@mandatia.eu</a></p>
+    </div>
+  </div>
+</section>

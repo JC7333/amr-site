@@ -1,0 +1,77 @@
+<header class="article-header">
+    <div class="article-eyebrow">Pour compliance officers · 5 minutes de lecture</div>
+    <h1 class="article-title">Pour les compliance officers</h1>
+    <p class="article-subtitle">Ce qu'AMR change au quotidien quand vous devez encadrer le déploiement d'agents IA.</p>
+  </header>
+
+  <div class="article-body">
+
+    <p class="lead">Vous êtes responsable conformité, DPO, ou compliance officer. Votre organisation déploie un agent IA, ou s'apprête à le faire. La question qu'on vous pose, ou qu'on vous posera, est simple. Comment prouvez-vous, devant un régulateur ou devant un juge, ce que cet agent avait le droit de faire ?</p>
+
+    <p>Cette page essaie de répondre concrètement, sur la base des textes en vigueur, sans jargon de pitch.</p>
+
+    <h2>Ce qu'on vous demande déjà de démontrer</h2>
+
+    <p>Le règlement européen sur l'intelligence artificielle (Règlement UE 2024/1689) impose au déployeur, pour un agent à risque élevé, plusieurs obligations cumulées. L'article 14 exige une supervision humaine effective. L'article 26 impose la conformité d'usage à la notice du fournisseur, la formation du personnel, et la tenue à jour des journaux. L'article 12 impose la traçabilité automatique des événements pertinents.</p>
+
+    <p>Le RGPD ajoute, dans les situations où l'agent prend des décisions affectant des personnes, l'article 22 qui exige une intervention humaine significative et la possibilité pour la personne de contester. L'article 35 oblige à une analyse d'impact dans les cas à risque élevé. L'article 6 demande de documenter la base légale invoquée.</p>
+
+    <p>Sur le papier, ces exigences sont claires. En pratique, elles supposent que vous puissiez répondre, à n'importe quel moment, à trois questions précises : qui a autorisé cet agent à agir, dans quel périmètre, et avec quelle preuve.</p>
+
+    <h2>Pourquoi les outils existants ne suffisent pas</h2>
+
+    <p>Trois types d'outils sont disponibles aujourd'hui, et aucun ne couvre la question.</p>
+
+    <p>Les <strong>permissions et listes de contrôle d'accès</strong> sont techniques. Elles disent qu'une connexion API a un certain droit. Elles ne disent rien du mandant humain qui en porte la responsabilité, ni de la base légale, ni de la durée de validité. Une ACL n'est pas un mandat. Elle ne tient pas devant un juge qui demande qui a autorisé une décision affectant une personne.</p>
+
+    <p>Les <strong>journaux d'audit</strong> enregistrent ce qui s'est passé. Ils prouvent un événement à un moment donné. Mais ils ne disent pas, avant l'événement, ce qui était autorisé. Reconstituer après une décision le cadre dans lequel elle aurait dû s'inscrire, c'est de la médecine légale appliquée à la conformité. C'est le pire moment pour découvrir un trou.</p>
+
+    <p>Les <strong>frameworks d'agents</strong> comme LangChain, AutoGen, ou les plateformes d'orchestration récentes gèrent l'exécution. Ils savent appeler des outils, gérer des contextes, retenter des étapes. Mais ils ne fournissent pas un registre vérifiable des mandats humains, indépendant du fournisseur, accessible en lecture par un tiers.</p>
+
+    <div class="callout">
+      <p><strong>La conséquence concrète</strong> : aujourd'hui, en cas d'incident sur un agent, vous reconstruisez le cadre d'autorisation après coup. Ce qui veut dire que la preuve que vous présenterez sera produite après l'événement, par la même partie qui est mise en cause. Un juge ou un régulateur va légitimement contester cette preuve.</p>
+    </div>
+
+    <h2>Ce qu'AMR ajoute concrètement</h2>
+
+    <p>AMR est un registre de mandats vérifiables pour agents IA. Il fonctionne en trois couches que vous pouvez activer indépendamment selon votre maturité.</p>
+
+    <p><strong>La couche registre (gratuite, open source)</strong> stocke les mandats en chaîne SHA-256. Chaque mandat décrit un mandant nommé, un agent identifié, un périmètre d'action explicite, des plafonds chiffrés, une durée de validité, une base légale citée, et des seuils de supervision humaine. Vous pouvez interroger le registre en lecture seule, exporter une preuve cryptographique de la chaîne, et donner à un tiers — auditeur interne, régulateur — un accès vérifiable indépendant de votre infrastructure d'exécution.</p>
+
+    <p><strong>La couche d'émission de jetons (gratuite, open source)</strong> transforme le registre en verrou. L'agent qui veut agir doit demander un jeton signé. Le système émet ce jeton uniquement si un mandat actif autorise l'action précise dans son périmètre. Pas de mandat valide, pas de jeton. Pas de jeton, pas d'action. Cette couche existe dans le code depuis le 23 avril 2026.</p>
+
+    <p><strong>Les gabarits par secteur</strong> sont des bases de mandat écrites dans le code d'AMR : ce que l'agent peut faire, ce qu'il ne peut jamais faire, ses plafonds, et les textes que le mandant doit vérifier. Aujourd'hui cinq gabarits existent : assistant de cabinet ou d'établissement de santé (agent-sante-rgpd), assistant de recruteur (agent-rh-recrutement), assistant d'analyste crédit (agent-credit), assistant de souscripteur en assurance vie et santé (agent-assurance-sante-vie) et agent de service client (agent-support-client). Chacun est un socle provisoire, sans relecture par des praticiens enregistrée ; les autres secteurs arrivent un par un, chacun d'abord dans le code.</p>
+
+    <h2>Ce que ça change dans votre quotidien</h2>
+
+    <p>Avant déploiement, vous définissez le mandat, à partir d'un gabarit quand il en existe un pour votre cas. Vous le faites relire par votre équipe juridique. Vous le signez ou le faites signer par le mandant habilité. Vous l'enregistrez dans le registre. Cette étape vous permet de discuter avec le métier en termes de scope explicite, pas de paramètres techniques.</p>
+
+    <p>Pendant l'exploitation, vos agents ne peuvent pas agir hors du périmètre défini. Le verrou est technique, pas procédural. Une dérive de scope déclenche un refus de jeton, donc une absence d'action, donc une alerte propre — pas un incident à reconstituer.</p>
+
+    <p>Lors d'un audit, interne ou externe, vous fournissez la chaîne des mandats et les logs d'exécution. Le mandat dit ce qui était autorisé. Le log dit ce qui s'est passé. Les deux ensemble forment une preuve que vous pouvez montrer à un auditeur, à un assureur ou à un juge.</p>
+
+    <p>Lors d'une revue de conformité avec un régulateur, vous pouvez démontrer non seulement la traçabilité des actions, mais aussi le cadre prospectif d'autorisation. Vous répondez à la question "qu'avez-vous autorisé" avant de répondre à la question "que s'est-il passé".</p>
+
+    <div class="pull-quote">Vous arrêtez de prouver ce qui s'est passé. Vous commencez à démontrer ce qui était autorisé.</div>
+
+    <h2>Ce qui reste de votre côté</h2>
+
+    <p>AMR ne remplace ni votre service juridique, ni votre DPO, ni la décision d'usage. Le mandat décrit un cadre, mais c'est vous qui l'écrivez. Les gabarits par secteur donnent un point de départ structuré, et leurs références juridiques restent marquées « à vérifier » tant que personne ne les a vérifiées : base légale précise, durées de conservation, règles propres à votre secteur et à votre organisation, classement d'un cas limite au regard de l'annexe III.</p>
+
+    <p>L'analyse d'impact RGPD reste à votre charge. La consultation du CSE, quand elle s'impose, reste à votre charge. La formation des opérateurs humains qui supervisent reste à votre charge. La sélection du fournisseur LLM, l'évaluation de conformité du modèle utilisé, la signature des contrats de sous-traitance restent à votre charge.</p>
+
+    <p>AMR pose la structure. Il vous donne un cadre vérifiable. Il vous évite d'avoir à reconstruire un cadre après l'incident. Il ne fait pas votre travail à votre place.</p>
+
+    <div class="sep"></div>
+
+    <p>Audric Bugnard — médecin à Aix-les-Bains, je construis mandatia.eu le soir. Si vous avez des retours sur ce que cette page rate ou survend, ils me sont utiles.</p>
+
+  </div>
+
+  <div class="cta-block">
+    <p>Pour creuser : la spec d'émission de jetons, les gabarits par secteur, le code complet.</p>
+    <div class="cta-buttons">
+      <a href="https://github.com/JC7333/amr/blob/main/docs/token-issuance-spec.md" target="_blank" rel="noopener" class="btn-primary">Lire la spec technique</a>
+      <a href="mailto:audric@mandatia.eu" class="btn-secondary">Écrire à Audric</a>
+    </div>
+  </div>
