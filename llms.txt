@@ -4,7 +4,7 @@
 
 "Mandate" here is not a mandate in the legal sense: an AI agent is not a person and cannot be given one. It means the written, dated and signed instruction by which an identified person sets what their agent may do on their behalf. The agent is that person's tool.
 
-Install and run (needs uv; the PyPI package is `mandatia`, version 0.1.2 on 13 November 2026; `uvx amr` installs a different project):
+Install and run (needs uv; the PyPI package is `mandatia`, version 0.1.2 on 14 November 2026; `uvx amr` installs a different project):
 
     uvx mandatia
 

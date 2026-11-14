@@ -7,10 +7,10 @@
    {
     "name": "create_mandate",
     "fr": [
-     "Émettez un mandat structuré juridiquement : identité du mandant, périmètre de l'agent, base légale, expiration. Chaque mandat est hashé SHA-256 et chaîné."
+     "Enregistrez un mandat, c'est-à-dire {{f:def_mandat}}. Il porte le mandant (une personne, ou un organe par sa décision), l'agent, le périmètre, l'acte qui donne au signataire le pouvoir d'autoriser (délégation de pouvoir, décision d'organe, contrat) et l'échéance. Chaque mandat est hashé SHA-256 et chaîné."
     ],
     "en": [
-     "Issue a legally-structured mandate with principal identity, agent scope, legal basis, and expiration. Every mandate is SHA-256 hashed and chained."
+     "Register a mandate, that is {{f:def_mandat_en}}. It carries the principal (a person, or a body through its decision), the agent, the scope, the act that gives the signer the power to authorize (delegation of authority, body decision, contract) and the expiry. Every mandate is SHA-256 hashed and chained."
     ]
    },
    {
