@@ -45,6 +45,9 @@ AMR_PUBLIC_KEY_PATH=/absolute/path/amr_signing_key.pub</code></pre>
       </table>
     </div>
     <div class="prose">
+      <p>Dans le code de main depuis le {{f:annotations_since}}, pas encore dans la version {{f:pypi_version}} publiée : chaque outil porte les annotations MCP (<code>readOnlyHint</code>, <code>destructiveHint</code>, <code>idempotentHint</code>, <code>openWorldHint</code>). Le client s'en sert pour savoir quels appels demandent votre accord : les uns ne font que lire (<code>verify_mandate</code>, <code>get_proof</code>), d'autres ajoutent au registre (<code>create_mandate</code>, <code>log_action</code>), <code>revoke_mandate</code> est définitif, <code>register_principal_key</code> et <code>report_issue</code> peuvent joindre le réseau si l'opérateur l'active. Ce sont des indications pour le client, pas une protection : AMR applique ses propres règles, quoi que le client en fasse. <code>python -m amr.tools_list</code> les affiche outil par outil.</p>
+    </div>
+    <div class="prose">
       <h2>4. Le premier mandat, dans cet ordre</h2>
       <p><code>create_mandate</code>, <code>verify_mandate</code>, <code>log_action</code>, <code>issue_mandate_attestation</code> avec <code>get_registry_public_key</code>, <code>revoke_mandate</code>, <code>get_proof</code>.</p>
       <p>Un exemple exécutable, vérifié par la suite de tests : <code>uv run python examples/quickstart_agent.py</code>.</p>

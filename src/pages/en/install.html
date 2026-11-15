@@ -45,6 +45,9 @@ AMR_PUBLIC_KEY_PATH=/absolute/path/amr_signing_key.pub</code></pre>
       </table>
     </div>
     <div class="prose">
+      <p>In the code on main since {{f:annotations_since_en}}, not yet in the published version {{f:pypi_version}}: every tool carries MCP annotations (<code>readOnlyHint</code>, <code>destructiveHint</code>, <code>idempotentHint</code>, <code>openWorldHint</code>). The client uses them to decide which calls need your approval: some only read (<code>verify_mandate</code>, <code>get_proof</code>), others append to the registry (<code>create_mandate</code>, <code>log_action</code>), <code>revoke_mandate</code> is final, <code>register_principal_key</code> and <code>report_issue</code> may reach the network if the operator turns it on. They are hints for the client, not a protection: AMR applies its own rules whatever the client does with them. <code>python -m amr.tools_list</code> shows them tool by tool.</p>
+    </div>
+    <div class="prose">
       <h2>4. The first mandate, in this order</h2>
       <p><code>create_mandate</code>, <code>verify_mandate</code>, <code>log_action</code>, <code>issue_mandate_attestation</code> with <code>get_registry_public_key</code>, <code>revoke_mandate</code>, <code>get_proof</code>.</p>
       <p>A runnable example, checked by the test suite: <code>uv run python examples/quickstart_agent.py</code>.</p>
