@@ -86,10 +86,12 @@
    {
     "name": "verify_mandate",
     "fr": [
-     "Avant toute action sensible, l'agent vérifie : ce mandat est-il valide, actif, dans le périmètre ? Un appel. Réponse instantanée."
+     "Avant une action sensible, l'agent vérifie que son mandat est valide, actif et non révoqué, et que chaque mandat au-dessus de lui l'est aussi. Un appel. La réponse rend le périmètre du mandat, elle ne juge pas l'action : c'est <code>issue_action_token</code> qui refuse une action hors périmètre.",
+     "Dans le code de main depuis le {{f:verify_id_since}}, pas encore dans la version {{f:pypi_version}} publiée : avec <code>mandate_id</code>, la réponse porte sur ce seul mandat. Un mandat révoqué, expiré ou détenu par un autre agent répond non, même si l'agent en a un autre en vigueur."
     ],
     "en": [
-     "Before any sensitive action, the agent checks: is this mandate valid, active, and within scope? One call. Instant answer."
+     "Before a sensitive action, the agent checks that its mandate is valid, active and not revoked, and that every mandate above it is too. One call. The answer returns the mandate's scope, it does not judge the action: <code>issue_action_token</code> is what refuses an out-of-scope action.",
+     "In the code on main since {{f:verify_id_since_en}}, not yet in the published version {{f:pypi_version}}: with <code>mandate_id</code>, the answer is about that one mandate. A mandate that is revoked, expired or held by another agent answers no, even if the agent holds another one in force."
     ]
    },
    {
