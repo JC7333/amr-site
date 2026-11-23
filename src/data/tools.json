@@ -122,10 +122,12 @@
    {
     "name": "log_action",
     "fr": [
-     "Enregistrez chaque action prise sous un mandat. Chaque événement est hashé, horodaté et chaîné au mandat parent. Piste d'audit dont toute modification se voit, par construction."
+     "Enregistrez chaque action prise sous un mandat. Chaque événement est hashé, horodaté et chaîné au mandat parent. Piste d'audit dont toute modification se voit, par construction.",
+     "Dans le code de main depuis le {{f:log_token_since}}, pas encore dans la version {{f:pypi_version}} publiée&nbsp;: avec <code>action_token</code>, le jeton rendu par <code>issue_action_token</code>, l'action n'est inscrite que si ce jeton vient de ce registre, est encore valable, a été émis sous ce mandat à cet agent et n'a couvert aucune autre action (un jeton, une action inscrite). Son identifiant est scellé dans l'entrée. Sans jeton, l'inscription reste une déclaration de l'opérateur de l'agent, pas un contrôle&nbsp;; <code>AMR_REQUIRE_ACTION_TOKEN_FOR_LOG=true</code> refuse toute action inscrite sans jeton. AMR ne voit pas l'action elle-même&nbsp;: c'est le destinataire, en vérifiant le jeton, qui la relie à ce qui a été fait."
     ],
     "en": [
-     "Log every action taken under a mandate. Each event is hashed, timestamped, and chained to the parent mandate. Tamper-evident audit trail by construction."
+     "Log every action taken under a mandate. Each event is hashed, timestamped, and chained to the parent mandate. Tamper-evident audit trail by construction.",
+     "In the code on main since {{f:log_token_since_en}}, not yet in the published version {{f:pypi_version}}: with <code>action_token</code>, the token <code>issue_action_token</code> returned, the action is logged only if that token comes from this registry, is still valid, was issued under this mandate to this agent and has not covered another action (one token, one logged action). Its identifier is sealed into the entry. Without a token, logging is a statement by the agent's operator, not a check; <code>AMR_REQUIRE_ACTION_TOKEN_FOR_LOG=true</code> refuses every action logged without one. AMR does not see the action itself: the receiver, by checking the token, is what ties it to what was done."
     ]
    },
    {
