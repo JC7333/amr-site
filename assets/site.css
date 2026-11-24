@@ -371,3 +371,11 @@ th { color: var(--encre); font-weight: 600; }
   .cells { break-inside: avoid; }
   pre { background: #f2f2f2; color: #000; }
 }
+
+/* Page « Pour un cahier des charges » : l'exigence à copier */
+.requirement { margin-top: 1rem; padding: 1.2rem 1.3rem; border: 1px solid var(--trait); border-radius: 0.85rem; background: var(--brume); }
+.requirement ol.plain { margin: 0; }
+.copy-row { margin-top: 1rem; }
+.btn.copy[hidden] { display: none; }
+.copy-buffer { position: fixed; top: 0; left: -9999px; opacity: 0; }
+@media print { .copy-row { display: none; } }
