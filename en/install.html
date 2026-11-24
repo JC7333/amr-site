@@ -45,7 +45,7 @@
   <div class="wrap">
     <div class="prose">
       <h2>1. Run the server</h2>
-      <p>It needs <a href="https://docs.astral.sh/uv/">uv</a>. The PyPI package is named “mandatia” (version 0.1.2 on 23 November 2026).</p>
+      <p>It needs <a href="https://docs.astral.sh/uv/">uv</a>. The PyPI package is named “mandatia” (version 0.1.2 on 24 November 2026).</p>
 <pre><code>uvx mandatia
 
 <span class="c"># the latest code of the repository instead:</span>
@@ -82,6 +82,7 @@ AMR_PUBLIC_KEY_PATH=/absolute/path/amr_signing_key.pub</code></pre>
     </div>
     <div class="prose">
       <p>In the code on main since 14 November 2026, not yet in the published version 0.1.2: every tool carries MCP annotations (<code>readOnlyHint</code>, <code>destructiveHint</code>, <code>idempotentHint</code>, <code>openWorldHint</code>). The client uses them to decide which calls need your approval: some only read (<code>verify_mandate</code>, <code>get_proof</code>), others append to the registry (<code>create_mandate</code>, <code>log_action</code>), <code>revoke_mandate</code> is final, <code>register_principal_key</code> and <code>report_issue</code> may reach the network if the operator turns it on. They are hints for the client, not a protection: AMR applies its own rules whatever the client does with them. <code>python -m amr.tools_list</code> shows them tool by tool.</p>
+      <p>In the code on main since 23 November 2026, not yet in the published version 0.1.2: a refusal (unknown, revoked or expired mandate, action outside the perimeter, invalid input) reaches the MCP client as a tool error (<code>isError</code>), no longer as an ordinary answer that a client could take for a success. Every refusal carries the same three keys, whatever the tool: <code>code</code> (a stable word, for example <code>action_out_of_scope</code>), <code>message</code> (one readable sentence, without the value entered) and <code>field</code> (the input field at fault when AMR knows it). The keys the tool already returned stay. The negative answers of the checking tools stay answers: <code>verify_mandate</code> saying no, <code>check_action_token</code> finding a token bad, expired or revoked. No mandate, log entry or hash changes. An agent framework that took these refusals for successes now sees them as errors.</p>
     </div>
     <div class="prose">
       <h2>4. The first mandate, in this order</h2>
@@ -104,7 +105,7 @@ AMR_PUBLIC_KEY_PATH=/absolute/path/amr_signing_key.pub</code></pre>
 <p class="note">Audric BUGNARD, physician in Aix-les-Bains, France<br><a href="mailto:audric@mandatia.eu">audric@mandatia.eu</a></p></div>
 <div><h2>Understand</h2><ul><li><a href="/en/#how">How it works</a></li><li><a href="/en/#questions">Questions</a></li><li><a href="/en/brief">AMR in one page</a></li><li><a href="/en/agentic-ai-eu-law">Agentic AI in EU law</a></li><li><a href="/pourquoi-autorisation-prospective">Why authorize before (in French)</a></li><li><a href="/pour-compliance-officers">For compliance officers (in French)</a></li></ul></div><div><h2>Use</h2><ul><li><a href="/en/verify">Verify a mandate</a></li><li><a href="/en/templates">Templates</a></li><li><a href="/en/install">Install</a></li><li><a href="/en/install#tools">The 19 tools</a></li><li><a href="https://github.com/JC7333/amr">Code on GitHub</a></li><li><a href="https://pypi.org/project/mandatia/">Package on PyPI</a></li></ul></div><div><h2>This site</h2><ul><li><a href="/en/legal-notice">Legal notice</a></li><li><a href="/llms.txt">llms.txt, for agents</a></li><li><a href="https://github.com/JC7333/amr-site">Source of this site</a></li></ul></div>
 </div>
-<p class="legal"><span>Open source, Apache-2.0 licence. This site sets no cookie and loads nothing from a third party.</span><span>Updated 23 November 2026</span></p>
+<p class="legal"><span>Open source, Apache-2.0 licence. This site sets no cookie and loads nothing from a third party.</span><span>Updated 24 November 2026</span></p>
 </div></footer>
 </body>
 </html>
