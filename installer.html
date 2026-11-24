@@ -45,7 +45,7 @@
   <div class="wrap">
     <div class="prose">
       <h2>1. Lancer le serveur</h2>
-      <p>Il faut <a href="https://docs.astral.sh/uv/">uv</a>. Le paquet PyPI s'appelle «&nbsp;mandatia&nbsp;» (version 0.1.2 au 23/11/2026).</p>
+      <p>Il faut <a href="https://docs.astral.sh/uv/">uv</a>. Le paquet PyPI s'appelle «&nbsp;mandatia&nbsp;» (version 0.1.2 au 24/11/2026).</p>
 <pre><code>uvx mandatia
 
 <span class="c"># le dernier code du dépôt, à la place :</span>
@@ -82,6 +82,7 @@ AMR_PUBLIC_KEY_PATH=/absolute/path/amr_signing_key.pub</code></pre>
     </div>
     <div class="prose">
       <p>Dans le code de main depuis le 14/11/2026, pas encore dans la version 0.1.2 publiée&nbsp;: chaque outil porte les annotations MCP (<code>readOnlyHint</code>, <code>destructiveHint</code>, <code>idempotentHint</code>, <code>openWorldHint</code>). Le client s'en sert pour savoir quels appels demandent votre accord&nbsp;: les uns ne font que lire (<code>verify_mandate</code>, <code>get_proof</code>), d'autres ajoutent au registre (<code>create_mandate</code>, <code>log_action</code>), <code>revoke_mandate</code> est définitif, <code>register_principal_key</code> et <code>report_issue</code> peuvent joindre le réseau si l'opérateur l'active. Ce sont des indications pour le client, pas une protection&nbsp;: AMR applique ses propres règles, quoi que le client en fasse. <code>python -m amr.tools_list</code> les affiche outil par outil.</p>
+      <p>Dans le code de main depuis le 23/11/2026, pas encore dans la version 0.1.2 publiée&nbsp;: un refus (mandat inconnu, révoqué ou expiré, action hors périmètre, entrée invalide) arrive au client MCP comme une erreur d'outil (<code>isError</code>), et non plus comme une réponse ordinaire qu'un client pouvait prendre pour un succès. Chaque refus porte les trois mêmes clés, quel que soit l'outil&nbsp;: <code>code</code> (un mot stable, par exemple <code>action_out_of_scope</code>), <code>message</code> (une phrase lisible, sans la valeur saisie) et <code>field</code> (le champ en cause quand AMR le connaît). Les clés que l'outil rendait déjà restent. Les réponses négatives des outils de contrôle restent des réponses&nbsp;: <code>verify_mandate</code> qui dit non, <code>check_action_token</code> qui juge un jeton mauvais, expiré ou révoqué. Aucun mandat, aucune entrée du journal, aucune empreinte ne change. Un cadre d'agent qui prenait ces refus pour des succès les voit désormais comme des erreurs.</p>
     </div>
     <div class="prose">
       <h2>4. Le premier mandat, dans cet ordre</h2>
@@ -104,7 +105,7 @@ AMR_PUBLIC_KEY_PATH=/absolute/path/amr_signing_key.pub</code></pre>
 <p class="note">Audric BUGNARD, médecin à Aix-les-Bains<br><a href="mailto:audric@mandatia.eu">audric@mandatia.eu</a></p></div>
 <div><h2>Comprendre</h2><ul><li><a href="/#fonctionnement">Fonctionnement</a></li><li><a href="/#questions">Questions</a></li><li><a href="/essentiel">L'essentiel en une page</a></li><li><a href="/pourquoi-autorisation-prospective">Pourquoi autoriser avant</a></li><li><a href="/pour-compliance-officers">Pour les responsables conformité</a></li><li><a href="/ia-agentique-droit-union">L'IA agentique dans le droit de l'Union</a></li></ul></div><div><h2>Utiliser</h2><ul><li><a href="/verifier">Vérifier un mandat</a></li><li><a href="/gabarits">Gabarits</a></li><li><a href="/installer">Installer</a></li><li><a href="/installer#outils">Les 19 outils</a></li><li><a href="https://github.com/JC7333/amr">Code sur GitHub</a></li><li><a href="https://pypi.org/project/mandatia/">Paquet sur PyPI</a></li></ul></div><div><h2>Le site</h2><ul><li><a href="/mentions-legales">Mentions légales</a></li><li><a href="/llms.txt">llms.txt, pour les agents</a></li><li><a href="https://github.com/JC7333/amr-site">Source de ce site</a></li></ul></div>
 </div>
-<p class="legal"><span>Open source, licence Apache-2.0. Ce site ne dépose aucun cookie et ne charge rien chez un tiers.</span><span>Mis à jour le 23/11/2026</span></p>
+<p class="legal"><span>Open source, licence Apache-2.0. Ce site ne dépose aucun cookie et ne charge rien chez un tiers.</span><span>Mis à jour le 24/11/2026</span></p>
 </div></footer>
 </body>
 </html>
