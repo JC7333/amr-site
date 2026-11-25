@@ -39,7 +39,7 @@ AMR_PUBLIC_KEY_PATH=/absolute/path/amr_signing_key.pub</code></pre>
         <tbody>
           <tr><td><code>principal</code></td><td>the person or body that grants mandates</td><td>create, sign, revoke, contest, prove</td></tr>
           <tr><td><code>agent</code></td><td>the agent that acts under a mandate</td><td><code>verify_mandate</code>, <code>issue_action_token</code>, <code>log_action</code>, <code>issue_mandate_attestation</code>, <code>get_registry_public_key</code>; <code>create_mandate</code> for sub-mandates under its own mandate only</td></tr>
-          <tr><td><code>receiver</code></td><td>a third party the agent acts upon</td><td><code>check_action_token</code>, <code>get_registry_public_key</code></td></tr>
+          <tr><td><code>receiver</code></td><td>a third party the agent acts upon</td><td><code>check_action_token</code>, <code>record_action_receipt</code>, <code>get_registry_public_key</code></td></tr>
           <tr><td><code>full</code> (default)</td><td>tests and single-user setups</td><td>every tool</td></tr>
         </tbody>
       </table>
