@@ -37,7 +37,7 @@ AMR_PUBLIC_KEY_PATH=/absolute/path/amr_signing_key.pub</code></pre>
       <table>
         <thead><tr><th scope="col">Profil</th><th scope="col">Qui</th><th scope="col">Outils</th></tr></thead>
         <tbody>
-          <tr><td><code>principal</code></td><td>la personne ou l'organe qui donne les mandats</td><td>créer, signer, révoquer, contester, prouver</td></tr>
+          <tr><td><code>principal</code></td><td>la personne ou l'organe qui donne les mandats</td><td>créer, signer, révoquer, contester, prouver, faire dater le registre</td></tr>
           <tr><td><code>agent</code></td><td>l'agent qui agit sous un mandat</td><td><code>verify_mandate</code>, <code>issue_action_token</code>, <code>log_action</code>, <code>issue_mandate_attestation</code>, <code>get_registry_public_key</code> ; <code>create_mandate</code> uniquement pour des sous-mandats sous son propre mandat</td></tr>
           <tr><td><code>receiver</code></td><td>un tiers sur lequel l'agent agit</td><td><code>check_action_token</code>, <code>record_action_receipt</code>, <code>get_registry_public_key</code></td></tr>
           <tr><td><code>full</code> (par défaut)</td><td>tests et installations à un seul utilisateur</td><td>tous les outils</td></tr>
