@@ -12,7 +12,7 @@ Latest code of the repository instead:
 
     uvx --from git+https://github.com/JC7333/amr amr
 
-Give each side only its tools with AMR_TOOL_PROFILE: `principal` (grant, sign, revoke), `agent` (token, log, attestation; sub-mandates only), `receiver` (check a token), `full` (default, every tool). An agent must not run the principal's tools: a mandate it granted to itself proves nothing.
+Give each side only its tools with AMR_TOOL_PROFILE: `principal` (grant, sign, revoke), `agent` (token, log, attestation; sub-mandates only), `receiver` (check a token, leave its receipt), `full` (default, every tool). An agent must not run the principal's tools: a mandate it granted to itself proves nothing.
 
 ## This site
 - [Install, for agents and developers](https://www.mandatia.eu/en/install): quickstart, tool profiles, reference of the MCP tools with their limits

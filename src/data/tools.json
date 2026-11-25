@@ -61,10 +61,12 @@
    {
     "name": "issue_action_token",
     "fr": [
-     "<strong>Le verrou.</strong> AMR se place dans la couche d'émission de jetons. Pas de mandat valide → pas de jeton JWS signé Ed25519 → pas d'action possible. Verrou structurel avant l'acte, pas un audit après. Dans le code open source depuis le 23 avril 2026."
+     "<strong>Le verrou.</strong> AMR se place dans la couche d'émission de jetons. Pas de mandat valide → pas de jeton JWS signé Ed25519 → pas d'action possible. Verrou structurel avant l'acte, pas un audit après. Dans le code open source depuis le 23 avril 2026.",
+     "Dans le code de main depuis le {{f:validation_since}}, pas encore dans la version {{f:pypi_version}} publiée : le mandat peut exiger qu'une personne valide certaines actions avant leur départ (<code>validation_actions</code>, par exemple l'envoi d'une note). Pour ces actions, pas de jeton sans <code>validated_by</code> (qui a validé) et <code>validated_content_sha256</code> (l'empreinte du texte validé), tous deux scellés dans le jeton. Limite connue : le registre note le valideur que l'agent déclare, il ne l'authentifie pas et ne voit jamais le contenu ; c'est le receveur qui compare ces deux valeurs avec la personne connectée chez lui et avec ce qu'il reçoit."
     ],
     "en": [
-     "<strong>The lock.</strong> AMR sits in the token issuance layer. No valid mandate → no Ed25519-signed JWS token → no action possible. Structural enforcement before the act, not audit after. In the open-source code since April 23, 2026."
+     "<strong>The lock.</strong> AMR sits in the token issuance layer. No valid mandate → no Ed25519-signed JWS token → no action possible. Structural enforcement before the act, not audit after. In the open-source code since April 23, 2026.",
+     "In the code on main since {{f:validation_since_en}}, not yet in the published version {{f:pypi_version}}: the mandate can require a person to validate some actions before they go out (<code>validation_actions</code>, for example sending a note). For those actions, no token without <code>validated_by</code> (who validated) and <code>validated_content_sha256</code> (the hash of the validated text), both sealed into the token. Known limit: the registry records the validator the agent declares, it does not authenticate that person and never sees the content; the receiver compares both values with who is signed in on its side and with what it receives."
     ]
    },
    {
@@ -128,6 +130,17 @@
     "en": [
      "Log every action taken under a mandate. Each event is hashed, timestamped, and chained to the parent mandate. Tamper-evident audit trail by construction.",
      "In the code on main since {{f:log_token_since_en}}, not yet in the published version {{f:pypi_version}}: with <code>action_token</code>, the token <code>issue_action_token</code> returned, the action is logged only if that token comes from this registry, is still valid, was issued under this mandate to this agent and has not covered another action (one token, one logged action). Its identifier is sealed into the entry. Without a token, logging is a statement by the agent's operator, not a check; <code>AMR_REQUIRE_ACTION_TOKEN_FOR_LOG=true</code> refuses every action logged without one. AMR does not see the action itself: the receiver, by checking the token, is what ties it to what was done."
+    ]
+   },
+   {
+    "name": "record_action_receipt",
+    "fr": [
+     "Dans le code de main depuis le {{f:receipt_since}}, pas encore dans la version {{f:pypi_version}} publiée : le receveur d'une action laisse son reçu dans le registre, exécutée ou refusée et pourquoi, avec s'il le veut l'empreinte de ce qu'il a reçu. <code>get_proof</code> montre alors pour chaque action trois lignes : ce que le mandat a autorisé (le jeton), ce que l'agent déclare avoir fait, ce que le receveur déclare avoir fait, et celle qui manque. Profil <code>receiver</code> seulement.",
+     "Limite connue : un reçu est la déclaration du receveur. Il ne prouve pas le contenu et n'est pas signé : qui détient le jeton et peut appeler cet outil sur le même registre pourrait l'écrire, et le premier reçu gagne. C'est pourquoi il n'est donné qu'au receveur, jamais à l'agent."
+    ],
+    "en": [
+     "In the code on main since {{f:receipt_since_en}}, not yet in the published version {{f:pypi_version}}: the receiver of an action leaves its receipt in the registry, executed or refused and why, with the hash of what it received if it wants. <code>get_proof</code> then shows three lines for each action: what the mandate authorized (the token), what the agent declares it did, what the receiver declares it did, and which one is missing. Profile <code>receiver</code> only.",
+     "Known limit: a receipt is the receiver's declaration. It does not prove the content and is not signed: anyone who holds the token and can call this tool on the same registry could write it, and the first receipt wins. That is why it goes to the receiver only, never to the agent."
     ]
    },
    {
