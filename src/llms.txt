@@ -19,6 +19,7 @@ Give each side only its tools with AMR_TOOL_PROFILE: `principal` (grant, sign, r
 - [Mandate templates](https://www.mandatia.eu/en/templates): healthcare, recruitment, credit, life and health insurance, customer support
 - [Verify a mandate](https://www.mandatia.eu/en/verify): a signed snapshot of a demonstration registry, checked in the browser
 - [AMR in one page](https://www.mandatia.eu/en/brief): what it does and does not do
+- [For a tender specification](https://www.mandatia.eu/en/procurement-requirement): four lines a buyer can copy into a specification for an AI agent, naming no product
 - Demonstration data: https://www.mandatia.eu/assets/demo/registry-snapshot.jws (signed snapshot), https://www.mandatia.eu/assets/demo/registry-key.json (public key), https://www.mandatia.eu/assets/demo/lock-demo.json (real answers of the registry)
 
 ## Code and specifications

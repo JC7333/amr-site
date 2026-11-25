@@ -1,0 +1,29 @@
+<section class="page-body">
+  <div class="wrap sheet">
+    <h1>Pour un cahier des charges</h1>
+    <p class="lede">Vous achetez un agent IA, ou un logiciel qui en contient un. Voici une exigence à copier dans votre cahier des charges. Elle ne nomme aucun produit : n'importe quel outil peut la remplir, AMR comme un autre.</p>
+
+    <h2>L'exigence, en quatre lignes</h2>
+    <div class="requirement">
+      <ol class="plain" id="exigence">
+        <li>Avant chaque action, l'agent demande une autorisation.</li>
+        <li>Cette autorisation vient d'un écrit daté et signé par une personne désignée de l'établissement, qui liste ce que l'agent peut faire et ce qu'il ne fera jamais.</li>
+        <li>Le système qui reçoit l'action vérifie l'autorisation et refuse l'action sans elle.</li>
+        <li>L'établissement peut retirer cet écrit à tout moment. Il garde la trace de ce qui a été autorisé, dans un format ouvert qu'il peut lire sans l'éditeur.</li>
+      </ol>
+      <p class="copy-row"><button class="btn btn-calme copy" type="button" data-copy="exigence" data-done="Copié" hidden>Copier les quatre lignes</button></p>
+    </div>
+
+    <h2>Ce que cela demande à un éditeur</h2>
+    <p>Son agent doit demander une autorisation avant d'agir, et s'arrêter quand on la lui refuse. Le système qui reçoit l'action doit la vérifier lui-même, au lieu de croire l'agent sur parole. La trace doit pouvoir sortir dans un format ouvert, lisible sans son logiciel.</p>
+    <p>Un exemple complet, en code ouvert : <a href="https://github.com/JC7333/amr/blob/main/docs/scribe-example.fr.md">un scribe d'hôpital sous mandat</a>, du mandat signé jusqu'au retrait.</p>
+
+    <h2>Ce que l'exigence ne garantit pas</h2>
+    <ul class="ticks">
+      <li>{{icon:no}}<span>Elle ne rend aucun système conforme à un texte.</span></li>
+      <li>{{icon:no}}<span>Elle ne surveille pas l'agent pendant qu'il agit.</span></li>
+      <li>{{icon:no}}<span>Elle ne prouve pas ce que l'agent a réellement fait. Elle montre ce qui a été autorisé, et par qui.</span></li>
+    </ul>
+    <p class="note">Rien ici n'est un conseil juridique.</p>
+  </div>
+</section>

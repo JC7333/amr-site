@@ -1,0 +1,29 @@
+<section class="page-body">
+  <div class="wrap sheet">
+    <h1>For a tender specification</h1>
+    <p class="lede">You are buying an AI agent, or software that contains one. Here is a requirement to copy into your specification. It names no product: any tool can meet it, AMR or another.</p>
+
+    <h2>The requirement, in four lines</h2>
+    <div class="requirement">
+      <ol class="plain" id="requirement">
+        <li>Before each action, the agent asks for an authorization.</li>
+        <li>That authorization comes from a written instruction, dated and signed by a designated person of the organisation, listing what the agent may do and what it will never do.</li>
+        <li>The system that receives the action checks the authorization and refuses the action without it.</li>
+        <li>The organisation can withdraw that instruction at any time. It keeps the record of what was authorized, in an open format it can read without the vendor.</li>
+      </ol>
+      <p class="copy-row"><button class="btn btn-calme copy" type="button" data-copy="requirement" data-done="Copied" hidden>Copy the four lines</button></p>
+    </div>
+
+    <h2>What it asks of a vendor</h2>
+    <p>Its agent must ask for an authorization before acting, and stop when it is refused. The system that receives the action must check it itself, instead of taking the agent's word for it. The record must be exportable in an open format, readable without the vendor's software.</p>
+    <p>A complete example, in open code: <a href="https://github.com/JC7333/amr/blob/main/docs/scribe-example.md">a hospital scribe under mandate</a>, from the signed mandate to its withdrawal.</p>
+
+    <h2>What the requirement does not guarantee</h2>
+    <ul class="ticks">
+      <li>{{icon:no}}<span>It does not make any system compliant with any law.</span></li>
+      <li>{{icon:no}}<span>It does not watch the agent while it acts.</span></li>
+      <li>{{icon:no}}<span>It does not prove what the agent actually did. It shows what was authorized, and by whom.</span></li>
+    </ul>
+    <p class="note">Nothing here is legal advice.</p>
+  </div>
+</section>

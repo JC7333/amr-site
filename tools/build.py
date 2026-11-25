@@ -73,6 +73,12 @@ PAGES = [
     ("brief", "en", "en/brief.html", "en/brief.html", "", "plain",
      "AMR in one page",
      "One page to print or forward: what AMR is, what it does, what it does not do, how to try it."),
+    ("tender", "fr", "cahier-des-charges.html", "fr/cahier-des-charges.html", "", "plain",
+     "Pour un cahier des charges | AMR",
+     "Quatre lignes à copier dans un cahier des charges pour un agent IA : autorisation écrite avant chaque action, vérifiée par celui qui la reçoit, retirable."),
+    ("tender", "en", "en/procurement-requirement.html", "en/procurement-requirement.html", "", "plain",
+     "For a tender specification | AMR",
+     "Four lines to copy into a tender specification for an AI agent: written authorization before each action, checked by the receiver, withdrawable."),
     ("why", "fr", "pourquoi-autorisation-prospective.html", "fr/pourquoi-autorisation-prospective.html", "", "article",
      "Pourquoi l'autorisation prospective | AMR",
      "Petit traité sur la différence entre prouver après et autoriser avant."),
@@ -119,6 +125,7 @@ T = {
                             (url("brief", "fr"), "L'essentiel en une page"),
                             (url("why", "fr"), "Pourquoi autoriser avant"),
                             (url("compliance", "fr"), "Pour les responsables conformité"),
+                            (url("tender", "fr"), "Pour un cahier des charges"),
                             (url("eulaw", "fr"), "L'IA agentique dans le droit de l'Union")]),
             ("Utiliser", [(url("verify", "fr"), "Vérifier un mandat"), (url("templates", "fr"), "Gabarits"),
                           (url("install", "fr"), "Installer"), (url("install", "fr") + "#outils", "Les {tools_count} outils"),
@@ -142,7 +149,8 @@ T = {
                             (url("brief", "en"), "AMR in one page"),
                             (url("eulaw", "en"), "Agentic AI in EU law"),
                             (url("why", "fr"), "Why authorize before (in French)"),
-                            (url("compliance", "fr"), "For compliance officers (in French)")]),
+                            (url("compliance", "fr"), "For compliance officers (in French)"),
+                            (url("tender", "en"), "For a tender specification")]),
             ("Use", [(url("verify", "en"), "Verify a mandate"), (url("templates", "en"), "Templates"),
                      (url("install", "en"), "Install"), (url("install", "en") + "#tools", "The {tools_count} tools"),
                      (REPO, "Code on GitHub"), ("https://pypi.org/project/mandatia/", "Package on PyPI")]),
@@ -365,6 +373,8 @@ def render(page):
         scripts += '<script src="/assets/verify.js" defer></script>\n'
     if pid == "brief":
         scripts += '<script src="/assets/print.js" defer></script>\n'
+    if pid == "tender":
+        scripts += '<script src="/assets/copy.js" defer></script>\n'
     og_image = f"{SITE}/assets/og-{lang}.jpg"
     return f"""<!doctype html>
 <html lang="{lang}">
