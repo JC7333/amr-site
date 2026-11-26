@@ -160,6 +160,26 @@
     "en": [
      "A signed dossier of a mandate over a period, for an insurer or an auditor: perimeter, status, sub-mandates, actions, tokens and integrity checks. JSON and printable page."
     ]
+   },
+   {
+    "name": "prepare_registry_timestamp",
+    "fr": [
+     "Dans le code de main depuis le {{f:timestamp_since}}, pas encore dans la version {{f:pypi_version}} publiée : un service d'horodatage choisi par l'exploitant (RFC 3161) date l'état du registre. Cet outil calcule une ancre, une empreinte SHA-256 de chaque table du registre, et prépare la demande. AMR n'appelle aucun service : l'exploitant envoie la demande lui-même, et seule l'empreinte sort du registre. Profil <code>principal</code>, jamais l'agent."
+    ],
+    "en": [
+     "In the code on main since {{f:timestamp_since_en}}, not yet in the published version {{f:pypi_version}}: a time-stamping service chosen by the operator (RFC 3161) dates the state of the registry. This tool computes an anchor, a SHA-256 digest of each table of the registry, and prepares the request. AMR calls no service: the operator sends the request, and only the digest leaves the registry. Profile <code>principal</code>, never the agent."
+    ]
+   },
+   {
+    "name": "record_registry_timestamp",
+    "fr": [
+     "Enregistre la réponse du service, seulement si elle date bien cette ancre, si sa signature remonte à une racine que l'exploitant a choisie (<code>AMR_TIMESTAMP_TRUST_ROOTS_PATH</code>) et si le registre contient encore exactement les lignes ancrées. Avec une copie de la base, chacun peut ensuite vérifier que le registre contenait ces lignes, inchangées, à cette date. <code>get_proof</code> montre les horodatages qui couvrent un mandat.",
+     "Limite connue : un horodatage montre l'état du registre à une date. Il ne montre pas que ce que disent les lignes est vrai, ni qui les a écrites. AMR ne vérifie pas la révocation du certificat du service et ne dit pas si un service est qualifié : cela dépend des racines de confiance choisies. Les lignes écrites après le dernier horodatage ne sont couvertes qu'au suivant."
+    ],
+    "en": [
+     "Records the service's response, only if it dates this anchor, if its signature chains to a root the operator chose (<code>AMR_TIMESTAMP_TRUST_ROOTS_PATH</code>) and if the registry still holds exactly the anchored rows. With a copy of the database, anyone can then check that the registry held these rows, unchanged, at that date. <code>get_proof</code> shows the timestamps that cover a mandate.",
+     "Known limit: a timestamp shows the state of the registry at a date. It does not show that what the rows say is true, or who wrote them. AMR does not check the revocation of the service's certificate and does not say whether a service is qualified: that depends on the trust roots chosen. Rows written after the last timestamp are covered only by the next one."
+    ]
    }
   ]
  },
