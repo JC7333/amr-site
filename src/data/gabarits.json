@@ -5,7 +5,7 @@
    "title": "Assistant de cabinet ou d'établissement de santé",
    "teaser": "Lit le dossier, propose des rendez-vous, commande jusqu'à 100 €. Ne prescrit jamais.",
    "may": ["lire le dossier patient", "prendre des rendez-vous", "rédiger des courriers et des messages aux patients", "commander des fournitures"],
-   "never": ["prescrire", "poser un diagnostic", "modifier ou exporter le dossier", "envoyer lui-même un courrier ou un message", "créer un sous-agent"],
+   "never": ["prescrire", "poser un diagnostic", "trier les patients par urgence", "modifier ou exporter le dossier", "envoyer lui-même un courrier ou un message", "créer un sous-agent"],
    "rules": ["100&nbsp;€ par commande au plus. Un jeton de commande vit 30 secondes au plus.", "Le mandat peut porter la décision d'un organe (commission, intitulé, date, personnes ou fonctions désignées), scellée dans l'empreinte de la chaîne."],
    "limit": ["AMR ne vérifie pas que cette décision existe."]
   },
@@ -13,7 +13,7 @@
    "title": "Healthcare practice or facility assistant",
    "teaser": "Reads the record, proposes appointments, orders up to €100. Never prescribes.",
    "may": ["read the patient record", "book appointments", "draft letters and patient messages", "order supplies"],
-   "never": ["prescribe", "diagnose", "change or export the record", "send a letter or message itself", "create a sub-agent"],
+   "never": ["prescribe", "diagnose", "rank patients by urgency", "change or export the record", "send a letter or message itself", "create a sub-agent"],
    "rules": ["100&nbsp;€ per order at most. An order token lives 30 seconds at most.", "The mandate can record the decision of a body (committee, title, date, designated persons or roles), sealed into the chain hash."],
    "limit": ["AMR does not check that the decision exists."]
   }
