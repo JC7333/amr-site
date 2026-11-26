@@ -363,7 +363,7 @@ def selftest():
         ("retour de « opposable »", "écartée par décision", lambda: both(lambda h: h.replace("AMR est ce mécanisme.", "Le mandat est opposable."))),
         ("retour du « mandat de l'agent »", "écartée par décision", lambda: both(lambda h: h.replace("AMR est ce mécanisme.", "Le mandat de l'agent est vérifié."))),
         ("retour de « nous en tirons son mandat »", "écartée par décision",
-         lambda: both(lambda h: h.replace("nous préparons le mandat qui fixe ce qu'il a le droit de faire", "nous en tirons son mandat"))),
+         lambda: both(lambda h: h.replace("nous préparons le mandat que vous signez et qui fixe ce qu'il a le droit de faire", "nous en tirons son mandat"))),
         ("définition de « mandat » retirée de l'accueil", "définition de « mandat »",
          lambda: both(lambda h: h.replace("au sens du Code civil", "au sens strict"))),
         ("mandant annoncé qui n'est pas celui du registre", "ne correspond pas à l'empreinte",
