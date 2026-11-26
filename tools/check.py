@@ -32,7 +32,9 @@ DECISIONS = ("mandat légal", "mandats légaux", "autorité légale", "art_1984"
              "legal authority", "opposable", "conforme ai act", "compatible eidas", "ai act compliant",
              # 13/11/2026 au soir : le mandat est l'écrit d'une personne, jamais celui de l'agent
              "mandat de l'agent", "mandat donné à l'agent", "mandat donné à un agent", "mandataire",
-             "agent's mandate", "mandate given to the agent", "mandate holder")
+             "agent's mandate", "mandate given to the agent", "mandate holder",
+             # 26/11/2026 : formes relevées sur l'accueil et l'article (« son mandat » de l'agent)
+             "mandat d'un agent", "en tirons son mandat", "into its mandate", "qui l'a mandaté")
 # La définition de « mandat » doit rester sur l'accueil, dans les deux langues.
 DEFINITION = {"index.html": ("def_mandat", "au sens du code civil"),
               "en/index.html": ("def_mandat_en", "in the legal sense")}
@@ -360,6 +362,8 @@ def selftest():
         ("retour de « mandat légal »", "écartée par décision", lambda: both(lambda h: h.replace("AMR est ce mécanisme.", "AMR crée un mandat légal."))),
         ("retour de « opposable »", "écartée par décision", lambda: both(lambda h: h.replace("AMR est ce mécanisme.", "Le mandat est opposable."))),
         ("retour du « mandat de l'agent »", "écartée par décision", lambda: both(lambda h: h.replace("AMR est ce mécanisme.", "Le mandat de l'agent est vérifié."))),
+        ("retour de « nous en tirons son mandat »", "écartée par décision",
+         lambda: both(lambda h: h.replace("nous préparons le mandat qui fixe ce qu'il a le droit de faire", "nous en tirons son mandat"))),
         ("définition de « mandat » retirée de l'accueil", "définition de « mandat »",
          lambda: both(lambda h: h.replace("au sens du Code civil", "au sens strict"))),
         ("mandant annoncé qui n'est pas celui du registre", "ne correspond pas à l'empreinte",
