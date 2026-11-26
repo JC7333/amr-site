@@ -212,7 +212,6 @@ img, svg { max-width: 100%; }
 .pilot ol li { counter-increment: p; display: grid; grid-template-columns: 2.2rem 1fr; gap: 0.8rem; }
 .pilot ol li::before { content: counter(p); width: 2.2rem; height: 2.2rem; border-radius: 50%; border: 2px solid var(--soleil); color: var(--soleil); display: grid; place-items: center; font-weight: 600; font-size: 1rem; }
 .pilot .btn { background: var(--blanc); color: var(--nuit); border-color: var(--blanc); margin-top: 1.8rem; }
-.pilot .btn + p { margin-top: 0.9rem; font-size: 0.95rem; }
 .pilot .btn:hover { background: var(--sur-nuit); border-color: var(--sur-nuit); color: var(--nuit); }
 @media (max-width: 56rem) { .pilot { grid-template-columns: 1fr; } }
 
